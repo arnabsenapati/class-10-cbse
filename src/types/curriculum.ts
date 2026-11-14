@@ -6,7 +6,40 @@ export type LabWidgetId =
   | 'monohybrid-simulator'
   | 'dihybrid-simulator'
   | 'sex-determination-lab'
-  | 'cbse-quiz-arena';
+  | 'cbse-quiz-arena'
+  | 'kavya-word-flashcards'
+  | 'hindi-kavya-quiz-arena'
+  | 'hindi-vyakaran-lab';
+
+export interface WordAnnotation {
+  word: string;
+  hindiMeaning: string;
+  englishMeaning: string;
+  grammarNote?: string;
+  exampleSentence?: string;
+}
+
+export interface TranscriptSegment {
+  label: string;
+  hindiOriginal: string;
+  englishText: string;
+}
+
+export interface MuhavraItem {
+  idiom: string;
+  hindiMeaning: string;
+  englishMeaning: string;
+  sourceLine?: string;
+  examSentence: string;
+}
+
+export interface SamasItem {
+  samastPad: string;
+  vigrah: string;
+  samasType: string;
+  englishMeaning: string;
+  examTrap?: string;
+}
 
 export type DiagramId =
   | 'meiosis-halving'
@@ -97,10 +130,80 @@ export type ContentBlock =
   | {
       type: 'qa';
       marks: number;
-      tag: 'NCERT' | 'CBSE Board Pattern' | 'Assertion-Reason' | 'Case-Based' | 'Numerical';
+      tag:
+        | 'NCERT'
+        | 'CBSE Board Pattern'
+        | 'Assertion-Reason'
+        | 'Case-Based'
+        | 'Numerical'
+        | 'NCERT प्रश्न-अभ्यास'
+        | 'पठित काव्यांश'
+        | 'पठित गद्यांश'
+        | 'संचयन मूल्यपरक'
+        | 'व्यावहारिक व्याकरण'
+        | 'रचनात्मक लेखन प्रारूप'
+        | 'मूल्यपरक प्रश्न (Competency)';
       question: string;
       answer: string;
       markingTip?: string;
+    }
+  | {
+      type: 'poetic-stanza';
+      passageMode?: 'verse' | 'prose';
+      stanzaLabel: string;
+      stanzaText: string;
+      dialectBadge?: string;
+      prasang: string;
+      bhavarthHindi: string;
+      englishHelper: string;
+      poeticDevices?: string[];
+      words: WordAnnotation[];
+    }
+  | {
+      type: 'writing-sample';
+      formatType:
+        | 'anuchchhed'
+        | 'patra'
+        | 'suchna'
+        | 'vigyapan'
+        | 'email'
+        | 'laghukatha';
+      badge: string;
+      title: string;
+      prompt: string;
+      wordTarget: string;
+      marksSplit: string;
+      metadataLines?: { label: string; value: string }[];
+      centerHeading?: string;
+      subHeading?: string;
+      body: string;
+      sloganOrHighlight?: string;
+      footerLines?: string[];
+      examinerNote?: string;
+    }
+  | {
+      type: 'english-transcript';
+      title: string;
+      intro?: string;
+      segments: TranscriptSegment[];
+    }
+  | {
+      type: 'chapter-word-bank';
+      title: string;
+      intro?: string;
+      extraWords?: WordAnnotation[];
+    }
+  | {
+      type: 'muhavre-list';
+      title: string;
+      note?: string;
+      items: MuhavraItem[];
+    }
+  | {
+      type: 'samas-list';
+      title: string;
+      note?: string;
+      items: SamasItem[];
     }
   | {
       type: 'lab';
@@ -153,8 +256,21 @@ export interface GlossaryTerm {
   id: string;
   term: string;
   symbol?: string;
-  category: 'Basics' | 'Alleles & Genes' | 'Punnett & Crosses' | 'Mendel Laws' | 'CBSE Exam';
+  category:
+    | 'Basics'
+    | 'Alleles & Genes'
+    | 'Punnett & Crosses'
+    | 'Mendel Laws'
+    | 'CBSE Exam'
+    | 'सधुक्कड़ी व ब्रज शब्द'
+    | 'तत्सम व साहित्यिक शब्द'
+    | 'उर्दू-फ़ारसी काव्य शब्द'
+    | 'काव्य-प्रतीक व अलंकार'
+    | 'गद्य व कथा शब्दावली'
+    | 'व्याकरण व लेखन शब्दावली';
   simpleMeaning: string;
+  englishMeaning?: string;
+  grammarNote?: string;
   ncertDefinition: string;
   example: string;
   subtopicPath: {
@@ -167,6 +283,7 @@ export interface GlossaryTerm {
 
 export interface QuizQuestion {
   id: string;
+  subjectSlug?: string;
   topicSlug: string;
   subtopicTitle: string;
   type: 'mcq' | 'assertion-reason' | 'case-based';

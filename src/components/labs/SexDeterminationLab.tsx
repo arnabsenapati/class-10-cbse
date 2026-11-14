@@ -112,7 +112,7 @@ export function SexDeterminationLab() {
             <button
               type="button"
               onClick={() => simulateBirths(20)}
-              className="rounded-lg border border-sky-300 bg-sky-50 px-3 py-1.5 text-xs font-bold text-sky-900 hover:bg-sky-100 cursor-pointer dark:bg-sky-950/40 dark:border-sky-800 dark:text-sky-200"
+              className="rounded-lg border border-sky-300 bg-sky-50 px-3 py-1.5 text-xs font-bold text-sky-900 hover:bg-sky-100 cursor-pointer dark:bg-sky-950/40 dark:border-sky-800 dark:text-sky-200 dark:hover:bg-sky-900/60"
             >
               +20 Births
             </button>
@@ -124,7 +124,7 @@ export function SexDeterminationLab() {
                   setBoys(0);
                   setLastRoll(null);
                 }}
-                className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer dark:border-slate-700 dark:text-slate-300"
+                className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               >
                 Reset
               </button>

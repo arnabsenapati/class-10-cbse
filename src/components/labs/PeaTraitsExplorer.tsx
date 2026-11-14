@@ -99,7 +99,7 @@ export function PeaTraitsExplorer() {
             setQuizMode((m) => !m);
             setPicked(null);
           }}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-50 cursor-pointer dark:bg-slate-800 dark:border-emerald-700 dark:text-emerald-300"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-50 cursor-pointer dark:bg-slate-800 dark:border-emerald-700 dark:text-emerald-300 dark:hover:bg-slate-700"
         >
           <HelpCircle className="h-3.5 w-3.5" />
           {quizMode ? 'Back to Explorer' : 'Quick Memory Check'}

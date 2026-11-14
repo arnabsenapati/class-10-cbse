@@ -70,11 +70,11 @@ export function TopBar({
         <button
           type="button"
           onClick={onOpenSearch}
-          className="flex flex-1 min-w-0 max-w-md items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-left text-xs text-slate-500 hover:border-teal-400 hover:bg-white transition cursor-pointer dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-teal-600"
+          className="flex flex-1 min-w-0 max-w-md items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-left text-xs text-slate-500 hover:border-teal-400 hover:bg-white transition cursor-pointer dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-teal-600 dark:hover:bg-slate-800"
         >
           <span className="flex items-center gap-2 truncate">
             <Search className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-            <span className="truncate">Search allele, Punnett square, 9:3:3:1, questions...</span>
+            <span className="truncate">Search कबीर, मुहावरे, समास, allele, Punnett square...</span>
           </span>
           <kbd className="hidden md:inline-block rounded border border-slate-300 bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">
             Ctrl K

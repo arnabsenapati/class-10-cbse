@@ -1,5 +1,12 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, ChevronRight, Clock, Dna } from 'lucide-react';
+import {
+  ArrowRight,
+  CheckCircle2,
+  ChevronRight,
+  Clock,
+  Dna,
+  Feather,
+} from 'lucide-react';
 import { buildSubtopicPath, getSubjectBySlug } from '../../data/registry';
 
 interface SubjectOverviewProps {
@@ -30,7 +37,7 @@ export function SubjectOverview({ completedSubtopics }: SubjectOverviewProps) {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <nav className="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
-        <Link to="/" className="hover:text-teal-700">Home</Link>
+        <Link to="/" className="hover:text-teal-700 dark:hover:text-teal-400">Home</Link>
         <ChevronRight className="h-3.5 w-3.5" />
         <span className="font-semibold text-slate-800 dark:text-slate-200">{subject.name}</span>
       </nav>
@@ -38,8 +45,16 @@ export function SubjectOverview({ completedSubtopics }: SubjectOverviewProps) {
       <header className="rounded-2xl border border-teal-200 bg-white p-6 shadow-xs dark:border-slate-800 dark:bg-slate-900">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-700 text-white">
-              <Dna className="h-6 w-6" />
+            <span
+              className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white ${
+                subject.slug === 'hindi' ? 'bg-amber-600' : 'bg-teal-700'
+              }`}
+            >
+              {subject.slug === 'hindi' ? (
+                <Feather className="h-6 w-6" />
+              ) : (
+                <Dna className="h-6 w-6" />
+              )}
             </span>
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">
@@ -97,7 +112,7 @@ export function SubjectOverview({ completedSubtopics }: SubjectOverviewProps) {
                     className="group rounded-xl border border-slate-200 p-3.5 hover:border-teal-400 transition flex items-center justify-between gap-3 dark:border-slate-800"
                   >
                     <div>
-                      <div className="text-sm font-bold text-slate-900 group-hover:text-teal-700 dark:text-white">
+                      <div className="text-sm font-bold text-slate-900 group-hover:text-teal-700 dark:text-white dark:group-hover:text-teal-400">
                         {sub.title}
                       </div>
                       <div className="mt-1 flex items-center gap-2 text-[11px] text-slate-500">

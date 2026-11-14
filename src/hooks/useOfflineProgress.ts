@@ -5,6 +5,7 @@ export interface StudyProgressState {
   bookmarkedSubtopics: string[];
   lastVisitedPath: string | null;
   bestQuizScore: { correct: number; total: number } | null;
+  bestQuizScoresBySubject: Record<string, { correct: number; total: number }>;
   theme: 'light' | 'dark';
 }
 
@@ -15,6 +16,7 @@ const DEFAULT_STATE: StudyProgressState = {
   bookmarkedSubtopics: [],
   lastVisitedPath: null,
   bestQuizScore: null,
+  bestQuizScoresBySubject: {},
   theme: 'light',
 };
 
@@ -23,6 +25,14 @@ function loadInitialState(): StudyProgressState {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_STATE;
     const parsed = JSON.parse(raw) as Partial<StudyProgressState>;
+    const bySubject: Record<string, { correct: number; total: number }> =
+      parsed.bestQuizScoresBySubject &&
+      typeof parsed.bestQuizScoresBySubject === 'object'
+        ? { ...parsed.bestQuizScoresBySubject }
+        : {};
+    if (parsed.bestQuizScore && !bySubject.biology) {
+      bySubject.biology = parsed.bestQuizScore;
+    }
     return {
       completedSubtopics: Array.isArray(parsed.completedSubtopics)
         ? parsed.completedSubtopics
@@ -33,6 +43,7 @@ function loadInitialState(): StudyProgressState {
       lastVisitedPath:
         typeof parsed.lastVisitedPath === 'string' ? parsed.lastVisitedPath : null,
       bestQuizScore: parsed.bestQuizScore ?? null,
+      bestQuizScoresBySubject: bySubject,
       theme: parsed.theme === 'dark' ? 'dark' : 'light',
     };
   } catch {
@@ -90,18 +101,36 @@ export function useOfflineProgress() {
     );
   }, []);
 
-  const recordQuizScore = useCallback((correct: number, total: number) => {
-    setState((prev) => {
-      if (!prev.bestQuizScore) {
-        return { ...prev, bestQuizScore: { correct, total } };
-      }
-      const prevPct = prev.bestQuizScore.correct / Math.max(1, prev.bestQuizScore.total);
-      const nextPct = correct / Math.max(1, total);
-      return nextPct >= prevPct
-        ? { ...prev, bestQuizScore: { correct, total } }
-        : prev;
-    });
-  }, []);
+  const recordQuizScore = useCallback(
+    (correct: number, total: number, subjectSlug = 'biology') => {
+      setState((prev) => {
+        const nextScore = { correct, total };
+        const nextPct = correct / Math.max(1, total);
+
+        const prevOverallPct = prev.bestQuizScore
+          ? prev.bestQuizScore.correct / Math.max(1, prev.bestQuizScore.total)
+          : -1;
+        const bestQuizScore =
+          nextPct >= prevOverallPct ? nextScore : prev.bestQuizScore;
+
+        const prevSub = prev.bestQuizScoresBySubject?.[subjectSlug];
+        const prevSubPct = prevSub
+          ? prevSub.correct / Math.max(1, prevSub.total)
+          : -1;
+        const bestQuizScoresBySubject = {
+          ...(prev.bestQuizScoresBySubject ?? {}),
+          [subjectSlug]: nextPct >= prevSubPct ? nextScore : prevSub!,
+        };
+
+        return {
+          ...prev,
+          bestQuizScore,
+          bestQuizScoresBySubject,
+        };
+      });
+    },
+    []
+  );
 
   const toggleTheme = useCallback(() => {
     setState((prev) => ({

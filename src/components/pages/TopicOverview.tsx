@@ -26,9 +26,9 @@ export function TopicOverview({ completedSubtopics }: TopicOverviewProps) {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <nav className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
-        <Link to="/" className="hover:text-teal-700">Home</Link>
+        <Link to="/" className="hover:text-teal-700 dark:hover:text-teal-400">Home</Link>
         <ChevronRight className="h-3.5 w-3.5" />
-        <Link to={`/subject/${subject.slug}`} className="hover:text-teal-700">
+        <Link to={`/subject/${subject.slug}`} className="hover:text-teal-700 dark:hover:text-teal-400">
           {subject.name}
         </Link>
         <ChevronRight className="h-3.5 w-3.5" />

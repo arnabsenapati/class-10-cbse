@@ -58,7 +58,7 @@ export function SearchPage() {
           type="text"
           value={query}
           onChange={(e) => handleQueryChange(e.target.value)}
-          placeholder="Try: allele, punnett square, monohybrid, 9:3:3:1, FOIL, test cross..."
+          placeholder="Try: कबीर, मुहावरे, समास, आत्मत्राण, allele, punnett square, 9:3:3:1..."
           autoFocus
           className="flex-1 bg-transparent py-2 text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400 dark:text-white"
         />
@@ -104,7 +104,7 @@ export function SearchPage() {
                 key={s}
                 type="button"
                 onClick={() => handleQueryChange(s)}
-                className="rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:border-teal-500 hover:bg-teal-50 hover:text-teal-900 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                className="rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:border-teal-500 hover:bg-teal-50 hover:text-teal-900 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-teal-950/60 dark:hover:text-teal-200"
               >
                 {s}
               </button>

@@ -90,6 +90,88 @@ function extractBlockText(block: ContentBlock): string {
       return stripMarkdown(
         `${block.tag} ${block.question} ${block.answer} ${block.markingTip ?? ''}`
       );
+    case 'poetic-stanza':
+      return stripMarkdown(
+        [
+          block.stanzaLabel,
+          block.stanzaText,
+          block.dialectBadge ?? '',
+          block.prasang,
+          block.bhavarthHindi,
+          block.englishHelper,
+          ...(block.poeticDevices ?? []),
+          ...block.words.map(
+            (w) =>
+              `${w.word} ${w.hindiMeaning} ${w.englishMeaning} ${w.grammarNote ?? ''} ${
+                w.exampleSentence ?? ''
+              }`
+          ),
+        ].join(' ')
+      );
+    case 'english-transcript':
+      return stripMarkdown(
+        [
+          block.title,
+          block.intro ?? '',
+          ...block.segments.map(
+            (s) => `${s.label} ${s.hindiOriginal} ${s.englishText}`
+          ),
+        ].join(' ')
+      );
+    case 'chapter-word-bank':
+      return stripMarkdown(
+        [
+          block.title,
+          block.intro ?? '',
+          ...(block.extraWords ?? []).map(
+            (w) =>
+              `${w.word} ${w.hindiMeaning} ${w.englishMeaning} ${w.grammarNote ?? ''} ${
+                w.exampleSentence ?? ''
+              }`
+          ),
+        ].join(' ')
+      );
+    case 'muhavre-list':
+      return stripMarkdown(
+        [
+          block.title,
+          block.note ?? '',
+          ...block.items.map(
+            (m) =>
+              `${m.idiom} ${m.hindiMeaning} ${m.englishMeaning} ${m.sourceLine ?? ''} ${
+                m.examSentence
+              }`
+          ),
+        ].join(' ')
+      );
+    case 'samas-list':
+      return stripMarkdown(
+        [
+          block.title,
+          block.note ?? '',
+          ...block.items.map(
+            (s) =>
+              `${s.samastPad} ${s.vigrah} ${s.samasType} ${s.englishMeaning} ${
+                s.examTrap ?? ''
+              }`
+          ),
+        ].join(' ')
+      );
+    case 'writing-sample':
+      return stripMarkdown(
+        [
+          block.badge,
+          block.title,
+          block.prompt,
+          block.centerHeading ?? '',
+          block.subHeading ?? '',
+          block.sloganOrHighlight ?? '',
+          ...(block.metadataLines ?? []).map((m) => `${m.label} ${m.value}`),
+          block.body,
+          ...(block.footerLines ?? []),
+          block.examinerNote ?? '',
+        ].join(' ')
+      );
     case 'lab':
       return stripMarkdown(`${block.title} ${block.caption ?? ''}`);
   }
@@ -180,25 +262,43 @@ function buildSearchIndex(): IndexedDocument[] {
       badge: 'Key Term',
       subjectSlug: term.subtopicPath.subjectSlug,
       topicSlug: term.subtopicPath.topicSlug,
-      keywordsText: `${term.term} ${term.symbol ?? ''} ${term.category}`.toLowerCase(),
+      keywordsText: `${term.term} ${term.symbol ?? ''} ${term.category} ${
+        term.englishMeaning ?? ''
+      } ${term.grammarNote ?? ''}`.toLowerCase(),
       bodyText: stripMarkdown(
-        `${term.simpleMeaning} ${term.ncertDefinition} Example: ${term.example}`
+        `${term.simpleMeaning} ${term.englishMeaning ?? ''} ${
+          term.grammarNote ?? ''
+        } ${term.ncertDefinition} Example: ${term.example}`
       ),
     });
   }
 
   for (const q of ALL_QUIZ_QUESTIONS) {
+    const subj = q.subjectSlug ?? 'biology';
+    const isHindi = subj === 'hindi';
     docs.push({
       id: `quiz:${q.id}`,
       kind: 'quiz',
       title: stripMarkdown(q.question).slice(0, 95) + (q.question.length > 95 ? '...' : ''),
-      breadcrumb: `Biology › CBSE Quiz Arena › ${q.subtopicTitle}`,
-      path: `/subject/biology/cbse-exam-mastery/cbse-traps-question-bank-and-quiz#interactive-cbse-quiz-section`,
+      breadcrumb: isHindi
+        ? `Hindi (Course B) › स्पर्श Quiz Arena › ${q.subtopicTitle}`
+        : `Biology › CBSE Quiz Arena › ${q.subtopicTitle}`,
+      path: isHindi
+        ? q.topicSlug === 'sparsh-gadyakhand'
+          ? `/subject/hindi/sparsh-gadyakhand/gadyakhand-board-mastery#hindi-gadya-quiz-section`
+          : q.topicSlug === 'sanchayan-bhag-2'
+          ? `/subject/hindi/sanchayan-bhag-2/sanchayan-board-mastery#hindi-sanchayan-quiz-section`
+          : q.topicSlug === 'apathit-aur-vyakaran'
+          ? `/subject/hindi/apathit-aur-vyakaran/vyakaran-board-mastery#hindi-vyakaran-quiz-section`
+          : q.topicSlug === 'rachanatmak-lekhan'
+          ? `/subject/hindi/rachanatmak-lekhan/lekhan-board-mastery#hindi-full-syllabus-quiz-section`
+          : `/subject/hindi/sparsh-kavyakhand/kavyakhand-board-mastery#hindi-kavya-quiz-section`
+        : `/subject/biology/cbse-exam-mastery/cbse-traps-question-bank-and-quiz#interactive-cbse-quiz-section`,
       badge: 'CBSE Quiz',
-      subjectSlug: 'biology',
+      subjectSlug: subj,
       topicSlug: q.topicSlug,
       keywordsText: `${q.subtopicTitle} ${q.type}`.toLowerCase(),
-      bodyText: stripMarkdown(`${q.question} ${q.options.join(' ')} ${q.explanation}`),
+      bodyText: stripMarkdown(`${q.casePassage ?? ''} ${q.question} ${q.options.join(' ')} ${q.explanation}`),
     });
   }
 
@@ -297,15 +397,22 @@ export function searchCurriculum(
 }
 
 export const POPULAR_SEARCH_SUGGESTIONS = [
+  'हरिहर काका',
+  'टोपी शुक्ला',
+  'सपनों के-से दिन',
+  'पदबंध',
+  'वाक्य रूपांतरण',
+  'समास',
+  'मुहावरे',
+  'सूचना लेखन',
+  'विज्ञापन लेखन',
+  'ई-मेल',
+  'लघुकथा',
+  'बड़े भाई साहब',
+  'कबीर साखी',
+  'मीरा के पद',
   'allele',
   'punnett square',
-  'monohybrid cross',
-  'dihybrid cross',
   '9:3:3:1',
-  '3:1',
-  'FOIL',
-  'dominant',
-  'test cross',
-  'genotype',
-  'XX XY',
+  'monohybrid cross',
 ];

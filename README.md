@@ -5,6 +5,15 @@ An interactive, offline-ready Progressive Web App (PWA) for Class 10 CBSE studen
 ## Features
 
 - **Subject › Topic › Subtopic Hierarchy:** Breadcrumb navigation, collapsible curriculum tree, and completion tracking saved offline in `localStorage`.
+- **Hindi Course B (Code 085) — Complete 80-Mark Syllabus (All 5 Units, 31 Subtopics):**
+  - **Unit 1 & 2 (`स्पर्श भाग-2`: 7 काव्यखंड + 7 गद्यखंड + Mastery) & Unit 3 (`संचयन भाग-2`: हरिहर काका, सपनों के-से दिन, टोपी शुक्ला + Mastery) — 5-Pillar Architecture:**
+    1. **Interactive Inline Word Lens & शब्दार्थ संकलन:** Hover or tap highlighted dialect/तत्सम/उर्दू-फ़ारसी words inside NCERT poems & prose passages for exam-safe मानक हिंदी अर्थ, English meaning, grammar note, and usage sentence + searchable self-test word bank.
+    2. **Full English Transcript (`संपूर्ण अंग्रेज़ी अनुवाद`):** Line-by-line / scene-by-scene Side-by-Side (`मूल + English`) or `English Only` reading mode for every chapter.
+    3. **Muhavre Corner (`पाठ के मुहावरे व वाक्य-प्रयोग`):** Chapter-wise idioms with CBSE `वाक्य-प्रयोग` model sentences and `Self-Test` mode.
+    4. **Samas Breakdown (`समास-विग्रह कोना`):** Compound words (`समस्तपद`), exact `समास-विग्रह`, type badges, and exam trap alerts.
+    5. **NCERT व CBSE Board Q&A + 3-in-1 Lab + 68-Question Offline Quiz Arena:** Solved NCERT/Board answers, 3-in-1 Flashcards & Speed Drill (`शब्दार्थ • मुहावरे • समास`), and filterable offline Self-Test Arena across all 5 Hindi units.
+  - **Unit 4 (`अपठित गद्यांश एवं व्यावहारिक व्याकरण` — 30 Marks):** 2×7 Unseen Passage strategy + 3 Word-Lens model passages, rules & traps for **पदबंध**, **वाक्य रूपांतरण**, **समास** (all 6 भेद), **मुहावरे**, plus the **42-Question Interactive Vyakaran Speed Lab**.
+  - **Unit 5 (`रचनात्मक लेखन` — 22 Marks):** Styled model samples & box rules for all 6 formats (**अनुच्छेद**, **औपचारिक पत्र**, **सूचना**, **विज्ञापन**, **औपचारिक ई-मेल**, **लघुकथा**) + 80-mark 180-minute Board strategy.
 - **Biology — Chapter 8: Heredity (From Absolute Basics):**
   1. **Foundations: DNA, Genes & Alleles** (Cell → Nucleus → Chromosome → DNA → Gene → Protein/Hormone; Gene vs. Allele; Dominant vs. Recessive; Homozygous vs. Heterozygous; Genotype vs. Phenotype).
   2. **Mendel & Punnett Square Mastery** (Why *Pisum sativum*; 7 Contrasting Traits; 4-Step Punnett Method; FOIL Gamete Splitter & Blank Grid Practice Trainer).

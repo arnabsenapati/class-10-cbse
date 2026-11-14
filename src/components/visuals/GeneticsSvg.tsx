@@ -402,7 +402,7 @@ function FoilArcsDiagram() {
         <button
           type="button"
           onClick={() => setReplayKey((k) => k + 1)}
-          className="no-print inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1 text-[11px] font-bold text-slate-600 hover:bg-slate-50 cursor-pointer dark:border-slate-700 dark:text-slate-300"
+          className="no-print inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1 text-[11px] font-bold text-slate-600 hover:bg-slate-50 cursor-pointer dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
         >
           <RotateCcw className="h-3 w-3" /> Replay FOIL Arcs
         </button>

@@ -142,7 +142,7 @@ export function DihybridSimulator() {
                 setIsPlaying(false);
                 setAnimStep((s) => Math.min(4, s + 1));
               }}
-              className="inline-flex items-center gap-1 rounded-md border border-violet-300 px-2 py-1 text-[11px] font-bold text-violet-800 hover:bg-violet-50 cursor-pointer dark:border-violet-700 dark:text-violet-300"
+              className="inline-flex items-center gap-1 rounded-md border border-violet-300 px-2 py-1 text-[11px] font-bold text-violet-800 hover:bg-violet-50 cursor-pointer dark:border-violet-700 dark:text-violet-300 dark:hover:bg-violet-950/60"
             >
               <SkipForward className="h-3 w-3" /> Next
             </button>
@@ -203,7 +203,7 @@ export function DihybridSimulator() {
             className={`rounded-full px-3 py-1 text-xs font-semibold transition cursor-pointer ${
               presetKey === item.key
                 ? 'bg-slate-900 text-white dark:bg-violet-500 dark:text-slate-950'
-                : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
             }`}
           >
             {item.label}

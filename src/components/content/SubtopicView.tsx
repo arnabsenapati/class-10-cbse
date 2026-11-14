@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Bookmark,
@@ -10,6 +10,7 @@ import {
   Target,
 } from 'lucide-react';
 import { getAdjacentSubtopics, getSubtopicBySlugs } from '../../data/registry';
+import { WordAnnotation } from '../../types/curriculum';
 import { BlockRenderer, renderInlineText } from './BlockRenderer';
 
 interface SubtopicViewProps {
@@ -19,10 +20,11 @@ interface SubtopicViewProps {
   completedSubtopics: string[];
   bookmarkedSubtopics: string[];
   bestQuizScore?: { correct: number; total: number } | null;
+  bestQuizScoresBySubject?: Record<string, { correct: number; total: number }>;
   onToggleComplete: (id: string) => void;
   onToggleBookmark: (id: string) => void;
   onVisitPath: (path: string) => void;
-  onSaveQuizScore: (correct: number, total: number) => void;
+  onSaveQuizScore: (correct: number, total: number, subjectSlug?: string) => void;
 }
 
 export function SubtopicView({
@@ -32,6 +34,7 @@ export function SubtopicView({
   completedSubtopics,
   bookmarkedSubtopics,
   bestQuizScore,
+  bestQuizScoresBySubject,
   onToggleComplete,
   onToggleBookmark,
   onVisitPath,
@@ -40,6 +43,26 @@ export function SubtopicView({
   const location = useLocation();
   const data = getSubtopicBySlugs(subjectSlug, topicSlug, subtopicSlug);
   const adjacent = getAdjacentSubtopics(subjectSlug, topicSlug, subtopicSlug);
+
+  const subtopicWords = useMemo<WordAnnotation[]>(() => {
+    if (!data) return [];
+    const seen = new Set<string>();
+    const list: WordAnnotation[] = [];
+    for (const sec of data.subtopic.sections) {
+      for (const blk of sec.blocks) {
+        if (blk.type === 'poetic-stanza') {
+          for (const w of blk.words) {
+            const key = w.word.trim();
+            if (!seen.has(key)) {
+              seen.add(key);
+              list.push(w);
+            }
+          }
+        }
+      }
+    }
+    return list;
+  }, [data]);
 
   useEffect(() => {
     onVisitPath(location.pathname);
@@ -131,7 +154,7 @@ export function SubtopicView({
                 className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition cursor-pointer ${
                   isBookmarked
                     ? 'border-amber-400 bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
-                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white'
                 }`}
               >
                 <Bookmark className={`h-3.5 w-3.5 ${isBookmarked ? 'fill-current' : ''}`} />
@@ -140,7 +163,7 @@ export function SubtopicView({
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
               >
                 <Printer className="h-3.5 w-3.5" /> Print / PDF
               </button>
@@ -186,7 +209,9 @@ export function SubtopicView({
                   <BlockRenderer
                     key={bIdx}
                     block={block}
+                    subtopicWords={subtopicWords}
                     bestQuizScore={bestQuizScore}
+                    bestQuizScoresBySubject={bestQuizScoresBySubject}
                     onSaveQuizScore={onSaveQuizScore}
                   />
                 ))}
@@ -284,7 +309,7 @@ export function SubtopicView({
               <Link
                 key={kw}
                 to={`/search?q=${encodeURIComponent(kw)}`}
-                className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 hover:bg-teal-100 hover:text-teal-900 dark:bg-slate-800 dark:text-slate-300"
+                className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 hover:bg-teal-100 hover:text-teal-900 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-teal-950/70 dark:hover:text-teal-200"
               >
                 {kw}
               </Link>

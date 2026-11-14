@@ -16,9 +16,41 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'icons-vendor': ['lucide-react'],
+        manualChunks(id) {
+          const normalized = id.replace(/\\/g, '/');
+          if (
+            normalized.includes('/node_modules/react/') ||
+            normalized.includes('/node_modules/react-dom/') ||
+            normalized.includes('/node_modules/react-router/') ||
+            normalized.includes('/node_modules/react-router-dom/') ||
+            normalized.includes('/node_modules/scheduler/')
+          ) {
+            return 'react-vendor';
+          }
+          if (normalized.includes('/node_modules/lucide-react/')) {
+            return 'icons-vendor';
+          }
+          if (normalized.includes('/src/data/subjects/biology/')) {
+            return 'data-biology';
+          }
+          if (normalized.includes('/src/data/subjects/hindi/gadya-')) {
+            return 'data-hindi-gadya';
+          }
+          if (normalized.includes('/src/data/subjects/hindi/kavya-')) {
+            return 'data-hindi-kavya';
+          }
+          if (normalized.includes('/src/data/subjects/hindi/sanchayan-')) {
+            return 'data-hindi-sanchayan';
+          }
+          if (normalized.includes('/src/data/subjects/hindi/vyakaran-')) {
+            return 'data-hindi-vyakaran';
+          }
+          if (normalized.includes('/src/data/subjects/hindi/lekhan-')) {
+            return 'data-hindi-lekhan';
+          }
+          if (normalized.includes('/src/data/subjects/hindi/')) {
+            return 'data-hindi-meta';
+          }
         },
       },
     },
@@ -36,10 +68,10 @@ export default defineConfig({
         'icons/apple-touch-icon.png',
       ],
       manifest: {
-        name: 'Class 10 CBSE Study Hub — Interactive Biology & Genetics',
+        name: 'Class 10 CBSE Study Hub — Hindi Course B & Biology',
         short_name: 'Class 10 Study Hub',
         description:
-          'Offline-ready Class 10 CBSE study companion with interactive Punnett square labs, step-by-step explanations from basics, search across Subject > Topic > Subtopic, and board exam practice.',
+          'Offline-ready Class 10 CBSE study companion featuring Complete 80-Mark Hindi Course B (Sparsh Bhag-2, Sanchayan Bhag-2, Apathit & 42-Q Vyakaran Lab, all 6 Creative Writing formats) and Biology (Heredity Punnett labs).',
         theme_color: '#0f766e',
         background_color: '#f8fafc',
         display: 'standalone',
@@ -70,6 +102,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,json}'],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         navigateFallback: '/index.html',
         cleanupOutdatedCaches: true,
         clientsClaim: true,

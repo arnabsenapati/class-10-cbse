@@ -3,21 +3,37 @@ import { Award, CheckCircle2, RotateCcw, Trophy, XCircle } from 'lucide-react';
 import { ALL_QUIZ_QUESTIONS } from '../../data/registry';
 
 interface CbseQuizArenaProps {
+  subjectSlug?: 'biology' | 'hindi';
   bestScore?: { correct: number; total: number } | null;
-  onSaveScore?: (correct: number, total: number) => void;
+  onSaveScore?: (correct: number, total: number, subjectSlug?: string) => void;
 }
 
-export function CbseQuizArena({ bestScore, onSaveScore }: CbseQuizArenaProps) {
+export function CbseQuizArena({
+  subjectSlug = 'biology',
+  bestScore,
+  onSaveScore,
+}: CbseQuizArenaProps) {
   const [filterType, setFilterType] = useState<'all' | 'mcq' | 'assertion-reason' | 'case-based'>(
     'all'
   );
+  const [topicFilter, setTopicFilter] = useState<string>('all');
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [submitted, setSubmitted] = useState(false);
 
+  const subjectQuestions = useMemo(
+    () => ALL_QUIZ_QUESTIONS.filter((q) => (q.subjectSlug ?? 'biology') === subjectSlug),
+    [subjectSlug]
+  );
+
   const questions = useMemo(() => {
-    if (filterType === 'all') return ALL_QUIZ_QUESTIONS;
-    return ALL_QUIZ_QUESTIONS.filter((q) => q.type === filterType);
-  }, [filterType]);
+    return subjectQuestions.filter((q) => {
+      if (filterType !== 'all' && q.type !== filterType) return false;
+      if (subjectSlug === 'hindi' && topicFilter !== 'all' && q.topicSlug !== topicFilter) {
+        return false;
+      }
+      return true;
+    });
+  }, [filterType, topicFilter, subjectSlug, subjectQuestions]);
 
   const answeredCount = questions.filter((q) => answers[q.id] !== undefined).length;
   const correctCount = questions.filter(
@@ -31,8 +47,8 @@ export function CbseQuizArena({ bestScore, onSaveScore }: CbseQuizArenaProps) {
 
   const handleSubmit = () => {
     setSubmitted(true);
-    if (filterType === 'all' && onSaveScore) {
-      onSaveScore(correctCount, questions.length);
+    if (filterType === 'all' && topicFilter === 'all' && onSaveScore) {
+      onSaveScore(correctCount, questions.length, subjectSlug);
     }
   };
 
@@ -50,10 +66,14 @@ export function CbseQuizArena({ bestScore, onSaveScore }: CbseQuizArenaProps) {
           </span>
           <div>
             <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-              CBSE Class 10 Heredity Self-Test Arena
+              {subjectSlug === 'hindi'
+                ? 'CBSE Class 10 Hindi Course B (80-Mark Full Syllabus) Self-Test Arena'
+                : 'CBSE Class 10 Heredity Self-Test Arena'}
             </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              100% offline quiz with instant NCERT explanations &amp; common trap alerts
+              {subjectSlug === 'hindi'
+                ? '100% ऑफ़लाइन • स्पर्श, संचयन, अपठित गद्यांश, व्याकरण (पदबंध-वाक्य-समास-मुहावरे) व लेखन अभ्यास'
+                : '100% offline quiz with instant NCERT explanations & common trap alerts'}
             </p>
           </div>
         </div>
@@ -67,35 +87,69 @@ export function CbseQuizArena({ bestScore, onSaveScore }: CbseQuizArenaProps) {
       </div>
 
       {/* Filter Pills */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap gap-1.5">
-          {[
-            { key: 'all' as const, label: `All (${ALL_QUIZ_QUESTIONS.length})` },
-            { key: 'mcq' as const, label: 'MCQs' },
-            { key: 'assertion-reason' as const, label: 'Assertion–Reason' },
-            { key: 'case-based' as const, label: 'Case-Based' },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => {
-                setFilterType(tab.key);
-                setSubmitted(false);
-              }}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
-                filterType === tab.key
-                  ? 'bg-amber-600 text-white'
-                  : 'bg-white border border-slate-200 text-slate-700 hover:border-amber-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+      <div className="mt-4 space-y-2">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              { key: 'all' as const, label: `All (${subjectQuestions.length})` },
+              { key: 'mcq' as const, label: 'MCQs' },
+              { key: 'assertion-reason' as const, label: 'Assertion–Reason' },
+              {
+                key: 'case-based' as const,
+                label: subjectSlug === 'hindi' ? 'पठित / अपठित गद्यांश व काव्यांश' : 'Case-Based',
+              },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => {
+                  setFilterType(tab.key);
+                  setSubmitted(false);
+                }}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
+                  filterType === tab.key
+                    ? 'bg-amber-600 text-white'
+                    : 'bg-white border border-slate-200 text-slate-700 hover:border-amber-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <span className="text-xs font-semibold text-slate-500">
+            Answered: {answeredCount}/{questions.length}
+          </span>
         </div>
 
-        <span className="text-xs font-semibold text-slate-500">
-          Answered: {answeredCount}/{questions.length}
-        </span>
+        {subjectSlug === 'hindi' && (
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              { key: 'all', label: 'सभी 5 इकाइयाँ (Full Syllabus)' },
+              { key: 'sparsh-kavyakhand', label: 'स्पर्श काव्यखंड' },
+              { key: 'sparsh-gadyakhand', label: 'स्पर्श गद्यखंड' },
+              { key: 'sanchayan-bhag-2', label: 'संचयन भाग-2' },
+              { key: 'apathit-aur-vyakaran', label: 'अपठित व व्याकरण' },
+              { key: 'rachanatmak-lekhan', label: 'रचनात्मक लेखन' },
+            ].map((u) => (
+              <button
+                key={u.key}
+                type="button"
+                onClick={() => {
+                  setTopicFilter(u.key);
+                  setSubmitted(false);
+                }}
+                className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition cursor-pointer ${
+                  topicFilter === u.key
+                    ? 'bg-slate-800 text-white dark:bg-white dark:text-slate-900'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:border-amber-400 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300'
+                }`}
+              >
+                {u.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Question Cards */}
@@ -119,8 +173,11 @@ export function CbseQuizArena({ bestScore, onSaveScore }: CbseQuizArenaProps) {
               </div>
 
               {q.casePassage && (
-                <div className="rounded-lg border-l-4 border-amber-400 bg-amber-50/70 p-3 text-xs text-slate-700 dark:bg-amber-950/30 dark:text-slate-300">
-                  <strong>Case Passage:</strong> {q.casePassage}
+                <div className="rounded-lg border-l-4 border-amber-400 bg-amber-50/70 p-3 text-xs text-slate-700 whitespace-pre-line leading-relaxed dark:bg-amber-950/30 dark:text-slate-300">
+                  <strong>
+                    {subjectSlug === 'hindi' ? 'पठित काव्यांश / गद्यांश:' : 'Case Passage:'}
+                  </strong>{' '}
+                  {q.casePassage}
                 </div>
               )}
 
@@ -216,7 +273,7 @@ export function CbseQuizArena({ bestScore, onSaveScore }: CbseQuizArenaProps) {
           <button
             type="button"
             onClick={handleReset}
-            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"
+            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white"
           >
             <RotateCcw className="h-3.5 w-3.5" /> Reset Quiz
           </button>

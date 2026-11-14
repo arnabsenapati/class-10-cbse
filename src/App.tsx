@@ -13,6 +13,7 @@ function SubtopicRoute({
   completedSubtopics,
   bookmarkedSubtopics,
   bestQuizScore,
+  bestQuizScoresBySubject,
   onToggleComplete,
   onToggleBookmark,
   onVisitPath,
@@ -21,10 +22,11 @@ function SubtopicRoute({
   completedSubtopics: string[];
   bookmarkedSubtopics: string[];
   bestQuizScore?: { correct: number; total: number } | null;
+  bestQuizScoresBySubject?: Record<string, { correct: number; total: number }>;
   onToggleComplete: (id: string) => void;
   onToggleBookmark: (id: string) => void;
   onVisitPath: (path: string) => void;
-  onSaveQuizScore: (correct: number, total: number) => void;
+  onSaveQuizScore: (correct: number, total: number, subjectSlug?: string) => void;
 }) {
   const { subjectSlug = '', topicSlug = '', subtopicSlug = '' } = useParams();
   return (
@@ -35,6 +37,7 @@ function SubtopicRoute({
       completedSubtopics={completedSubtopics}
       bookmarkedSubtopics={bookmarkedSubtopics}
       bestQuizScore={bestQuizScore}
+      bestQuizScoresBySubject={bestQuizScoresBySubject}
       onToggleComplete={onToggleComplete}
       onToggleBookmark={onToggleBookmark}
       onVisitPath={onVisitPath}
@@ -104,6 +107,7 @@ export function App() {
                 completedSubtopics={state.completedSubtopics}
                 bookmarkedSubtopics={state.bookmarkedSubtopics}
                 bestQuizScore={state.bestQuizScore}
+                bestQuizScoresBySubject={state.bestQuizScoresBySubject}
                 onToggleComplete={toggleCompleted}
                 onToggleBookmark={toggleBookmark}
                 onVisitPath={recordVisitedPath}

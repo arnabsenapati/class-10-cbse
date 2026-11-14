@@ -211,7 +211,7 @@ export function CellToTraitExplorer() {
           type="button"
           onClick={() => setStepIdx((i) => Math.max(0, i - 1))}
           disabled={stepIdx === 0}
-          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 disabled:opacity-40 hover:bg-slate-50 cursor-pointer disabled:cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"
+          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 disabled:opacity-40 hover:bg-slate-50 cursor-pointer disabled:cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700"
         >
           <ChevronLeft className="h-3.5 w-3.5" /> Zoom Out
         </button>

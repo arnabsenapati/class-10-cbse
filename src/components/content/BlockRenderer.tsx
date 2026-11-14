@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useState } from 'react';
+import { Fragment, ReactNode, useMemo, useState } from 'react';
 import {
   AlertTriangle,
   ArrowDown,
@@ -7,14 +7,22 @@ import {
   ChevronDown,
   ChevronUp,
   Eye,
+  Feather,
+  FileText,
+  Languages,
   Lightbulb,
+  Mail,
+  Megaphone,
   PenLine,
+  Pin,
   Scale,
+  Search,
   Sparkles,
+  X,
   XCircle,
   Zap,
 } from 'lucide-react';
-import { CalloutVariant, ContentBlock } from '../../types/curriculum';
+import { CalloutVariant, ContentBlock, WordAnnotation } from '../../types/curriculum';
 import { LabResolver } from '../labs/LabResolver';
 import { ConceptDiagram } from '../visuals/GeneticsSvg';
 
@@ -122,7 +130,7 @@ function QaAccordion({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="no-print mt-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+          className="no-print mt-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white"
         >
           {open ? (
             <>
@@ -369,7 +377,7 @@ function CrossFlowCard({
           <button
             type="button"
             onClick={() => setVisibleStep((s) => (s < maxStep ? s + 1 : 1))}
-            className="inline-flex items-center gap-1 rounded-lg bg-teal-50 px-2.5 py-1 text-[11px] font-bold text-teal-800 hover:bg-teal-100 cursor-pointer dark:bg-teal-950 dark:text-teal-300"
+            className="inline-flex items-center gap-1 rounded-lg bg-teal-50 px-2.5 py-1 text-[11px] font-bold text-teal-800 hover:bg-teal-100 cursor-pointer dark:bg-teal-950 dark:text-teal-300 dark:hover:bg-teal-900"
           >
             <Eye className="h-3 w-3" />
             {visibleStep < maxStep
@@ -448,15 +456,1159 @@ function CrossFlowCard({
   );
 }
 
+const DEVANAGARI_LETTER = '[\\u0900-\\u0963\\u0966-\\u096F\\u0971-\\u097F]';
+
+type LineSegment =
+  | { kind: 'text'; text: string }
+  | { kind: 'word'; text: string; wordIndex: number };
+
+function escapeRegExp(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function tokenizeStanzaLine(
+  line: string,
+  words: WordAnnotation[],
+  matcher: RegExp | null,
+  wordIndexMap: Map<string, number>
+): LineSegment[] {
+  if (!matcher || words.length === 0 || !line) {
+    return [{ kind: 'text', text: line }];
+  }
+
+  matcher.lastIndex = 0;
+  const segments: LineSegment[] = [];
+  let cursor = 0;
+
+  for (const match of line.matchAll(matcher)) {
+    const start = match.index ?? 0;
+    const matchedText = match[0];
+    if (start > cursor) {
+      segments.push({ kind: 'text', text: line.slice(cursor, start) });
+    }
+    const wordIdx = wordIndexMap.get(matchedText);
+    if (wordIdx !== undefined) {
+      segments.push({ kind: 'word', text: matchedText, wordIndex: wordIdx });
+    } else {
+      segments.push({ kind: 'text', text: matchedText });
+    }
+    cursor = start + matchedText.length;
+  }
+
+  if (cursor < line.length) {
+    segments.push({ kind: 'text', text: line.slice(cursor) });
+  }
+
+  return segments.length > 0 ? segments : [{ kind: 'text', text: line }];
+}
+
+function PoeticStanzaCard({
+  block,
+}: {
+  block: Extract<ContentBlock, { type: 'poetic-stanza' }>;
+}) {
+  const [hoveredWordIdx, setHoveredWordIdx] = useState<number | null>(null);
+  const [pinnedWordIdx, setPinnedWordIdx] = useState<number | null>(null);
+  const [showAllWords, setShowAllWords] = useState(false);
+
+  const { matcher, wordIndexMap } = useMemo(() => {
+    const idxMap = new Map<string, number>();
+    block.words.forEach((w, idx) => {
+      if (!idxMap.has(w.word)) {
+        idxMap.set(w.word, idx);
+      }
+    });
+    const uniqueSorted = [...idxMap.keys()].sort((a, b) => b.length - a.length);
+    if (uniqueSorted.length === 0) {
+      return { matcher: null, wordIndexMap: idxMap };
+    }
+    const pattern = uniqueSorted.map(escapeRegExp).join('|');
+    const regex = new RegExp(
+      `(?<!${DEVANAGARI_LETTER})(${pattern})(?!${DEVANAGARI_LETTER})`,
+      'g'
+    );
+    return { matcher: regex, wordIndexMap: idxMap };
+  }, [block.words]);
+
+  const lines = useMemo(() => block.stanzaText.split('\n'), [block.stanzaText]);
+  const isProse = block.passageMode === 'prose';
+  const activeIdx = hoveredWordIdx ?? pinnedWordIdx;
+  const activeWord = activeIdx !== null ? block.words[activeIdx] : null;
+  const isPinned = pinnedWordIdx !== null && hoveredWordIdx === null;
+
+  return (
+    <div className="print-avoid-break rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50/60 via-white to-orange-50/40 overflow-visible shadow-xs dark:border-amber-900/60 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
+      {/* Header Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-200/70 bg-amber-50/80 px-4 py-2.5 rounded-t-2xl dark:border-amber-900/50 dark:bg-amber-950/30">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-amber-900 dark:text-amber-300">
+            {isProse ? (
+              <BookOpen className="h-3.5 w-3.5" />
+            ) : (
+              <Feather className="h-3.5 w-3.5" />
+            )}
+            {block.stanzaLabel}
+          </span>
+          {block.dialectBadge && (
+            <span className="rounded-full bg-white border border-amber-200 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:bg-slate-900 dark:border-amber-800 dark:text-amber-300">
+              {block.dialectBadge}
+            </span>
+          )}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setShowAllWords((s) => !s)}
+          className="no-print inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-bold text-amber-900 hover:bg-amber-100/70 transition cursor-pointer dark:border-amber-800 dark:bg-slate-900 dark:text-amber-300 dark:hover:bg-amber-950/60"
+        >
+          <Languages className="h-3.5 w-3.5" />
+          {showAllWords
+            ? 'तालिका छिपाएँ (Hide Table)'
+            : `शब्दार्थ तालिका (${block.words.length})`}
+        </button>
+      </div>
+
+      <div className="p-4 sm:p-5 space-y-4">
+        {/* Passage Box with Interactive Inline Word Tokens */}
+        <div
+          className={`rounded-xl border border-amber-200/80 bg-white/95 px-4 py-4 sm:px-6 sm:py-5 shadow-2xs dark:border-slate-800 dark:bg-slate-950/90 ${
+            isProse ? 'text-left' : 'text-center'
+          }`}
+        >
+          <div
+            className={
+              isProse
+                ? 'space-y-2 text-[16px] sm:text-[17px] leading-8 sm:leading-9 font-medium text-slate-900 dark:text-slate-100'
+                : 'space-y-1.5 text-lg sm:text-[19px] leading-9 sm:leading-10 font-semibold text-slate-900 dark:text-slate-100'
+            }
+          >
+            {lines.map((line, lIdx) => {
+              const segments = tokenizeStanzaLine(
+                line,
+                block.words,
+                matcher,
+                wordIndexMap
+              );
+              return (
+                <div key={lIdx} className="min-h-[1.75rem]">
+                  {segments.map((seg, sIdx) => {
+                    if (seg.kind === 'text') {
+                      return <Fragment key={sIdx}>{seg.text}</Fragment>;
+                    }
+                    const wordObj = block.words[seg.wordIndex];
+                    const isActive = activeIdx === seg.wordIndex;
+                    const isHovered = hoveredWordIdx === seg.wordIndex;
+                    const isPin = pinnedWordIdx === seg.wordIndex;
+
+                    return (
+                      <span key={sIdx} className="relative inline-block mx-[1px]">
+                        <button
+                          type="button"
+                          onMouseEnter={() => setHoveredWordIdx(seg.wordIndex)}
+                          onMouseLeave={() =>
+                            setHoveredWordIdx((curr) =>
+                              curr === seg.wordIndex ? null : curr
+                            )
+                          }
+                          onFocus={() => setHoveredWordIdx(seg.wordIndex)}
+                          onBlur={() =>
+                            setHoveredWordIdx((curr) =>
+                              curr === seg.wordIndex ? null : curr
+                            )
+                          }
+                          onClick={() =>
+                            setPinnedWordIdx((curr) =>
+                              curr === seg.wordIndex ? null : seg.wordIndex
+                            )
+                          }
+                          aria-label={`${seg.text}: ${wordObj.hindiMeaning} (${wordObj.englishMeaning})`}
+                          className={`inline rounded px-1 py-0.5 border-b-2 border-dotted transition cursor-pointer ${
+                            isActive
+                              ? 'bg-amber-300/90 border-amber-800 text-slate-950 ring-2 ring-amber-400/70 dark:bg-amber-500/35 dark:border-amber-300 dark:text-amber-100'
+                              : 'bg-amber-100/80 border-amber-600 text-amber-950 hover:bg-amber-200/80 dark:bg-amber-950/70 dark:border-amber-400 dark:text-amber-200 dark:hover:bg-amber-900/80 dark:hover:text-amber-100'
+                          }`}
+                        >
+                          {seg.text}
+                          {isPin && (
+                            <span className="ml-0.5 inline-block text-[10px] align-top text-amber-800 dark:text-amber-300">
+                              •
+                            </span>
+                          )}
+                        </button>
+
+                        {/* Desktop Floating Hover Tooltip */}
+                        {isHovered && wordObj && (
+                          <div
+                            role="tooltip"
+                            className="no-print hidden sm:block pointer-events-none absolute left-1/2 bottom-full z-30 mb-2 w-72 -translate-x-1/2 rounded-xl border border-slate-200 bg-slate-900 px-3.5 py-2.5 text-left text-xs text-white shadow-xl dark:border-slate-700 dark:bg-slate-800"
+                          >
+                            <div className="flex items-center justify-between gap-2 border-b border-white/15 pb-1 mb-1.5">
+                              <span className="font-extrabold text-amber-300 text-sm">
+                                {wordObj.word}
+                              </span>
+                              {wordObj.grammarNote && (
+                                <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold text-sky-200">
+                                  {wordObj.grammarNote}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-white font-semibold leading-snug">
+                              <span className="text-emerald-300">हिंदी:</span>{' '}
+                              {wordObj.hindiMeaning}
+                            </div>
+                            <div className="text-slate-200 mt-0.5 leading-snug">
+                              <span className="text-indigo-300">English:</span>{' '}
+                              {wordObj.englishMeaning}
+                            </div>
+                            {wordObj.exampleSentence && (
+                              <div className="mt-1.5 pt-1 border-t border-white/10 text-[11px] text-amber-100/95 leading-snug">
+                                <span className="font-bold text-amber-300">
+                                  प्रयोग:
+                                </span>{' '}
+                                {wordObj.exampleSentence}
+                              </div>
+                            )}
+                            <div className="mt-1 text-[10px] text-slate-400">
+                              Click/Tap word to pin below
+                            </div>
+                          </div>
+                        )}
+                      </span>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="no-print mt-3 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+            Tip: Hover or tap any{' '}
+            <span className="rounded bg-amber-100/90 border-b border-dotted border-amber-600 px-1 text-amber-950 dark:bg-amber-950/70 dark:text-amber-200">
+              highlighted word
+            </span>{' '}
+            for its exam-safe मानक हिंदी अर्थ, English helper, grammar note, and usage sentence.
+          </p>
+        </div>
+
+        {/* Live Word Lens Inspector (Responsive for Mobile Tap + Desktop Pin) */}
+        {activeWord && (
+          <div className="no-print animate-slide-down rounded-xl border-2 border-amber-400 bg-white p-3.5 shadow-sm dark:border-amber-700 dark:bg-slate-900">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-amber-100 dark:border-slate-800">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 px-2 py-0.5 text-[11px] font-extrabold text-amber-900 dark:bg-amber-950 dark:text-amber-300">
+                  <Languages className="h-3 w-3" /> Word Lens
+                </span>
+                <span className="text-base font-extrabold text-slate-900 dark:text-white">
+                  {activeWord.word}
+                </span>
+                {activeWord.grammarNote && (
+                  <span className="rounded-full bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 text-[11px] font-bold text-indigo-800 dark:bg-indigo-950/60 dark:border-indigo-800 dark:text-indigo-300">
+                    {activeWord.grammarNote}
+                  </span>
+                )}
+                {isPinned && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase text-amber-700 dark:text-amber-400">
+                    <Pin className="h-3 w-3" /> Pinned
+                  </span>
+                )}
+              </div>
+
+              {pinnedWordIdx !== null && (
+                <button
+                  type="button"
+                  onClick={() => setPinnedWordIdx(null)}
+                  className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-bold text-slate-500 hover:bg-slate-100 hover:text-slate-800 cursor-pointer dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                >
+                  <X className="h-3.5 w-3.5" /> Close
+                </button>
+              )}
+            </div>
+
+            <div className="mt-2.5 grid gap-2 sm:grid-cols-2 text-xs sm:text-sm">
+              <div className="rounded-lg bg-emerald-50/70 border border-emerald-200 px-3 py-2 dark:bg-emerald-950/30 dark:border-emerald-900">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
+                  मानक हिंदी अर्थ (Exam-Safe Hindi)
+                </div>
+                <div className="mt-0.5 font-bold text-slate-900 dark:text-slate-100">
+                  {activeWord.hindiMeaning}
+                </div>
+              </div>
+
+              <div className="rounded-lg bg-indigo-50/70 border border-indigo-200 px-3 py-2 dark:bg-indigo-950/30 dark:border-indigo-900">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-800 dark:text-indigo-400">
+                  English Helper Meaning
+                </div>
+                <div className="mt-0.5 font-semibold text-slate-900 dark:text-slate-100">
+                  {activeWord.englishMeaning}
+                </div>
+              </div>
+            </div>
+
+            {activeWord.exampleSentence && (
+              <div className="mt-2 rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-700 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-300">
+                <strong className="text-slate-900 dark:text-white">
+                  वाक्य प्रयोग (Exam Usage):
+                </strong>{' '}
+                {activeWord.exampleSentence}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Full Word Meanings Table (Togglable + Always Visible in Print) */}
+        {block.words.length > 0 && (
+          <div className={showAllWords ? 'block' : 'hidden print:block'}>
+            <div className="overflow-x-auto rounded-xl border border-amber-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+              <div className="border-b border-amber-100 bg-amber-50/70 px-3.5 py-2 text-xs font-extrabold text-amber-900 dark:border-slate-800 dark:bg-slate-950 dark:text-amber-300">
+                कठिन शब्दार्थ व व्याकरण तालिका (Word Meanings &amp; Usage)
+              </div>
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60">
+                    <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
+                      शब्द
+                    </th>
+                    <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
+                      मानक हिंदी अर्थ
+                    </th>
+                    <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
+                      English Helper
+                    </th>
+                    <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
+                      व्याकरण व वाक्य प्रयोग
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                  {block.words.map((w, idx) => (
+                    <tr
+                      key={`${w.word}-${idx}`}
+                      className="hover:bg-amber-50/40 dark:hover:bg-slate-800/40"
+                    >
+                      <td className="px-3 py-2 font-bold text-amber-900 dark:text-amber-300 whitespace-nowrap">
+                        {w.word}
+                      </td>
+                      <td className="px-3 py-2 font-semibold text-slate-800 dark:text-slate-200">
+                        {w.hindiMeaning}
+                      </td>
+                      <td className="px-3 py-2 text-slate-700 dark:text-slate-300">
+                        {w.englishMeaning}
+                      </td>
+                      <td className="px-3 py-2 text-slate-600 dark:text-slate-400 space-y-0.5">
+                        {w.grammarNote && (
+                          <div className="font-semibold text-indigo-700 dark:text-indigo-400">
+                            {w.grammarNote}
+                          </div>
+                        )}
+                        {w.exampleSentence && <div>{w.exampleSentence}</div>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Passage Explanations: Prasang + Hindi Meaning + English Helper + Literary/Language Style */}
+        <div className="space-y-3">
+          <div className="rounded-xl border border-teal-200 bg-teal-50/60 p-3.5 space-y-1.5 dark:border-teal-900/60 dark:bg-teal-950/30">
+            <div className="text-xs font-extrabold uppercase tracking-wider text-teal-900 dark:text-teal-300">
+              {isProse ? 'प्रसंग व संदर्भ (Context)' : 'प्रसंग (Context)'}
+            </div>
+            <p className="text-xs sm:text-sm leading-relaxed text-slate-800 dark:text-slate-200">
+              {renderInlineText(block.prasang)}
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-slate-200 bg-white p-3.5 sm:p-4 space-y-1.5 dark:border-slate-800 dark:bg-slate-900">
+            <div className="text-xs font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
+              {isProse
+                ? 'सरल हिंदी व्याख्या व आशय (Exam-Standard Hindi Explanation)'
+                : 'सरल हिंदी भावार्थ (Exam-Standard Hindi Explanation)'}
+            </div>
+            <p className="text-sm leading-7 text-slate-800 whitespace-pre-line dark:text-slate-200">
+              {renderInlineText(block.bhavarthHindi)}
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-indigo-200 bg-indigo-50/60 p-3.5 space-y-1.5 dark:border-indigo-900/60 dark:bg-indigo-950/30">
+            <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-indigo-900 dark:text-indigo-300">
+              <Sparkles className="h-3.5 w-3.5" /> English Helper Explanation (Concept Bridge)
+            </div>
+            <p className="text-xs sm:text-sm leading-relaxed text-slate-800 whitespace-pre-line dark:text-slate-200">
+              {renderInlineText(block.englishHelper)}
+            </p>
+          </div>
+
+          {block.poeticDevices && block.poeticDevices.length > 0 && (
+            <div className="rounded-xl border border-sky-200 bg-sky-50/60 p-3.5 space-y-1.5 dark:border-sky-900/60 dark:bg-sky-950/30">
+              <div className="text-xs font-extrabold uppercase tracking-wider text-sky-900 dark:text-sky-300">
+                {isProse
+                  ? 'भाषा-शैली व परीक्षा संकेत (Language Style & Board Focus)'
+                  : 'काव्य-सौंदर्य व परीक्षा संकेत (Poetic Devices & Board Focus)'}
+              </div>
+              <ul className="space-y-1 pl-4 list-disc text-xs sm:text-sm text-slate-800 dark:text-slate-200">
+                {block.poeticDevices.map((dev, dIdx) => (
+                  <li key={dIdx} className="leading-relaxed">
+                    {renderInlineText(dev)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function getSamasBadgeClass(samasType: string): string {
+  if (samasType.includes('अव्ययीभाव')) {
+    return 'bg-sky-100 text-sky-900 border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800';
+  }
+  if (samasType.includes('तत्पुरुष')) {
+    return 'bg-teal-100 text-teal-900 border-teal-200 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800';
+  }
+  if (samasType.includes('कर्मधारय')) {
+    return 'bg-amber-100 text-amber-900 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800';
+  }
+  if (samasType.includes('द्विगु')) {
+    return 'bg-violet-100 text-violet-900 border-violet-200 dark:bg-violet-950/60 dark:text-violet-300 dark:border-violet-800';
+  }
+  if (samasType.includes('द्वंद्व')) {
+    return 'bg-rose-100 text-rose-900 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800';
+  }
+  return 'bg-emerald-100 text-emerald-900 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800';
+}
+
+function EnglishTranscriptCard({
+  block,
+}: {
+  block: Extract<ContentBlock, { type: 'english-transcript' }>;
+}) {
+  const [viewMode, setViewMode] = useState<'side-by-side' | 'english-only'>('side-by-side');
+
+  return (
+    <div className="rounded-2xl border border-indigo-200 bg-indigo-50/35 overflow-hidden shadow-xs dark:border-indigo-900/60 dark:bg-slate-950/60">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-100 bg-indigo-50/90 px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-md bg-indigo-100 px-2 py-0.5 text-[11px] font-extrabold text-indigo-900 dark:bg-indigo-950 dark:text-indigo-300">
+            <Languages className="h-3.5 w-3.5" /> Full English Transcript
+          </span>
+          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
+            {block.title}
+          </h3>
+        </div>
+
+        <div className="no-print inline-flex rounded-lg border border-indigo-200 bg-white p-0.5 dark:border-slate-700 dark:bg-slate-950">
+          <button
+            type="button"
+            onClick={() => setViewMode('side-by-side')}
+            className={`rounded-md px-2.5 py-1 text-[11px] font-bold transition cursor-pointer ${
+              viewMode === 'side-by-side'
+                ? 'bg-indigo-600 text-white'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
+            }`}
+          >
+            Side-by-Side (मूल + English)
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('english-only')}
+            className={`rounded-md px-2.5 py-1 text-[11px] font-bold transition cursor-pointer ${
+              viewMode === 'english-only'
+                ? 'bg-indigo-600 text-white'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
+            }`}
+          >
+            English Only
+          </button>
+        </div>
+      </div>
+
+      <div className="p-4 space-y-3">
+        {block.intro && (
+          <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            {renderInlineText(block.intro)}
+          </p>
+        )}
+
+        <div className="space-y-3">
+          {block.segments.map((seg, idx) => (
+            <div
+              key={`${seg.label}-${idx}`}
+              className="print-avoid-break rounded-xl border border-indigo-100 bg-white p-3.5 space-y-2.5 dark:border-slate-800 dark:bg-slate-900"
+            >
+              <div className="text-xs font-extrabold text-indigo-800 dark:text-indigo-300">
+                {seg.label}
+              </div>
+              <div
+                className={`grid gap-3 ${
+                  viewMode === 'side-by-side' ? 'md:grid-cols-2' : 'grid-cols-1'
+                }`}
+              >
+                {viewMode === 'side-by-side' && (
+                  <div className="rounded-lg border border-amber-200/80 bg-amber-50/40 p-3 dark:border-slate-800 dark:bg-slate-950/70">
+                    <div className="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-400 mb-1">
+                      Original Hindi Text
+                    </div>
+                    <div className="whitespace-pre-line text-sm font-medium leading-7 text-slate-900 dark:text-slate-100">
+                      {seg.hindiOriginal}
+                    </div>
+                  </div>
+                )}
+                <div className="rounded-lg border border-indigo-200/80 bg-indigo-50/40 p-3 dark:border-slate-800 dark:bg-indigo-950/20">
+                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-800 dark:text-indigo-400 mb-1">
+                    Line-by-Line English Transcript
+                  </div>
+                  <div className="whitespace-pre-line text-xs sm:text-sm leading-relaxed text-slate-800 dark:text-slate-200">
+                    {renderInlineText(seg.englishText)}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ChapterWordBankCard({
+  block,
+  subtopicWords,
+}: {
+  block: Extract<ContentBlock, { type: 'chapter-word-bank' }>;
+  subtopicWords?: WordAnnotation[];
+}) {
+  const [query, setQuery] = useState('');
+  const [hideMeanings, setHideMeanings] = useState(false);
+  const [revealed, setRevealed] = useState<Record<string, boolean>>({});
+
+  const mergedWords = useMemo(() => {
+    const seen = new Set<string>();
+    const combined: WordAnnotation[] = [];
+    for (const w of [...(subtopicWords ?? []), ...(block.extraWords ?? [])]) {
+      const key = w.word.trim();
+      if (!seen.has(key)) {
+        seen.add(key);
+        combined.push(w);
+      }
+    }
+    return combined;
+  }, [subtopicWords, block.extraWords]);
+
+  const filteredWords = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return mergedWords;
+    return mergedWords.filter(
+      (w) =>
+        w.word.toLowerCase().includes(q) ||
+        w.hindiMeaning.toLowerCase().includes(q) ||
+        w.englishMeaning.toLowerCase().includes(q) ||
+        (w.grammarNote ?? '').toLowerCase().includes(q)
+    );
+  }, [mergedWords, query]);
+
+  return (
+    <div className="rounded-2xl border border-amber-200 bg-amber-50/35 overflow-hidden shadow-xs dark:border-amber-900/60 dark:bg-slate-950/60">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-100 bg-amber-50/90 px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 px-2 py-0.5 text-[11px] font-extrabold text-amber-900 dark:bg-amber-950 dark:text-amber-300">
+            <BookOpen className="h-3.5 w-3.5" /> शब्दार्थ संकलन ({mergedWords.length} शब्द)
+          </span>
+          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
+            {block.title}
+          </h3>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            setHideMeanings((prev) => !prev);
+            setRevealed({});
+          }}
+          className={`no-print inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-bold transition cursor-pointer ${
+            hideMeanings
+              ? 'border-amber-600 bg-amber-600 text-white'
+              : 'border-amber-300 bg-white text-amber-900 hover:bg-amber-50 dark:border-slate-700 dark:bg-slate-800 dark:text-amber-300 dark:hover:bg-slate-700'
+          }`}
+        >
+          <Eye className="h-3.5 w-3.5" />
+          {hideMeanings ? 'सभी अर्थ दिखाएँ' : 'Self-Test: अर्थ छिपाएँ'}
+        </button>
+      </div>
+
+      <div className="p-4 space-y-3">
+        {block.intro && (
+          <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            {renderInlineText(block.intro)}
+          </p>
+        )}
+
+        <div className="no-print flex items-center gap-2 rounded-xl border border-amber-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-slate-900">
+          <Search className="h-4 w-4 text-slate-400 shrink-0" />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="शब्द, मानक हिंदी अर्थ या English खोजें..."
+            className="flex-1 bg-transparent text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none dark:text-white"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="text-xs font-bold text-slate-400 hover:text-slate-700 cursor-pointer"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        <div className="overflow-x-auto rounded-xl border border-amber-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60">
+                <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
+                  शब्द (Word)
+                </th>
+                <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
+                  मानक हिंदी अर्थ
+                </th>
+                <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
+                  English Helper
+                </th>
+                <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
+                  व्याकरण व वाक्य प्रयोग
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+              {filteredWords.map((w, idx) => {
+                const key = w.word.trim();
+                const masked = hideMeanings && !revealed[key];
+                return (
+                  <tr
+                    key={`${key}-${idx}`}
+                    className="hover:bg-amber-50/40 dark:hover:bg-slate-800/40"
+                  >
+                    <td className="px-3 py-2.5 font-extrabold text-amber-900 dark:text-amber-300 whitespace-nowrap align-top">
+                      {w.word}
+                    </td>
+                    <td className="px-3 py-2.5 font-semibold text-slate-800 dark:text-slate-200 align-top">
+                      {masked && (
+                        <button
+                          type="button"
+                          onClick={() => setRevealed((r) => ({ ...r, [key]: true }))}
+                          className="no-print rounded-md border border-dashed border-amber-400 bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-900 hover:bg-amber-100 cursor-pointer dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-300 dark:hover:bg-amber-900/60"
+                        >
+                          Click to reveal meaning
+                        </button>
+                      )}
+                      <span className={masked ? 'hidden print:inline' : 'inline'}>
+                        {w.hindiMeaning}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2.5 text-slate-700 dark:text-slate-300 align-top">
+                      <span className={masked ? 'hidden print:inline' : 'inline'}>
+                        {w.englishMeaning}
+                      </span>
+                      {masked && (
+                        <span className="no-print text-[11px] italic text-slate-400">
+                          (Hidden in Self-Test)
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2.5 text-slate-600 dark:text-slate-400 space-y-0.5 align-top">
+                      {w.grammarNote && (
+                        <div className="font-semibold text-indigo-700 dark:text-indigo-400">
+                          {w.grammarNote}
+                        </div>
+                      )}
+                      {w.exampleSentence && <div>{w.exampleSentence}</div>}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {filteredWords.length === 0 && (
+            <div className="p-4 text-center text-xs text-slate-500">
+              कोई मेल खाने वाला शब्द नहीं मिला।
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MuhavreListCard({
+  block,
+}: {
+  block: Extract<ContentBlock, { type: 'muhavre-list' }>;
+}) {
+  const [hideMeanings, setHideMeanings] = useState(false);
+  const [revealed, setRevealed] = useState<Record<number, boolean>>({});
+
+  return (
+    <div className="rounded-2xl border border-rose-200 bg-rose-50/30 overflow-hidden shadow-xs dark:border-rose-900/60 dark:bg-slate-950/60">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rose-100 bg-rose-50/90 px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-md bg-rose-100 px-2 py-0.5 text-[11px] font-extrabold text-rose-900 dark:bg-rose-950 dark:text-rose-300">
+            <Feather className="h-3.5 w-3.5" /> CBSE व्याकरण • मुहावरे (4 अंक)
+          </span>
+          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
+            {block.title}
+          </h3>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            setHideMeanings((prev) => !prev);
+            setRevealed({});
+          }}
+          className={`no-print inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-bold transition cursor-pointer ${
+            hideMeanings
+              ? 'border-rose-600 bg-rose-600 text-white'
+              : 'border-rose-300 bg-white text-rose-900 hover:bg-rose-50 dark:border-slate-700 dark:bg-slate-800 dark:text-rose-300 dark:hover:bg-slate-700'
+          }`}
+        >
+          <Eye className="h-3.5 w-3.5" />
+          {hideMeanings ? 'सभी अर्थ दिखाएँ' : 'Self-Test: अर्थ छिपाएँ'}
+        </button>
+      </div>
+
+      <div className="p-4 space-y-3">
+        {block.note && (
+          <div className="rounded-xl border border-rose-200 bg-white/90 px-3.5 py-2.5 text-xs text-slate-700 leading-relaxed dark:border-rose-900/50 dark:bg-slate-900 dark:text-slate-300">
+            <strong className="text-rose-800 dark:text-rose-300">CBSE परीक्षा नियम:</strong>{' '}
+            {renderInlineText(block.note)}
+          </div>
+        )}
+
+        <div className="grid gap-3 md:grid-cols-2">
+          {block.items.map((item, idx) => {
+            const masked = hideMeanings && !revealed[idx];
+            return (
+              <div
+                key={`${item.idiom}-${idx}`}
+                className="print-avoid-break rounded-xl border border-rose-200/80 bg-white p-4 space-y-2.5 shadow-2xs dark:border-slate-800 dark:bg-slate-900"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rose-600 text-[11px] font-bold text-white">
+                      {idx + 1}
+                    </span>
+                    <span className="text-sm sm:text-base font-extrabold text-rose-900 dark:text-rose-300">
+                      {item.idiom}
+                    </span>
+                  </div>
+                  {item.sourceLine && (
+                    <span className="rounded-md bg-amber-50 border border-amber-200 px-2 py-0.5 text-[10px] font-bold text-amber-900 dark:bg-amber-950/40 dark:border-amber-900 dark:text-amber-300">
+                      {item.sourceLine}
+                    </span>
+                  )}
+                </div>
+
+                {masked && (
+                  <button
+                    type="button"
+                    onClick={() => setRevealed((r) => ({ ...r, [idx]: true }))}
+                    className="no-print w-full rounded-lg border border-dashed border-rose-300 bg-rose-50/70 px-3 py-2 text-xs font-bold text-rose-900 hover:bg-rose-100 cursor-pointer dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-300 dark:hover:bg-rose-900/60"
+                  >
+                    अर्थ व वाक्य प्रयोग देखें (Click to Reveal)
+                  </button>
+                )}
+
+                <div className={masked ? 'hidden print:block space-y-2' : 'space-y-2'}>
+                  <div className="grid gap-2 sm:grid-cols-2 text-xs">
+                    <div className="rounded-lg bg-emerald-50/70 border border-emerald-200 px-2.5 py-1.5 dark:bg-emerald-950/30 dark:border-emerald-900">
+                      <span className="text-[10px] font-extrabold uppercase text-emerald-800 dark:text-emerald-400 block">
+                        मानक हिंदी अर्थ
+                      </span>
+                      <span className="font-bold text-slate-900 dark:text-slate-100">
+                        {item.hindiMeaning}
+                      </span>
+                    </div>
+                    <div className="rounded-lg bg-indigo-50/70 border border-indigo-200 px-2.5 py-1.5 dark:bg-indigo-950/30 dark:border-indigo-900">
+                      <span className="text-[10px] font-extrabold uppercase text-indigo-800 dark:text-indigo-400 block">
+                        English Meaning
+                      </span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">
+                        {item.englishMeaning}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-700 leading-relaxed dark:bg-slate-950 dark:border-slate-800 dark:text-slate-300">
+                    <strong className="text-slate-900 dark:text-white">
+                      वाक्य प्रयोग (Exam Model):
+                    </strong>{' '}
+                    {renderInlineText(item.examSentence)}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SamasListCard({
+  block,
+}: {
+  block: Extract<ContentBlock, { type: 'samas-list' }>;
+}) {
+  const [hideAnswers, setHideAnswers] = useState(false);
+  const [revealed, setRevealed] = useState<Record<number, boolean>>({});
+
+  return (
+    <div className="rounded-2xl border border-teal-200 bg-teal-50/30 overflow-hidden shadow-xs dark:border-teal-900/60 dark:bg-slate-950/60">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-teal-100 bg-teal-50/90 px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-md bg-teal-100 px-2 py-0.5 text-[11px] font-extrabold text-teal-900 dark:bg-teal-950 dark:text-teal-300">
+            <Scale className="h-3.5 w-3.5" /> CBSE व्याकरण • समास-विग्रह (4 अंक)
+          </span>
+          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
+            {block.title}
+          </h3>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            setHideAnswers((prev) => !prev);
+            setRevealed({});
+          }}
+          className={`no-print inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-bold transition cursor-pointer ${
+            hideAnswers
+              ? 'border-teal-700 bg-teal-700 text-white'
+              : 'border-teal-300 bg-white text-teal-900 hover:bg-teal-50 dark:border-slate-700 dark:bg-slate-800 dark:text-teal-300 dark:hover:bg-slate-700'
+          }`}
+        >
+          <Eye className="h-3.5 w-3.5" />
+          {hideAnswers ? 'विग्रह व भेद दिखाएँ' : 'Self-Test: विग्रह व भेद छिपाएँ'}
+        </button>
+      </div>
+
+      <div className="p-4 space-y-3">
+        {block.note && (
+          <div className="rounded-xl border border-teal-200 bg-white/90 px-3.5 py-2.5 text-xs text-slate-700 leading-relaxed dark:border-teal-900/50 dark:bg-slate-900 dark:text-slate-300">
+            <strong className="text-teal-800 dark:text-teal-300">समास सूत्र (Board Tip):</strong>{' '}
+            {renderInlineText(block.note)}
+          </div>
+        )}
+
+        <div className="overflow-x-auto rounded-xl border border-teal-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60">
+                <th className="px-3 py-2.5 font-bold text-slate-800 dark:text-slate-200">
+                  समस्तपद (Compound)
+                </th>
+                <th className="px-3 py-2.5 font-bold text-slate-800 dark:text-slate-200">
+                  समास-विग्रह (Expansion)
+                </th>
+                <th className="px-3 py-2.5 font-bold text-slate-800 dark:text-slate-200">
+                  समास का भेद
+                </th>
+                <th className="px-3 py-2.5 font-bold text-slate-800 dark:text-slate-200">
+                  परीक्षा संकेत / भ्रम से बचें
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+              {block.items.map((item, idx) => {
+                const masked = hideAnswers && !revealed[idx];
+                return (
+                  <tr
+                    key={`${item.samastPad}-${idx}`}
+                    className="hover:bg-teal-50/40 dark:hover:bg-slate-800/40"
+                  >
+                    <td className="px-3 py-2.5 align-top">
+                      <div className="font-extrabold text-sm text-slate-900 dark:text-white whitespace-nowrap">
+                        {item.samastPad}
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                        {item.englishMeaning}
+                      </div>
+                    </td>
+                    <td className="px-3 py-2.5 font-semibold text-slate-800 dark:text-slate-200 align-top">
+                      {masked && (
+                        <button
+                          type="button"
+                          onClick={() => setRevealed((r) => ({ ...r, [idx]: true }))}
+                          className="no-print rounded-md border border-dashed border-teal-400 bg-teal-50 px-2 py-1 text-[11px] font-bold text-teal-900 hover:bg-teal-100 cursor-pointer dark:border-teal-700 dark:bg-teal-950/40 dark:text-teal-300 dark:hover:bg-teal-900/60"
+                        >
+                          Click to reveal
+                        </button>
+                      )}
+                      <span className={masked ? 'hidden print:inline' : 'inline'}>
+                        {item.vigrah}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2.5 align-top whitespace-nowrap">
+                      <span
+                        className={`${
+                          masked ? 'hidden print:inline-flex' : 'inline-flex'
+                        } rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${getSamasBadgeClass(
+                          item.samasType
+                        )}`}
+                      >
+                        {item.samasType}
+                      </span>
+                      {masked && (
+                        <span className="no-print text-[11px] italic text-slate-400">
+                          (Hidden)
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2.5 text-slate-600 dark:text-slate-400 align-top leading-relaxed">
+                      {item.examTrap ? renderInlineText(item.examTrap) : '—'}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WritingSampleCard({
+  block,
+}: {
+  block: Extract<ContentBlock, { type: 'writing-sample' }>;
+}) {
+  const isBoxed =
+    block.formatType === 'suchna' || block.formatType === 'vigyapan';
+  const isEmail = block.formatType === 'email';
+  const isVigyapan = block.formatType === 'vigyapan';
+  const isSuchna = block.formatType === 'suchna';
+
+  const FormatIcon = isEmail
+    ? Mail
+    : isVigyapan
+    ? Megaphone
+    : FileText;
+
+  return (
+    <div className="print-avoid-break rounded-2xl border border-sky-200 bg-sky-50/30 overflow-hidden shadow-xs dark:border-sky-900/60 dark:bg-slate-950/70">
+      {/* Header Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-sky-200/80 bg-sky-50/90 px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-md bg-sky-100 px-2 py-0.5 text-[11px] font-extrabold text-sky-900 dark:bg-sky-950 dark:text-sky-300">
+            <FormatIcon className="h-3.5 w-3.5" /> {block.badge}
+          </span>
+          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
+            {block.title}
+          </h3>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-bold">
+          <span className="rounded-md bg-white border border-sky-200 px-2 py-0.5 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+            शब्द-सीमा: {block.wordTarget}
+          </span>
+          <span className="rounded-md bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-300">
+            अंक-विभाजन: {block.marksSplit}
+          </span>
+        </div>
+      </div>
+
+      <div className="p-4 sm:p-5 space-y-4">
+        {/* CBSE Board Question Prompt */}
+        <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-xs sm:text-sm text-slate-800 leading-relaxed dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
+          <span className="font-extrabold text-sky-800 dark:text-sky-400">
+            प्रश्न (CBSE Prompt):{' '}
+          </span>
+          {renderInlineText(block.prompt)}
+        </div>
+
+        {/* Authentic Format Answer Sheet */}
+        {isBoxed ? (
+          <div
+            className={`mx-auto max-w-2xl border-2 border-slate-900 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-300 dark:bg-slate-950 ${
+              isVigyapan
+                ? 'bg-gradient-to-br from-amber-50/60 via-white to-rose-50/40 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900'
+                : ''
+            }`}
+          >
+            {block.centerHeading && (
+              <div className="text-center text-sm sm:text-base font-extrabold tracking-wide text-slate-900 dark:text-white">
+                {block.centerHeading}
+              </div>
+            )}
+
+            {isSuchna && (
+              <div className="mt-1.5 text-center">
+                <span className="inline-block border-y border-slate-800 px-4 py-0.5 text-xs sm:text-sm font-extrabold uppercase tracking-widest text-slate-900 dark:border-slate-300 dark:text-white">
+                  सूचना
+                </span>
+              </div>
+            )}
+
+            {block.sloganOrHighlight && (
+              <div className="mt-2.5 text-center">
+                <span className="inline-block rounded-full border border-rose-300 bg-rose-50 px-3.5 py-1 text-xs sm:text-sm font-extrabold text-rose-900 dark:border-rose-700 dark:bg-rose-950/60 dark:text-rose-200">
+                  ★ {block.sloganOrHighlight} ★
+                </span>
+              </div>
+            )}
+
+            {block.metadataLines && block.metadataLines.length > 0 && (
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
+                {block.metadataLines.map((m, idx) => (
+                  <div key={idx}>
+                    <span className="text-slate-500 dark:text-slate-400">
+                      {m.label}:{' '}
+                    </span>
+                    <span className="text-slate-900 dark:text-white">
+                      {m.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {block.subHeading && (
+              <div className="mt-3 text-center text-sm sm:text-base font-extrabold underline underline-offset-4 text-slate-900 dark:text-white">
+                {block.subHeading}
+              </div>
+            )}
+
+            <div className="mt-3 text-sm leading-7 text-slate-800 whitespace-pre-line dark:text-slate-200">
+              {renderInlineText(block.body)}
+            </div>
+
+            {block.footerLines && block.footerLines.length > 0 && (
+              <div
+                className={`mt-4 pt-3 border-t border-dashed border-slate-300 text-xs sm:text-sm font-bold text-slate-900 dark:border-slate-700 dark:text-slate-100 ${
+                  isVigyapan ? 'text-center bg-amber-50/70 rounded-lg p-2.5 dark:bg-slate-900' : 'text-left'
+                }`}
+              >
+                {block.footerLines.map((line, i) => (
+                  <div key={i}>{line}</div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : isEmail ? (
+          <div className="mx-auto max-w-2xl rounded-xl border-2 border-slate-700 bg-white overflow-hidden shadow-sm dark:border-slate-400 dark:bg-slate-950">
+            <div className="bg-slate-800 px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-white flex items-center gap-2 dark:bg-slate-800">
+              <Mail className="h-3.5 w-3.5 text-sky-300" />
+              {block.centerHeading ?? 'औपचारिक ई-मेल प्रारूप (Compose E-Mail)'}
+            </div>
+            {block.metadataLines && block.metadataLines.length > 0 && (
+              <div className="divide-y divide-slate-200 border-b border-slate-300 text-xs sm:text-sm dark:divide-slate-800 dark:border-slate-700">
+                {block.metadataLines.map((m, idx) => (
+                  <div key={idx} className="grid grid-cols-12 px-4 py-2 gap-2">
+                    <span className="col-span-4 sm:col-span-3 font-extrabold text-slate-600 dark:text-slate-400">
+                      {m.label}:
+                    </span>
+                    <span className="col-span-8 sm:col-span-9 font-semibold text-slate-900 break-all dark:text-slate-100">
+                      {m.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="p-4 sm:p-5 space-y-3">
+              {block.subHeading && (
+                <div className="text-sm font-bold text-slate-900 dark:text-white">
+                  {block.subHeading}
+                </div>
+              )}
+              <div className="text-sm leading-7 text-slate-800 whitespace-pre-line dark:text-slate-200">
+                {renderInlineText(block.body)}
+              </div>
+              {block.footerLines && block.footerLines.length > 0 && (
+                <div className="pt-2 text-sm font-bold text-slate-900 dark:text-slate-100 space-y-0.5">
+                  {block.footerLines.map((line, i) => (
+                    <div key={i}>{line}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-slate-300 bg-white p-5 sm:p-6 shadow-xs dark:border-slate-700 dark:bg-slate-950 space-y-3">
+            {block.centerHeading && (
+              <div className="text-center text-base font-extrabold text-slate-900 underline underline-offset-4 dark:text-white">
+                {block.centerHeading}
+              </div>
+            )}
+            {block.sloganOrHighlight && (
+              <div className="text-center text-xs sm:text-sm font-bold italic text-amber-800 dark:text-amber-300">
+                “{block.sloganOrHighlight}”
+              </div>
+            )}
+            {block.metadataLines && block.metadataLines.length > 0 && (
+              <div className="text-xs sm:text-sm space-y-1 border-b border-slate-100 pb-3 dark:border-slate-800">
+                {block.metadataLines.map((m, idx) => (
+                  <div key={idx} className="text-slate-800 dark:text-slate-200">
+                    {m.label ? (
+                      <>
+                        <strong className="text-slate-900 dark:text-white">
+                          {m.label}:{' '}
+                        </strong>
+                        {m.value}
+                      </>
+                    ) : (
+                      <span>{m.value}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            {block.subHeading && (
+              <div className="text-sm font-bold text-slate-900 dark:text-white">
+                {block.subHeading}
+              </div>
+            )}
+            <div className="text-sm leading-7 text-slate-800 whitespace-pre-line dark:text-slate-200">
+              {renderInlineText(block.body)}
+            </div>
+            {block.footerLines && block.footerLines.length > 0 && (
+              <div className="pt-2 text-sm font-bold text-slate-900 dark:text-slate-100 space-y-0.5">
+                {block.footerLines.map((line, i) => (
+                  <div key={i}>{line}</div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {block.examinerNote && (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 px-3.5 py-2.5 text-xs text-emerald-950 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200">
+            <strong>CBSE Examiner Full-Marks Secret:</strong>{' '}
+            {renderInlineText(block.examinerNote)}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 interface BlockRendererProps {
   block: ContentBlock;
+  subtopicWords?: WordAnnotation[];
   bestQuizScore?: { correct: number; total: number } | null;
-  onSaveQuizScore?: (correct: number, total: number) => void;
+  bestQuizScoresBySubject?: Record<string, { correct: number; total: number }>;
+  onSaveQuizScore?: (correct: number, total: number, subjectSlug?: string) => void;
 }
 
 export function BlockRenderer({
   block,
+  subtopicWords,
   bestQuizScore,
+  bestQuizScoresBySubject,
   onSaveQuizScore,
 }: BlockRendererProps) {
   switch (block.type) {
@@ -638,12 +1790,33 @@ export function BlockRenderer({
     case 'qa':
       return <QaAccordion block={block} />;
 
+    case 'poetic-stanza':
+      return <PoeticStanzaCard block={block} />;
+
+    case 'writing-sample':
+      return <WritingSampleCard block={block} />;
+
+    case 'english-transcript':
+      return <EnglishTranscriptCard block={block} />;
+
+    case 'chapter-word-bank':
+      return (
+        <ChapterWordBankCard block={block} subtopicWords={subtopicWords} />
+      );
+
+    case 'muhavre-list':
+      return <MuhavreListCard block={block} />;
+
+    case 'samas-list':
+      return <SamasListCard block={block} />;
+
     case 'lab':
       return (
         <div className="space-y-2 no-print-interactive">
           <LabResolver
             labId={block.labId}
             bestQuizScore={bestQuizScore}
+            bestQuizScoresBySubject={bestQuizScoresBySubject}
             onSaveQuizScore={onSaveQuizScore}
           />
           {block.caption && (

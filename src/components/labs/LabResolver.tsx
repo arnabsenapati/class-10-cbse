@@ -3,6 +3,8 @@ import { AllelePairBuilder } from './AllelePairBuilder';
 import { CbseQuizArena } from './CbseQuizArena';
 import { CellToTraitExplorer } from './CellToTraitExplorer';
 import { DihybridSimulator } from './DihybridSimulator';
+import { HindiVyakaranLab } from './HindiVyakaranLab';
+import { KavyaWordTrainerLab } from './KavyaWordTrainerLab';
 import { MonohybridSimulator } from './MonohybridSimulator';
 import { PeaTraitsExplorer } from './PeaTraitsExplorer';
 import { PunnettTrainerLab } from './PunnettTrainerLab';
@@ -11,12 +13,14 @@ import { SexDeterminationLab } from './SexDeterminationLab';
 interface LabResolverProps {
   labId: LabWidgetId;
   bestQuizScore?: { correct: number; total: number } | null;
-  onSaveQuizScore?: (correct: number, total: number) => void;
+  bestQuizScoresBySubject?: Record<string, { correct: number; total: number }>;
+  onSaveQuizScore?: (correct: number, total: number, subjectSlug?: string) => void;
 }
 
 export function LabResolver({
   labId,
   bestQuizScore,
+  bestQuizScoresBySubject,
   onSaveQuizScore,
 }: LabResolverProps) {
   switch (labId) {
@@ -34,10 +38,23 @@ export function LabResolver({
       return <DihybridSimulator />;
     case 'sex-determination-lab':
       return <SexDeterminationLab />;
+    case 'kavya-word-flashcards':
+      return <KavyaWordTrainerLab />;
+    case 'hindi-vyakaran-lab':
+      return <HindiVyakaranLab />;
+    case 'hindi-kavya-quiz-arena':
+      return (
+        <CbseQuizArena
+          subjectSlug="hindi"
+          bestScore={bestQuizScoresBySubject?.hindi ?? null}
+          onSaveScore={onSaveQuizScore}
+        />
+      );
     case 'cbse-quiz-arena':
       return (
         <CbseQuizArena
-          bestScore={bestQuizScore}
+          subjectSlug="biology"
+          bestScore={bestQuizScoresBySubject?.biology ?? bestQuizScore ?? null}
           onSaveScore={onSaveQuizScore}
         />
       );

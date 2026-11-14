@@ -90,7 +90,7 @@ export function AllelePairBuilder() {
                     className={`flex-1 rounded-lg py-2 font-mono text-base font-bold transition cursor-pointer ${
                       maternalAllele === letter
                         ? 'bg-sky-600 text-white shadow-sm'
-                        : 'bg-white text-slate-700 border border-sky-200 hover:bg-sky-100 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200'
+                        : 'bg-white text-slate-700 border border-sky-200 hover:bg-sky-100 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700'
                     }`}
                   >
                     {letter}
@@ -118,7 +118,7 @@ export function AllelePairBuilder() {
                     className={`flex-1 rounded-lg py-2 font-mono text-base font-bold transition cursor-pointer ${
                       paternalAllele === letter
                         ? 'bg-amber-600 text-white shadow-sm'
-                        : 'bg-white text-slate-700 border border-amber-200 hover:bg-amber-100 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200'
+                        : 'bg-white text-slate-700 border border-amber-200 hover:bg-amber-100 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700'
                     }`}
                   >
                     {letter}

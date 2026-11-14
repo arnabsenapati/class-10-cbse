@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Circle,
   Dna,
+  Feather,
   Home,
   Search,
 } from 'lucide-react';
@@ -22,23 +23,15 @@ export function SidebarTree({
   onNavigate,
 }: SidebarTreeProps) {
   const location = useLocation();
-  const [expandedSubjects, setExpandedSubjects] = useState<Record<string, boolean>>({
-    biology: true,
-  });
-  const [expandedTopics, setExpandedTopics] = useState<Record<string, boolean>>({
-    'basics-and-alleles': true,
-    'mendel-and-punnett-square': true,
-    'monohybrid-cross': true,
-    'dihybrid-cross': true,
-    'cbse-exam-mastery': true,
-  });
+  const [expandedSubjects, setExpandedSubjects] = useState<Record<string, boolean>>({});
+  const [expandedTopics, setExpandedTopics] = useState<Record<string, boolean>>({});
 
   const toggleSubject = (slug: string) => {
-    setExpandedSubjects((prev) => ({ ...prev, [slug]: !prev[slug] }));
+    setExpandedSubjects((prev) => ({ ...prev, [slug]: !(prev[slug] ?? false) }));
   };
 
   const toggleTopic = (slug: string) => {
-    setExpandedTopics((prev) => ({ ...prev, [slug]: !prev[slug] }));
+    setExpandedTopics((prev) => ({ ...prev, [slug]: !(prev[slug] ?? false) }));
   };
 
   return (
@@ -90,7 +83,7 @@ export function SidebarTree({
         </div>
 
         {SUBJECTS.map((subject) => {
-          const isSubjectOpen = expandedSubjects[subject.slug] ?? true;
+          const isSubjectOpen = expandedSubjects[subject.slug] ?? false;
           const totalSubs = subject.topics.reduce(
             (acc, t) => acc + t.subtopics.length,
             0
@@ -111,7 +104,11 @@ export function SidebarTree({
                   onClick={onNavigate}
                   className="flex items-center gap-2 text-xs font-extrabold text-slate-900 hover:text-teal-700 dark:text-white dark:hover:text-teal-400"
                 >
-                  <Dna className="h-4 w-4 text-teal-600" />
+                  {subject.slug === 'hindi' ? (
+                    <Feather className="h-4 w-4 text-amber-600 shrink-0" />
+                  ) : (
+                    <Dna className="h-4 w-4 text-teal-600 shrink-0" />
+                  )}
                   <span>{subject.name}</span>
                   <span className="rounded bg-white px-1.5 py-0.5 text-[10px] font-bold text-slate-600 dark:bg-slate-900 dark:text-slate-300">
                     {doneSubs}/{totalSubs}
@@ -135,7 +132,7 @@ export function SidebarTree({
               {isSubjectOpen && (
                 <div className="pl-2 space-y-2 border-l-2 border-slate-200 ml-3 dark:border-slate-800">
                   {subject.topics.map((topic) => {
-                    const isTopicOpen = expandedTopics[topic.slug] ?? true;
+                    const isTopicOpen = expandedTopics[topic.slug] ?? false;
                     const topicPath = `/subject/${subject.slug}/${topic.slug}`;
                     const topicActive = location.pathname === topicPath;
 
