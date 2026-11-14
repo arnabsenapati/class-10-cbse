@@ -1832,17 +1832,22 @@ function WritingSampleCard({
 }: {
   block: Extract<ContentBlock, { type: 'writing-sample' }>;
 }) {
+  const isEnglish =
+    block.lang === 'en' ||
+    block.formatType === 'formal-letter' ||
+    block.formatType === 'analytical-paragraph';
   const isBoxed =
     block.formatType === 'suchna' || block.formatType === 'vigyapan';
   const isEmail = block.formatType === 'email';
   const isVigyapan = block.formatType === 'vigyapan';
   const isSuchna = block.formatType === 'suchna';
 
-  const FormatIcon = isEmail
-    ? Mail
-    : isVigyapan
-    ? Megaphone
-    : FileText;
+  const FormatIcon =
+    isEmail || block.formatType === 'formal-letter'
+      ? Mail
+      : isVigyapan
+      ? Megaphone
+      : FileText;
 
   return (
     <div className="print-avoid-break rounded-2xl border border-sky-200 bg-sky-50/30 overflow-hidden shadow-xs dark:border-sky-900/60 dark:bg-slate-950/70">
@@ -1858,10 +1863,10 @@ function WritingSampleCard({
         </div>
         <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-bold">
           <span className="rounded-md bg-white border border-sky-200 px-2 py-0.5 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
-            शब्द-सीमा: {block.wordTarget}
+            {isEnglish ? 'Word Limit' : 'शब्द-सीमा'}: {block.wordTarget}
           </span>
           <span className="rounded-md bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-300">
-            अंक-विभाजन: {block.marksSplit}
+            {isEnglish ? 'Marks Split' : 'अंक-विभाजन'}: {block.marksSplit}
           </span>
         </div>
       </div>
@@ -1870,7 +1875,7 @@ function WritingSampleCard({
         {/* CBSE Board Question Prompt */}
         <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-xs sm:text-sm text-slate-800 leading-relaxed dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
           <span className="font-extrabold text-sky-800 dark:text-sky-400">
-            प्रश्न (CBSE Prompt):{' '}
+            {isEnglish ? 'CBSE Board Prompt:' : 'प्रश्न (CBSE Prompt):'}{' '}
           </span>
           {renderInlineText(block.prompt)}
         </div>

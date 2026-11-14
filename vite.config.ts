@@ -60,6 +60,12 @@ export default defineConfig({
           if (normalized.includes('/src/data/subjects/english/footprints-')) {
             return 'data-english-footprints';
           }
+          if (normalized.includes('/src/data/subjects/english/grammar-')) {
+            return 'data-english-grammar';
+          }
+          if (normalized.includes('/src/data/subjects/english/writing-')) {
+            return 'data-english-writing';
+          }
           if (normalized.includes('/src/data/subjects/english/')) {
             return 'data-english-meta';
           }
@@ -86,7 +92,7 @@ export default defineConfig({
         name: 'Class 10 CBSE Study Hub — English, Hindi Course B & Biology',
         short_name: 'Class 10 Study Hub',
         description:
-          'Offline-ready Class 10 CBSE study companion featuring English Language & Literature (Code 184 — First Flight Prose & Poetry + Footprints without Feet 7-pillar guides, Poetic Devices & Character Evolution Labs, Word Lens RTC extracts & NCERT PDFs), Complete 80-Mark Hindi Course B, and Biology (Heredity Punnett labs).',
+          'Offline-ready Class 10 CBSE study companion featuring Complete 80-Mark English Language & Literature (Code 184 — First Flight Prose & Poetry, Footprints without Feet, Unseen Passages, 50-Q Grammar Lab, Formal Letters & Analytical Paragraphs + NCERT PDFs), Complete 80-Mark Hindi Course B, and Biology (Heredity Punnett labs).',
         theme_color: '#0f766e',
         background_color: '#f8fafc',
         display: 'standalone',

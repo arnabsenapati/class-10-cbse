@@ -1789,6 +1789,426 @@ export const englishGlossary: GlossaryTerm[] = [
       sectionId: 'footprints-09-vocab-language',
     },
   },
+
+  // Grammar & Writing Rules + Tone Descriptors (Milestone 4: 22 terms -> 115 total)
+  {
+    id: 'eng-gl-rg-discursive-vs-factual',
+    term: 'Discursive vs. Case-Based Factual Passage',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Discursive passages (400–450 words) explore opinions, reasoning, and argument shifts; factual passages (200–250 words) pair crisp facts with statistical tables/charts.',
+    englishMeaning: 'Section A Reading Comprehension pair (10 + 10 = 20 Marks in CBSE Code 184).',
+    grammarNote: 'Reading Blueprint (Section A — 20 Marks)',
+    ncertDefinition:
+      'CBSE Blueprint: Q1 Discursive tests vocabulary in context, tone, and 2-mark rationale; Q2 Case-Based tests objective data comparison and visual-input inference.',
+    example:
+      'Before reading Q2 options, verify axis units and percentage-point gaps inside the embedded survey table.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'unseen-passages-discursive-factual',
+      sectionId: 'rg-01-blueprint-strategy',
+    },
+  },
+  {
+    id: 'eng-gl-rg-contextual-vocab',
+    term: 'Contextual Vocabulary Inference',
+    category: 'Tone & Mood Descriptors',
+    simpleMeaning:
+      'Selecting what a word means inside the author’s exact sentence rather than picking its most common standalone dictionary meaning.',
+    englishMeaning: 'Key 1-mark Section A MCQ skill where distractors mimic out-of-context meanings.',
+    grammarNote: 'Unseen Passage Vocabulary Rule',
+    ncertDefinition:
+      'CBSE Reading Strategy: Substitute each option directly back into the target sentence to verify tense, part of speech, and connotation match.',
+    example:
+      'If a passage describes "measured optimism", "measured" means restrained/balanced — NOT arithmetically calculated.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'unseen-passages-discursive-factual',
+      sectionId: 'rg-01-discursive-model',
+    },
+  },
+  {
+    id: 'eng-gl-rg-didactic-cautionary-sceptical',
+    term: 'Didactic, Cautionary & Sceptical Tones',
+    category: 'Tone & Mood Descriptors',
+    simpleMeaning:
+      'Didactic aims to teach a moral lesson; cautionary warns against looming harm; sceptical questions sweeping claims pending stronger proof.',
+    englishMeaning: 'Three high-frequency tone answers in CBSE Section A Unseen Passages.',
+    grammarNote: 'Authorial Tone Classification',
+    ncertDefinition:
+      'Tone Decoder: Look at modal verbs ("must beware" -> cautionary), rhetorical questions ("can an algorithm replace empathy?" -> sceptical), or imperative guidance (-> didactic).',
+    example:
+      'Notice how "sobering" or "cautionary" differs sharply from "cynical": caution seeks improvement rather than mocking hope.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'unseen-passages-discursive-factual',
+      sectionId: 'rg-01-traps-drills',
+    },
+  },
+  {
+    id: 'eng-gl-rg-phonetic-articles',
+    term: 'Phonetic Article Rule (a vs. an)',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Choose "a" before an opening consonant SOUND (even vowel letters u/eu -> /y/, o -> /w/) and "an" before a vowel SOUND (including silent-h or acronyms M, L, F, H, S).',
+    englishMeaning: 'Prevents classic Determiner gap-fill errors like writing "an European" or "a honest".',
+    grammarNote: 'Determiners (Articles)',
+    ncertDefinition:
+      'Core Grammar Rule: Sound decides "a/an", never spelling alone ("a university", "a one-way street" vs. "an hour", "an MLA", "an heirloom").',
+    example:
+      'Wait an hour outside a university gate before meeting a European guest and an NCC cadet.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'determiners',
+      sectionId: 'rg-02-overview-articles',
+    },
+  },
+  {
+    id: 'eng-gl-rg-little-a-the',
+    term: 'Little / A Little / The Little (& Few Variants)',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Bare "little/few" = almost none (negative); "a little/a few" = some small positive amount; "the little/the few" = not much/many, yet ALL that exists.',
+    englishMeaning: 'High-frequency CBSE determiner contrast (uncountable "little" vs countable "few").',
+    grammarNote: 'Determiners (Quantifiers)',
+    ncertDefinition:
+      'CBSE Quantifier Distinction: Uncountable nouns take little/a little/the little; plural countable nouns take few/a few/the few.',
+    example:
+      'Although little hope remained earlier, a few volunteers pooled the little money they had saved.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'determiners',
+      sectionId: 'rg-02-quantifiers-little-few',
+    },
+  },
+  {
+    id: 'eng-gl-rg-each-every-neither',
+    term: 'Each, Every, Either & Neither',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      '"Each" highlights individuals inside a group of 2+; "every" treats all members (3+) collectively; "either/neither" apply strictly to 2 choices.',
+    englishMeaning: 'Distributive determiners that govern singular countable nouns and singular verbs.',
+    grammarNote: 'Determiners (Distributives)',
+    ncertDefinition:
+      'Agreement Rule: "Each", "every", "either", and "neither" followed by a singular noun (or "of + plural noun") ALWAYS take a singular verb.',
+    example:
+      'Neither candidate was disqualified, though each speaker had been briefed on strict timings.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'determiners',
+      sectionId: 'rg-02-distributives-demonstratives',
+    },
+  },
+  {
+    id: 'eng-gl-rg-past-perf-vs-simple',
+    term: 'Simple Past vs. Present Perfect vs. Past Perfect',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Finished past time markers (yesterday, ago, in 2020) force Simple Past (V2); unfinished relevance takes Present Perfect; the EARLIER of two past events takes Past Perfect (had + V3).',
+    englishMeaning: 'Prevents the two biggest Section B tense editing traps in CBSE papers.',
+    grammarNote: 'Tenses & Sequence',
+    ncertDefinition:
+      'Board Tense Law: Never combine Present Perfect ("has/have + V3") with finished past adverbials like "yesterday" or "last week".',
+    example:
+      'Correct: "She submitted her essay yesterday" (NOT "has submitted yesterday"). Compare: "The bell had rung before we entered."',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'tenses',
+      sectionId: 'rg-03-past-present-traps',
+    },
+  },
+  {
+    id: 'eng-gl-rg-conditionals-0-3',
+    term: 'Conditional Sentences (Types 0, 1, 2 & 3)',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Type 0: If+V1 -> V1 (facts); Type 1: If+V1 -> will+V1; Type 2: If+V2/were -> would+V1 (unreal present); Type 3: If+had+V3 -> would have+V3 (unreal past).',
+    englishMeaning: 'Structural pairing law tested heavily in board gap-fills and editing.',
+    grammarNote: 'Conditionals Matrix',
+    ncertDefinition:
+      'Zero Future-in-If Rule: Never put "will" or "would" directly inside the standard "if" condition clause ("If it rains...", NOT "If it will rain...").',
+    example:
+      'Had the municipality cleared the drains earlier (Type 3), commuters would not have faced waterlogging.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'tenses',
+      sectionId: 'rg-03-conditionals-sequence',
+    },
+  },
+  {
+    id: 'eng-gl-rg-stative-verbs',
+    term: 'Stative Verbs (No Continuous -ing)',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Verbs denoting mental states, possession, senses, or belonging (know, belong, own, prefer, believe, seem) resist continuous "-ing" forms in standard grammar.',
+    englishMeaning: 'Frequent CBSE Error -> Correction line item (e.g., "is belonging -> belongs").',
+    grammarNote: 'Tenses (Aspect Restriction)',
+    ncertDefinition:
+      'Grammar Exception: Replace progressive "is owning / is knowing / is resembling" with Simple Present or Past ("owns / knew / resembles").',
+    example:
+      'This heritage silver medal belongs (NOT "is belonging") to our school museum.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'tenses',
+      sectionId: 'rg-03-tense-matrix',
+    },
+  },
+  {
+    id: 'eng-gl-rg-first-subj-vs-proximity',
+    term: 'First-Subject Rule vs. Proximity Concord Rule',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Parenthetical linkers (as well as, along with, together with) agree with the FIRST subject; correlatives (either...or, neither...nor, not only...but also) agree with the NEARER subject.',
+    englishMeaning: 'Essential pair of Subject–Verb Agreement laws tested annually by CBSE.',
+    grammarNote: 'Subject–Verb Concord',
+    ncertDefinition:
+      'Concord Contrast: "The captain, along with his players, IS ready" vs. "Neither the captain nor his players ARE ready."',
+    example:
+      'Spot the connector first ("along with" vs. "nor") before checking singular vs. plural on the verb.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'subject-verb-agreement',
+      sectionId: 'rg-04-golden-concord-rules',
+    },
+  },
+  {
+    id: 'eng-gl-rg-the-number-of',
+    term: '"A Number Of" vs. "The Number Of" (& Indefinites)',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      '"A number of + plural noun" means "several" (Plural verb); "The number of + plural noun" denotes ONE statistical figure (Singular verb).',
+    englishMeaning: 'Includes "one of the + plural noun -> singular verb" vs relative "who" trap.',
+    grammarNote: 'Subject–Verb Concord',
+    ncertDefinition:
+      'Relative Antecedent Trap: "One of the books IS torn", BUT "She is one of the students who HAVE qualified" ("who" refers to plural "students").',
+    example:
+      'A number of participants are waiting outside, while the number of vacant seats is dropping.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'subject-verb-agreement',
+      sectionId: 'rg-04-indefinite-collective-nouns',
+    },
+  },
+  {
+    id: 'eng-gl-rg-deceptive-s-nouns',
+    term: 'Deceptive "-s" Singular Nouns vs. Unit Subjects',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Subjects/illnesses/news ending in "-s" (news, physics, mathematics, politics, measles, innings) take singular verbs; sums, distances, and weights as ONE unit are also singular.',
+    englishMeaning: 'Also contrasts bare plural pair-nouns ("scissors are") vs "a pair of scissors is".',
+    grammarNote: 'Subject–Verb Concord',
+    ncertDefinition:
+      'CBSE Concord Rule: Always check whether "-s" belongs to an uncountable singular concept or a plural pair instrument.',
+    example:
+      'Ten thousand rupees was donated, and today’s physics news is encouraging.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'subject-verb-agreement',
+      sectionId: 'rg-04-tricky-exceptions',
+    },
+  },
+  {
+    id: 'eng-gl-rg-mustnt-vs-neednt',
+    term: 'Prohibition ("Must Not") vs. Non-Necessity ("Need Not")',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      '"Must not" means strictly forbidden / banned; "need not / don’t have to" means optional / not compulsory.',
+    englishMeaning: 'Critical modal distinction on CBSE hospital, school, and metro signage questions.',
+    grammarNote: 'Modals (Obligation & Prohibition)',
+    ncertDefinition:
+      'Modal Syntax Law: Modals always take bare V1 (never "must to wear"); only "ought" and "used" require "to + V1".',
+    example:
+      'Examinees must not carry mobile phones into the hall, though they need not bring their own graph sheets.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'modals',
+      sectionId: 'rg-05-obligation-prohibition-necessity',
+    },
+  },
+  {
+    id: 'eng-gl-rg-epistemic-past-modals',
+    term: 'Deduction & Past Modals (Must Have / Should Have)',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      '"Must have + V3" states high-confidence deduction from clues; "should have + V3" marks unfulfilled past duty; "can’t be" marks logical impossibility.',
+    englishMeaning: 'Evaluates modal certainty in past contexts and negative deductions.',
+    grammarNote: 'Modals (Epistemic & Past)',
+    ncertDefinition:
+      'Deduction Pair: Opposite of epistemic "He must be home" is "He can’t be home" — never "He mustn’t be home".',
+    example:
+      'Seeing dark puddles outside, Rahul realised it must have rained heavily overnight.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'modals',
+      sectionId: 'rg-05-deduction-past-modals',
+    },
+  },
+  {
+    id: 'eng-gl-rg-son-backshift',
+    term: 'Pronoun SON Rule & Tense Backshift Chart',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      '1st person follows Subject, 2nd person follows Object, 3rd stays unchanged; past reporting verbs shift present -> past, V2 -> had + V3, will -> would, and now -> then.',
+    englishMeaning: 'Core mechanics of converting direct speech / dialogue into indirect narration.',
+    grammarNote: 'Reported Speech Fundamentals',
+    ncertDefinition:
+      'Exceptions: Universal truths and sentences with present/future reporting verbs ("says", "will say") keep original verb tenses unchanged.',
+    example:
+      'She told me that she had completed those slides the previous evening.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'reported-speech',
+      sectionId: 'rg-06-core-shift-charts',
+    },
+  },
+  {
+    id: 'eng-gl-rg-wh-no-inversion',
+    term: 'No-Inversion Rule & Negative Commands ("Forbade")',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Reported questions restore statement order (wh-word + Subject + Verb, NO "do/did" and NO "that"); negative imperatives use either "warned not to" OR "forbade + obj + to" (never "forbade not to").',
+    englishMeaning: 'Eliminates the top two 1-mark reported-speech mistakes in Class 10 board exams.',
+    grammarNote: 'Reported Speech (Questions & Imperatives)',
+    ncertDefinition:
+      'CBSE Reported Question Law: Convert "Where did you go?" into "...asked where he had gone", never "...asked where had he gone".',
+    example:
+      'Notice: "forbade" already contains "not", so follow it cleanly with positive infinitive "to + V1".',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'reported-speech',
+      sectionId: 'rg-06-commands-requests-exclamations',
+    },
+  },
+  {
+    id: 'eng-gl-wr-formal-letter-8parts',
+    term: '8-Part Block-Left Formal Letter Layout',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Sender’s Address -> Expanded Date -> Receiver’s Designation & Address -> Crisp Subject -> Salutation (Sir/Madam) -> 3-Paragraph Body -> Complimentary Close -> Sender Name.',
+    englishMeaning: 'CBSE 5-Mark Layout (Format 1 + Organisation 1 + Content 2 + Accuracy 1) in 100–120 words.',
+    grammarNote: 'Writing Format (Letter to Editor / Complaint)',
+    ncertDefinition:
+      'CBSE Standard Conventions: Write full dates ("14 November 2026"), avoid apostrophe in "Yours", and use "Yours truly" for Editors.',
+    example:
+      'Remember: The Newspaper Editor publishes your letter to build public civic pressure — never command the Editor to repair roads directly!',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-writing-skills',
+      subtopicSlug: 'formal-letter-editor-and-complaint',
+      sectionId: 'wr-01-cbse-format-blueprint',
+    },
+  },
+  {
+    id: 'eng-gl-wr-order-vs-inquiry',
+    term: 'Placing an Order vs. Letter of Inquiry Blueprint',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Order letters specify item details, quantities, institutional discount, delivery deadline & damage-replacement terms; Inquiry letters cite an ad/notice and ask crisp structured questions.',
+    englishMeaning: 'Two high-scoring commercial formal letter formats in CBSE Question 4.',
+    grammarNote: 'Commercial Formal Letters (5 Marks)',
+    ncertDefinition:
+      'Content Check: An Order Letter without an itemized table/list or payment-on-delivery terms loses Content marks.',
+    example:
+      'Close inquiry letters with a polite request for the latest brochure and fee schedule.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-writing-skills',
+      subtopicSlug: 'formal-letter-placing-order-and-inquiry',
+      sectionId: 'wr-02-order-letter-blueprint',
+    },
+  },
+  {
+    id: 'eng-gl-wr-analytical-single-para',
+    term: 'Analytical Paragraph: Single-Para Data Synthesis',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'A unified 100–120 word paragraph combining an overview sentence, grouped comparisons/extremes from visual/SWOT cues, and a data-backed takeaway — without personal "I/we" opinions.',
+    englishMeaning: 'CBSE Question 5 (5 Marks: Content 2 + Organisation/Cohesion 2 + Accuracy 1).',
+    grammarNote: 'Analytical Paragraph Architecture',
+    ncertDefinition:
+      'CBSE Rubric Rule: Never copy every data cell sequentially like a shopping list; group highs, lows, anomalies, and percentages proportionally.',
+    example:
+      'Replace informal filler with precision verbs: "surged sharply", "plateaued", "outpaced", "accounted for nearly two-fifths".',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-writing-skills',
+      subtopicSlug: 'analytical-paragraph-writing',
+      sectionId: 'wr-03-analytical-blueprint-lexicon',
+    },
+  },
+  {
+    id: 'eng-gl-wr-swot-objective-eval',
+    term: 'SWOT & Argument-Cue Objective Evaluation',
+    category: 'Tone & Mood Descriptors',
+    simpleMeaning:
+      'Analytical tone weighs Strengths, Weaknesses, Opportunities, and Threats neutrally ("While advocates highlight..., critics warn...") instead of declaring personal votes.',
+    englishMeaning: 'Distinguishes CBSE Analytical Paragraphs from persuasive debates or speeches.',
+    grammarNote: 'Analytical Writing Tone',
+    ncertDefinition:
+      'Objectivity Rule: Every claim must trace directly back to a cue or figure given in the prompt box.',
+    example:
+      'Conclude SWOT analyses by noting how success hinges on mitigating highlighted operational risks.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-writing-skills',
+      subtopicSlug: 'analytical-paragraph-writing',
+      sectionId: 'wr-03-swot-cue-map-models',
+    },
+  },
+  {
+    id: 'eng-gl-wr-180min-time-plan',
+    term: '80-Mark / 180-Minute CBSE Code 184 Pacing Plan',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      '15-min Reading Scan + Sec A Reading (40m) + Sec B Grammar & Writing (40m) + Sec C Literature (85m) + 15-min Spelling, Concord & Presentation Audit.',
+    englishMeaning: 'Prevents rushing 6-mark Literature answers at the end of the 3-hour exam.',
+    grammarNote: 'Exam Time Management',
+    ncertDefinition:
+      'Board Strategy: Use the 15-minute Reading Time strictly to skim Section A questions and shortlist internal choices in Writing & Literature.',
+    example:
+      'Underline one key phrase per bullet point cleanly with pencil/pen during the final 15-minute audit.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-writing-skills',
+      subtopicSlug: 'writing-and-80-mark-board-strategy',
+      sectionId: 'wr-04-180min-time-plan',
+    },
+  },
+  {
+    id: 'eng-gl-rg-board-editing-audit',
+    term: 'Board Error–Correction Audit Checklist',
+    category: 'Grammar & Writing Rules',
+    simpleMeaning:
+      'Five-point check for every CBSE Editing box line: (1) Concord (singular/plural verb), (2) Determiner (a/an/the/little/any), (3) Tense marker, (4) Modal bare V1, (5) Preposition/Linkers.',
+    englishMeaning: 'Systematic elimination grid for solving 10 out of 12 Section B grammar questions cleanly.',
+    grammarNote: 'Section B Exam Audit',
+    ncertDefinition:
+      'Answer-Sheet Format: Always write BOTH columns side by side — `Error` word on left, `Correction` word on right.',
+    example:
+      'Attempting all 12 instead of carefully checking the clearest 10 wastes minutes needed for 6-mark answers.',
+    subtopicPath: {
+      subjectSlug: 'english',
+      topicSlug: 'english-reading-grammar',
+      subtopicSlug: 'reading-grammar-board-mastery',
+      sectionId: 'rg-07-cheat-sheet',
+    },
+  },
 ];
 
 export const englishQuizBank: QuizQuestion[] = [
@@ -3522,5 +3942,564 @@ export const englishQuizBank: QuizQuestion[] = [
     correctIndex: 3,
     explanation:
       'A is false, but R is true: every time Think-Tank reaches a smart answer (like eye communication or vitamins), Noodle politely whispers it first.',
+  },
+
+  // =========================================================================
+  // Milestone 4: Section A Reading & Section B Grammar (18 questions, eng-q-85..102)
+  // =========================================================================
+  {
+    id: 'eng-q-85',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Unseen Passages (Discursive)',
+    type: 'case-based',
+    marks: 5,
+    casePassage:
+      'In our hyper-connected age, every spare sixty seconds at a bus stop or traffic signal is instinctively colonised by glowing feeds. Yet neuroscientists warn that continuous partial attention leaves young minds paradoxically overstimulated yet creatively impoverished, because original insight germinates in quiet boredom rather than algorithmic novelty.',
+    question:
+      'What does the author imply by saying spare moments are "instinctively colonised by glowing feeds"?',
+    options: [
+      'Students use phones mainly to study historical colonisation maps outdoors.',
+      'Reflexive screen scrolling automatically occupies every brief pause, squeezing out restful mental downtime needed for original thought.',
+      'Smartphones physically damage batteries when opened near traffic signals.',
+      'Social media networks legally prohibit offline reading during bus commutes.',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Calling feeds "colonising" spare minutes highlights involuntary habit displacement of quiet, restorative daydreaming — consistent with the author’s warning against "continuous partial attention".',
+    commonMistake:
+      'Picking literal definitions of "colonised" or "traffic signal" instead of interpreting the metaphor in context.',
+  },
+  {
+    id: 'eng-q-86',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Unseen Passages (Tone & Attitude)',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Which adjective BEST captures a writer’s tone when an unseen discursive essay acknowledges AI’s medical breakthroughs while still cautioning against unverified diagnostic shortcuts?',
+    options: ['Cynical and dismissive', 'Measured and cautionary', 'Sardonic and mocking', 'Euphoric and uncritical'],
+    correctIndex: 1,
+    explanation:
+      'Acknowledging real benefits alongside specific risks reflects a balanced ("measured") yet alert ("cautionary") academic tone — distinct from bitterness ("cynical") or mockery ("sardonic").',
+  },
+  {
+    id: 'eng-q-87',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Unseen Passages (Case-Based Factual)',
+    type: 'case-based',
+    marks: 5,
+    casePassage:
+      'Survey of 1,200 Urban Class 10 Students (2025): Daily physical library visits rose from 14% to 29% only in schools pairing quiet reading periods with zero-phone zones, whereas schools merely displaying posters saw library use remain flat at 15%. Meanwhile, sleep under 6.5 hours fell from 48% to 31% among zero-phone evening households.',
+    question:
+      'Based strictly on the passage data, which conclusion is best supported?',
+    options: [
+      'Wall posters alone doubled daily library visits across urban schools.',
+      'Structured environment changes (zero-phone zones + dedicated time) measurably boosted library habits more than passive posters alone.',
+      'All 1,200 surveyed students eliminated digital textbooks completely.',
+      'Zero-phone evenings increased sleep deprivation from 31% to 48%.',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Comparing 14% -> 29% (structural rules) vs. flat 15% (posters only) cleanly proves environmental design outperformed passive slogans; watch the reversed numbers trap in Option D.',
+  },
+  {
+    id: 'eng-q-88',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Unseen Passages (Reading Strategy)',
+    type: 'assertion-reason',
+    marks: 1,
+    question:
+      'Assertion (A): In a 2-mark Unseen Passage inference question, copying two sentences verbatim rarely fetches full marks.\nReason (R): CBSE marking schemes reward concise synthesis in the student’s own words supported by specific textual reasoning within 30–40 words.',
+    options: [
+      'Both A and R are true, and R is the correct explanation of A.',
+      'Both A and R are true, but R is NOT the correct explanation of A.',
+      'A is true, but R is false.',
+      'A is false, but R is true.',
+    ],
+    correctIndex: 0,
+    explanation:
+      'Blindly lifting raw lines fails to answer "why" or "how" in inferential 2-mark questions; paraphrased synthesis anchored in evidence scores 2/2.',
+  },
+  {
+    id: 'eng-q-89',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Determiners',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Complete accurately: "Having waited for ______ hour in vain, ______ European journalist took a cab to the press club."',
+    options: ['a / an', 'an / a', 'an / an', 'a / a'],
+    correctIndex: 1,
+    explanation:
+      'Initial consonant/vowel SOUND governs a/an: silent-h "hour" starts with a vowel sound ("an hour"), while "European" starts with the consonant /y/ sound ("a European").',
+  },
+  {
+    id: 'eng-q-90',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Determiners (Quantifiers)',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Choose the determiner meaning "the entire small amount available": "Rather than complaining, Meera used ______ confidence she had gathered to address the assembly."',
+    options: ['little', 'a little', 'the little', 'the few'],
+    correctIndex: 2,
+    explanation:
+      '"Confidence" is uncountable and modified by a defining clause ("she had gathered"), requiring "the little" (all of that small quantity).',
+  },
+  {
+    id: 'eng-q-91',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Determiners',
+    type: 'assertion-reason',
+    marks: 1,
+    question:
+      'Assertion (A): "Hardly any student forgot to bring the atlas" is grammatically accurate.\nReason (R): Adverbs such as "hardly", "scarcely", and "seldom" carry negative force, so they pair with "any" rather than "some".',
+    options: [
+      'Both A and R are true, and R is the correct explanation of A.',
+      'Both A and R are true, but R is NOT the correct explanation of A.',
+      'A is true, but R is false.',
+      'A is false, but R is true.',
+    ],
+    correctIndex: 0,
+    explanation:
+      'Semi-negative adverbs attract negative-polarity "any" instead of "some".',
+  },
+  {
+    id: 'eng-q-92',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Tenses',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Fill in the blank: "No sooner had the chief guest stepped onto the podium than the choir ______ the welcome hymn."',
+    options: ['has sung', 'sang', 'had sung', 'was singing'],
+    correctIndex: 1,
+    explanation:
+      'With "No sooner had + S + V3... than...", the second immediate consecutive past action takes Simple Past ("sang").',
+  },
+  {
+    id: 'eng-q-93',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Tenses (Conditionals)',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Complete the Type-3 Conditional: "If the volunteers had reinforced the bund before midnight, floodwater ______ the library basement."',
+    options: [
+      'will not enter',
+      'would not enter',
+      'would not have entered',
+      'had not entered',
+    ],
+    correctIndex: 2,
+    explanation:
+      'Type-3 Unreal Past ("If + had + V3") always pairs with "would (not) have + V3" in the result clause.',
+  },
+  {
+    id: 'eng-q-94',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Tenses (Editing)',
+    type: 'assertion-reason',
+    marks: 1,
+    question:
+      'Assertion (A): In "Our debate team has won the regional trophy last November", "has won" must be edited to "won".\nReason (R): Specific finished past time markers ("last November", "yesterday", "two years ago") forbid Present Perfect.',
+    options: [
+      'Both A and R are true, and R is the correct explanation of A.',
+      'Both A and R are true, but R is NOT the correct explanation of A.',
+      'A is true, but R is false.',
+      'A is false, but R is true.',
+    ],
+    correctIndex: 0,
+    explanation:
+      'An explicit finished past time adverbial anchors the event purely in Simple Past ("won").',
+  },
+  {
+    id: 'eng-q-95',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Subject–Verb Agreement',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Select the grammatically sound sentence following CBSE Concord Rules:',
+    options: [
+      'Neither the science coordinator nor the two lab assistants has arrived yet.',
+      'The principal, together with twelve prefects, are inspecting the stalls.',
+      'Aarav is one of those debaters who always cite verified statistics.',
+      'The number of electric buses in our town have tripled since 2023.',
+    ],
+    correctIndex: 2,
+    explanation:
+      'In Option C, "who" refers back to plural "debaters" -> plural verb "cite" is exact! Options A ("have arrived" by proximity), B ("is" by first subject), and D ("has tripled" for "The number of") contain classic traps.',
+  },
+  {
+    id: 'eng-q-96',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Subject–Verb Agreement',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Complete accurately: "Forty thousand rupees ______ a generous budget for the annual science exhibition, though every team of finalists ______ submitted receipts."',
+    options: ['are / have', 'is / has', 'were / have', 'is / have'],
+    correctIndex: 1,
+    explanation:
+      'A monetary sum treated as ONE budget takes singular "is", and singular head noun "every team" takes singular "has".',
+  },
+  {
+    id: 'eng-q-97',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Modals',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Noticeboard: "Entry passes are complimentary for senior citizens; therefore, retirees ______ queue at Ticket Counter 3."',
+    options: ['must not', 'need not', 'cannot', 'ought not'],
+    correctIndex: 1,
+    explanation:
+      'Complimentary entry means queuing is NOT required (optional), which requires "need not" — whereas "must not" implies strict legal prohibition.',
+  },
+  {
+    id: 'eng-q-98',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Modals (Past & Deduction)',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Fill in the blank expressing unfulfilled past responsibility: "Raghav ______ checked the microscope lens cap before locking the cupboard yesterday."',
+    options: ['must be', 'should have', 'ought check', 'could been'],
+    correctIndex: 1,
+    explanation:
+      '"Should have + V3" conveys moral reproach or advice about a duty neglected in the past.',
+  },
+  {
+    id: 'eng-q-99',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Modals',
+    type: 'assertion-reason',
+    marks: 1,
+    question:
+      'Assertion (A): In "Walk carefully lest you should slip on the wet corridor", "should" is the standard formal pairing.\nReason (R): Conjunction "lest" carries an inherent negative warning meaning ("for fear that ... might not"), so "not" is omitted after it.',
+    options: [
+      'Both A and R are true, and R is the correct explanation of A.',
+      'Both A and R are true, but R is NOT the correct explanation of A.',
+      'A is true, but R is false.',
+      'A is false, but R is true.',
+    ],
+    correctIndex: 0,
+    explanation:
+      '"Lest" always takes "should + V1" (positive verb form, zero "not").',
+  },
+  {
+    id: 'eng-q-100',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Reported Speech (Questions)',
+    type: 'case-based',
+    marks: 5,
+    casePassage:
+      'Dialogue:\nTraffic Warden: "Why did you park your bicycle outside the marked bay this morning?"\nStudent: "Sorry, sir! I did not notice the freshly painted yellow sign."',
+    question:
+      'Choose the error-free Reported Speech completion of the Traffic Warden’s question:',
+    options: [
+      'The traffic warden asked the student why had he parked his bicycle outside the marked bay that morning.',
+      'The traffic warden asked the student that why he parked his bicycle outside the marked bay this morning.',
+      'The traffic warden asked the student why he had parked his bicycle outside the marked bay that morning.',
+      'The traffic warden asked the student why did he park his bicycle outside the marked bay that morning.',
+    ],
+    correctIndex: 2,
+    explanation:
+      'All four CBSE shifts work together: (1) NO "that", (2) statement word order ("he had parked", NOT "had he parked" or "did he park"), (3) Simple Past -> Past Perfect, (4) "this morning" -> "that morning".',
+  },
+  {
+    id: 'eng-q-101',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Reported Speech (Imperatives)',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Identify the ONLY grammatically valid conversion of: Mother said to Kabir, "Do not leave the geyser switched on overnight."',
+    options: [
+      'Mother forbade Kabir not to leave the geyser switched on overnight.',
+      'Mother advised Kabir to do not leave the geyser switched on overnight.',
+      'Mother forbade Kabir to leave the geyser switched on overnight.',
+      'Mother warned Kabir that he does not leave the geyser switched on overnight.',
+    ],
+    correctIndex: 2,
+    explanation:
+      '"Forbade" already means "ordered NOT to", so pairing it with bare infinitive "to leave" is crisp and error-free; writing "forbade... not to" is a double-negative trap.',
+  },
+  {
+    id: 'eng-q-102',
+    subjectSlug: 'english',
+    topicSlug: 'english-reading-grammar',
+    subtopicTitle: 'Grammar — Reported Speech (Statements)',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Convert accurately: My geography teacher says, "The Himalayan rivers sustain nearly half of northern India’s plains."',
+    options: [
+      'My geography teacher says that the Himalayan rivers sustained nearly half of northern India’s plains.',
+      'My geography teacher says that the Himalayan rivers sustain nearly half of northern India’s plains.',
+      'My geography teacher said whether the Himalayan rivers sustain northern India’s plains.',
+      'My geography teacher told that the Himalayan rivers are sustaining northern India’s plains.',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Two independent guards keep "sustain" unchanged: (1) Present reporting verb "says", AND (2) enduring geographical truth.',
+  },
+
+  // =========================================================================
+  // Milestone 4: Section B Writing Skills (12 questions, eng-q-103..114)
+  // =========================================================================
+  {
+    id: 'eng-q-103',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: 'Formal Letter (Format Rules)',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'According to CBSE Class 10 block-left conventions, which trio of Formal Letter elements is 100% accurate?',
+    options: [
+      'Date: 14/11/26 | Subject: Long 3-line summary | Close: Your’s sincerely',
+      'Date: 14 November 2026 | Subject: Crisp 6–8 words | Close: Yours truly (to Editor)',
+      'Sender address on top-right | Salutation: Respected Sirji | Close: Yours lovingly',
+      'Receiver address omitted | Subject underlined in red | Close: Your obediently',
+    ],
+    correctIndex: 1,
+    explanation:
+      'CBSE awards full Format marks only for left-aligned block structure, expanded date ("14 November 2026"), concise Subject, plain "Sir/Madam", and apostrophe-free "Yours truly / Yours sincerely".',
+  },
+  {
+    id: 'eng-q-104',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: 'Letter to the Editor (Content)',
+    type: 'case-based',
+    marks: 5,
+    casePassage:
+      'Prompt: As Kabir/Kavita of 19 Civil Lines, Jaipur, write a letter to the Editor of a national daily expressing concern over open burning of autumn leaves and plastic packaging in residential parks.',
+    question:
+      'Which closing appeal is MOST appropriate for the final paragraph of a Letter to the Editor?',
+    options: [
+      'Kindly send two municipal sanitation vans to our park by 9 a.m. tomorrow without fail.',
+      'I request you to publish this concern in your esteemed daily so that residents adopt composting and municipal authorities enforce anti-burning bylaws.',
+      'Please refund my municipal park maintenance tax within seven working days.',
+      'Kindly grant our colony permission to cut down all park trees next month.',
+    ],
+    correctIndex: 1,
+    explanation:
+      'A newspaper Editor is a catalyst for public awareness and civic accountability — never a municipal contractor who directly clears garbage!',
+    commonMistake:
+      'Commanding the Editor ("You must clean our street immediately") drops Content & Organisation marks.',
+  },
+  {
+    id: 'eng-q-105',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: 'Complaint Letter (Defective Goods)',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Which combination of details is MANDATORY inside a commercial Complaint Letter about a malfunctioning school projector?',
+    options: [
+      'Student hobbies, picnic dates, and personal apology',
+      'Invoice/Bill No., Date of Purchase, specific fault symptoms, warranty reference, and exact remedy (repair/replacement deadline)',
+      'Newspaper circulation figures and poetry couplets',
+      'Asking the Sales Manager to install a public library instead',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Commercial complaints succeed on verifiable transaction evidence (Invoice No., Date, Defect specifics, Warranty period) paired with a polite, firm action deadline.',
+  },
+  {
+    id: 'eng-q-106',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: 'Placing an Order Letter',
+    type: 'assertion-reason',
+    marks: 1,
+    question:
+      'Assertion (A): An Order Letter from a School Sports Secretary must state the delivery deadline, institutional discount, and condition for returning damaged items.\nReason (R): Clear commercial specifications protect the institution against delayed consignments, billing disputes, or faulty sports gear.',
+    options: [
+      'Both A and R are true, and R is the correct explanation of A.',
+      'Both A and R are true, but R is NOT the correct explanation of A.',
+      'A is true, but R is false.',
+      'A is false, but R is true.',
+    ],
+    correctIndex: 0,
+    explanation:
+      'Without itemized quantities, agreed institutional discount, delivery deadline, and replacement terms, an order letter remains legally and practically incomplete.',
+  },
+  {
+    id: 'eng-q-107',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: 'Letter of Inquiry',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'When drafting a Letter of Inquiry for a weekend Robotics & AI Boot Camp, which structure earns full Organisation (1M) + Content (2M) marks?',
+    options: [
+      'Writing one 250-word unbroken paragraph listing childhood memories.',
+      'Citing the advertisement/brochure source, clearly bulleting key queries (duration, batch timings, fee structure, certification, prerequisites), and requesting the prospectus.',
+      'Demanding immediate cash refund before enrolling.',
+      'Addressing the letter "To Whom It May Concern" with no sender address.',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Organised, specific queries grouped neatly under a clear reference sentence earn immediate examiner appreciation.',
+  },
+  {
+    id: 'eng-q-108',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: 'Analytical Paragraph (Structure & Tone)',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Which opening sentence follows CBSE Analytical Paragraph standards BEST for a bar graph comparing Metro vs. Small-Town rooftop solar installations (2020–2025)?',
+    options: [
+      'Dear Examiner, today I am going to tell you why we all should buy solar panels.',
+      'The provided bar graph illustrates rooftop solar adoption across Metro and Small-Town households between 2020 and 2025, revealing sustained growth in both segments.',
+      'In 2020 Metro was 18% and Small-Town was 9% and in 2021 it was 22% and 12% and 2022 was 29%.',
+      'I believe electricity boards are lazy not to subsidise panels everywhere.',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Option B delivers a crisp, objective 3rd-person overview naming the visual format, variables, and overarching trend without subjective "I/we" chatter or mechanical number-listing.',
+  },
+  {
+    id: 'eng-q-109',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: 'Analytical Paragraph (Data Synthesis)',
+    type: 'case-based',
+    marks: 5,
+    casePassage:
+      'Survey Data — Teen Evening Activity Hours (% of Daily Free Time): Metro Cities -> Digital Entertainment 46%, Outdoor Sports 18%, Print Reading 11%, Hobbies/Music 25%. Tier-2 Towns -> Digital Entertainment 33%, Outdoor Sports 32%, Print Reading 17%, Hobbies/Music 18%.',
+    question:
+      'Which analytical sentence synthesises the data MOST effectively using proportional & comparative vocabulary?',
+    options: [
+      'Teens in both cities wasted time every evening.',
+      'While digital entertainment commands the lion’s share in Metro cities (nearly half at 46%), Tier-2 teens allocate almost equal time to outdoor sports (32%) and screens (33%).',
+      'Metro hobbies are 25% and Tier-2 hobbies are 18% and print reading is 11% and 17%.',
+      'Outdoor sports should be made compulsory by schools at 5 p.m. daily.',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Notice how Option B compares contrasting proportions ("lion’s share... nearly half" vs "almost equal") cleanly while remaining strictly anchored in data.',
+  },
+  {
+    id: 'eng-q-110',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: 'Analytical Paragraph (SWOT Cues)',
+    type: 'case-based',
+    marks: 5,
+    casePassage:
+      'SWOT Cues for Campus Rainwater Harvesting Plan: Strengths — low annual upkeep, cuts tanker dependency 40%; Weaknesses — high initial civil piping cost; Opportunities — state green-school grant subsidy; Threats — clogging during heavy leaf-fall without quarterly filter checks.',
+    question:
+      'How should a student frame the concluding line of this SWOT Analytical Paragraph?',
+    options: [
+      'Therefore, the Principal must immediately sanction rupees five lakh today.',
+      'Overall, the long-term water savings and grant eligibility outweigh capital hurdles provided seasonal filter maintenance prevents system clogging.',
+      'In conclusion, rain is good and students love monsoon holidays.',
+      'Strengths are good, weaknesses are bad, and threats should not exist.',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Strong SWOT conclusions weigh net trade-offs objectively and link risk mitigation ("seasonal filter maintenance") directly to the given cues.',
+  },
+  {
+    id: 'eng-q-111',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: 'Analytical Paragraph (Common Mistakes)',
+    type: 'assertion-reason',
+    marks: 1,
+    question:
+      'Assertion (A): Breaking an Analytical Paragraph into four separate mini-paragraphs with bullet headings hurts Organisation marks.\nReason (R): CBSE expects a single cohesive 100–120 word paragraph using smooth transition linkers between overview, data comparison, and conclusion.',
+    options: [
+      'Both A and R are true, and R is the correct explanation of A.',
+      'Both A and R are true, but R is NOT the correct explanation of A.',
+      'A is true, but R is false.',
+      'A is false, but R is true.',
+    ],
+    correctIndex: 0,
+    explanation:
+      'By definition, an Analytical Paragraph is ONE unified paragraph using cohesive linkers ("Whereas", "Conversely", "In stark contrast", "Overall") rather than a multi-heading report.',
+  },
+  {
+    id: 'eng-q-112',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: 'Writing Skills — Word Limit & Marks',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Which marks breakdown matches Official CBSE Class 10 English (Code 184) Section B Creative Writing?',
+    options: [
+      'Formal Letter (10 Marks, 250 words) + Analytical Paragraph (10 Marks, 250 words)',
+      'Formal Letter (5 Marks, 100–120 words) + Analytical Paragraph (5 Marks, 100–120 words) = 10 Marks total',
+      'Informal Letter (5 Marks) + Story Writing (5 Marks)',
+      'Notice Writing (4 Marks) + Advertisement (6 Marks)',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Unlike Hindi Course B (which covers Anuchchhed/Suchna/Vigyapan/Email/Laghukatha), English Code 184 Section B Writing carries 10 Marks: one 5M Formal Letter + one 5M Analytical Paragraph (both 100–120 words, each with an A/B choice).',
+  },
+  {
+    id: 'eng-q-113',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: '80-Mark Board Exam Strategy',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'In the CBSE Code 184 Question Paper, how many total Grammar items appear vs. how many should you attempt?',
+    options: [
+      'Attempt 8 out of 10 (16 Marks)',
+      'Attempt ANY 10 out of 12 (10 Marks total)',
+      'Attempt all 15 compulsory items (15 Marks)',
+      'Attempt 5 out of 6 (5 Marks)',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Section B Grammar prints 12 diverse 1-mark items and instructs candidates to attempt ANY 10 — always pick the 10 items you verify with 100% certainty.',
+  },
+  {
+    id: 'eng-q-114',
+    subjectSlug: 'english',
+    topicSlug: 'english-writing-skills',
+    subtopicTitle: '80-Mark 180-Min Pacing Plan',
+    type: 'mcq',
+    marks: 1,
+    question:
+      'Which time allocation keeps adequate margin for BOTH 6-mark Literature answers and a 15-minute final audit?',
+    options: [
+      'Section A Reading: 75 min | Section B: 60 min | Section C Literature: 45 min | Audit: 0 min',
+      'Section A Reading: 40 min | Section B Grammar & Writing: 40 min | Section C Literature: 85 min | Revision Audit: 15 min',
+      'Section C Literature first for 150 min | Reading & Writing rushed in last 30 min',
+      'Spend 45 min rewriting the Formal Letter three times',
+    ],
+    correctIndex: 1,
+    explanation:
+      '40m Reading (20M) + 40m Grammar & Writing (20M) + 85m Literature (40M) = 165m, leaving 15 full minutes inside 180m for Subject–Verb Concord, spelling, and underlining.',
   },
 ];

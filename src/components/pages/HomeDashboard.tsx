@@ -84,8 +84,9 @@ export function HomeDashboard({
               CBSE Class 10 Interactive Study Hub — English, Hindi Course B &amp; Biology
             </h1>
             <p className="text-sm sm:text-base text-teal-100 leading-relaxed max-w-2xl">
-              Prepare for your <strong>2 Dec English Board Exam</strong> with our 7-pillar{' '}
-              <strong>First Flight Prose &amp; Poetry</strong> + <strong>Footprints without Feet</strong> guide (optional NCERT text &amp; PDFs, Word Lens RTC extracts, <strong>48-Entry Poetic Devices Lab</strong>, <strong>18-Character Evolution Trainer</strong> &amp; 6-mark answers), plus complete <strong>80-mark Hindi Course B</strong> and interactive <strong>Biology Genetics</strong> labs — 100% offline.
+              Prepare for your <strong>2 Dec English Board Exam</strong> with the{' '}
+              <strong>complete 80-mark Code 184 curriculum</strong> — 7-pillar{' '}
+              <strong>First Flight Prose &amp; Poetry</strong> + <strong>Footprints without Feet</strong> guides, <strong>20M Unseen Passages</strong>, a <strong>50-Q Interactive Grammar Lab</strong>, <strong>Formal Letters &amp; Analytical Paragraphs</strong> &amp; a <strong>114-Q Quiz Arena</strong>, plus complete <strong>80-mark Hindi Course B</strong> and interactive <strong>Biology Genetics</strong> labs — 100% offline.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -123,6 +124,20 @@ export function HomeDashboard({
               >
                 <BookMarked className="h-4 w-4" />
                 Footprints (Ch 1–9)
+              </Link>
+              <Link
+                to="/subject/english/english-reading-grammar/reading-grammar-board-mastery"
+                className="inline-flex items-center gap-2 rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-sky-500 transition"
+              >
+                <Layers className="h-4 w-4" />
+                Reading &amp; 50-Q Grammar Lab
+              </Link>
+              <Link
+                to="/subject/english/english-writing-skills/writing-and-80-mark-board-strategy"
+                className="inline-flex items-center gap-2 rounded-xl bg-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-cyan-500 transition"
+              >
+                <BookOpen className="h-4 w-4" />
+                Writing &amp; 80M Strategy
               </Link>
 
               <Link
@@ -239,10 +254,16 @@ export function HomeDashboard({
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
-              title: 'English Literature Matrix & 84-Q Arena',
-              desc: 'Revise all 28 First Flight & Footprints chapters/poems + practice 84 board-pattern RTC, Assertion–Reason & MCQ drills.',
+              title: 'English 80M Blueprint & 114-Q Quiz Arena',
+              desc: 'Practice all 5 CBSE Code 184 units (First Flight Prose, Poetry, Footprints, Reading & Grammar, Writing Skills) offline.',
               icon: <BookOpen className="h-5 w-5 text-indigo-600" />,
-              path: '/subject/english/first-flight-prose/first-flight-prose-board-mastery#english-prose-quiz-section',
+              path: '/subject/english/english-writing-skills/writing-and-80-mark-board-strategy#wr-04-full-syllabus-quiz-arena',
+            },
+            {
+              title: '10-Mark English Grammar 50-Q Speed Lab',
+              desc: 'Drill 50 board-pattern questions across Determiners, Tenses, Subject–Verb Concord, Modals & Reported Speech with instant shortcut rules.',
+              icon: <Layers className="h-5 w-5 text-sky-600" />,
+              path: '/subject/english/english-reading-grammar/reading-grammar-board-mastery#rg-07-interactive-grammar-lab',
             },
             {
               title: 'Poetic Devices Matrix & 20-Q Drill Lab',
@@ -355,7 +376,7 @@ export function HomeDashboard({
             Curriculum Map: Subject › Topic › Subtopic
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Active CBSE Class 10 Subjects: English Language &amp; Literature (Code 184 — First Flight Prose &amp; Poetry + Footprints without Feet), Hindi Course B (Code 085 — संपूर्ण 80-अंक पाठ्यक्रम), &amp; Biology (Chapter 8: Heredity)
+            Active CBSE Class 10 Subjects: English Language &amp; Literature (Code 184 — Complete 80-Mark Syllabus), Hindi Course B (Code 085 — संपूर्ण 80-अंक पाठ्यक्रम), &amp; Biology (Chapter 8: Heredity)
           </p>
         </div>
 
@@ -464,7 +485,11 @@ export function HomeDashboard({
                               <div className="flex items-center justify-between text-xs font-bold text-teal-700 dark:text-teal-400">
                                 <span>
                                   {isEnglish
-                                    ? 'Open 7-Pillar Guide, Word Lens, RTC & NCERT Text'
+                                    ? topic.slug === 'english-reading-grammar'
+                                      ? 'Open Rules, Error–Correction, Word Lens & Lab'
+                                      : topic.slug === 'english-writing-skills'
+                                      ? 'Open CBSE Formats, Solved Samples & 80M Plan'
+                                      : 'Open 7-Pillar Guide, Word Lens, RTC & NCERT Text'
                                     : isHindi
                                     ? 'Open Word Lens, Transcript, मुहावरे, समास & Q&A'
                                     : 'Open Lesson & Lab'}
@@ -493,16 +518,16 @@ export function HomeDashboard({
               Works Online &amp; Offline + Modular Multi-Subject Ready
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-              Install this PWA on Android, Windows, macOS, or iOS to study without internet. Covers CBSE Class 10 English (Code 184 — First Flight Prose + NCERT PDFs), full 80-mark Hindi Course B, and Biology (Chapter 8: Heredity).
+              Install this PWA on Android, Windows, macOS, or iOS to study without internet. Covers complete 80-mark CBSE Class 10 English (Code 184), full 80-mark Hindi Course B, and Biology (Chapter 8: Heredity).
             </p>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link
-            to="/subject/english/first-flight-prose/first-flight-prose-board-mastery#english-prose-quiz-section"
+            to="/subject/english/english-writing-skills/writing-and-80-mark-board-strategy#wr-04-full-syllabus-quiz-arena"
             className="rounded-xl bg-indigo-600 px-4 py-2 text-xs font-bold text-white hover:bg-indigo-700 transition"
           >
-            English Prose Quiz →
+            English 80M Quiz →
           </Link>
           <Link
             to="/subject/hindi/rachanatmak-lekhan/lekhan-board-mastery#hindi-full-syllabus-quiz-section"

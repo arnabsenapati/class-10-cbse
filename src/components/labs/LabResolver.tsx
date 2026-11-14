@@ -3,6 +3,7 @@ import { AllelePairBuilder } from './AllelePairBuilder';
 import { CbseQuizArena } from './CbseQuizArena';
 import { CellToTraitExplorer } from './CellToTraitExplorer';
 import { DihybridSimulator } from './DihybridSimulator';
+import { EnglishGrammarLab } from './EnglishGrammarLab';
 import { EnglishLiteratureTrainerLab } from './EnglishLiteratureTrainerLab';
 import { EnglishPoeticDevicesLab } from './EnglishPoeticDevicesLab';
 import { HindiVyakaranLab } from './HindiVyakaranLab';
@@ -65,11 +66,7 @@ export function LabResolver({
     case 'english-literature-trainer':
       return <EnglishLiteratureTrainerLab />;
     case 'english-grammar-lab':
-      return (
-        <div className="rounded-2xl border border-indigo-200 bg-indigo-50/60 p-5 text-xs sm:text-sm text-indigo-900 dark:border-indigo-900/60 dark:bg-indigo-950/30 dark:text-indigo-200">
-          Interactive English Lab ({labId}) is scheduled for the upcoming milestone.
-        </div>
-      );
+      return <EnglishGrammarLab />;
     case 'cbse-quiz-arena':
       return (
         <CbseQuizArena
