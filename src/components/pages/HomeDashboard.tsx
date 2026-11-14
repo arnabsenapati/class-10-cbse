@@ -3,6 +3,7 @@ import {
   ArrowRight,
   Bookmark,
   BookMarked,
+  BookOpen,
   CheckCircle2,
   Clock,
   Dna,
@@ -50,12 +51,12 @@ export function HomeDashboard({
   ).length;
   const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
-  const firstSubtopicPath = flatSubtopicFirstPath(flatSubtopics);
   const resumeEntry = flatSubtopics.find((f) => f.path === progress.lastVisitedPath);
   const bookmarkedEntries = flatSubtopics.filter((f) =>
     progress.bookmarkedSubtopics.includes(f.subtopic.id)
   );
 
+  const englishScore = progress.bestQuizScoresBySubject?.english ?? null;
   const bioScore = progress.bestQuizScoresBySubject?.biology ?? progress.bestQuizScore;
   const hindiScore = progress.bestQuizScoresBySubject?.hindi ?? null;
 
@@ -67,7 +68,7 @@ export function HomeDashboard({
           <div className="lg:col-span-8 space-y-4">
             <div className="inline-flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-bold backdrop-blur">
-                CBSE Class 10 • Science (Heredity) &amp; Hindi Course B (Code 085)
+                CBSE Class 10 • English (Code 184), Hindi Course B (Code 085) &amp; Science (Heredity)
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/20 border border-emerald-300/30 px-3 py-1 text-xs font-bold text-emerald-100">
                 <WifiOff className="h-3.5 w-3.5" />
@@ -80,10 +81,11 @@ export function HomeDashboard({
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-              CBSE Class 10 Interactive Study Hub — Hindi Course B &amp; Biology
+              CBSE Class 10 Interactive Study Hub — English, Hindi Course B &amp; Biology
             </h1>
             <p className="text-sm sm:text-base text-teal-100 leading-relaxed max-w-2xl">
-              Master all 80 marks of <strong>Hindi Course B</strong>—<strong>स्पर्श भाग-2</strong> (14 lessons), <strong>संचयन भाग-2</strong> (3 stories), <strong>अपठित व व्याकरण Lab</strong> (42 interactive MCQs), and all <strong>6 रचनात्मक लेखन formats</strong>—alongside interactive Genetics &amp; Punnett Square simulators, 100% offline.
+              Prepare for your <strong>2 Dec English Board Exam</strong> with our 7-pillar{' '}
+              <strong>First Flight Prose &amp; Poetry</strong> + <strong>Footprints without Feet</strong> guide (optional NCERT text &amp; PDFs, Word Lens RTC extracts, <strong>48-Entry Poetic Devices Lab</strong>, <strong>18-Character Evolution Trainer</strong> &amp; 6-mark answers), plus complete <strong>80-mark Hindi Course B</strong> and interactive <strong>Biology Genetics</strong> labs — 100% offline.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -91,22 +93,52 @@ export function HomeDashboard({
                 to={
                   resumeEntry
                     ? resumeEntry.path
-                    : '/subject/hindi/sparsh-kavyakhand/kabir-ki-sakhi'
+                    : '/subject/english/first-flight-prose/a-letter-to-god'
                 }
                 className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-extrabold text-teal-900 shadow-sm hover:bg-teal-50 transition"
               >
                 <Play className="h-4 w-4 fill-current" />
                 {resumeEntry
                   ? `Resume: ${resumeEntry.subtopic.title}`
-                  : 'Start Hindi: पाठ 1 कबीर की साखी'}
+                  : 'Start English (First Flight)'}
               </Link>
 
               <Link
-                to={firstSubtopicPath}
+                to="/subject/english/first-flight-prose/a-letter-to-god"
+                className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-indigo-500 transition"
+              >
+                <BookOpen className="h-4 w-4" />
+                First Flight Prose (Ch 1–9)
+              </Link>
+              <Link
+                to="/subject/english/first-flight-poetry/dust-of-snow"
+                className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-violet-500 transition"
+              >
+                <Feather className="h-4 w-4" />
+                First Flight Poetry (10 Poems)
+              </Link>
+              <Link
+                to="/subject/english/footprints-without-feet/a-triumph-of-surgery"
+                className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-teal-500 transition"
+              >
+                <BookMarked className="h-4 w-4" />
+                Footprints (Ch 1–9)
+              </Link>
+
+              <Link
+                to="/subject/hindi/sparsh-kavyakhand/kabir-ki-sakhi"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-bold text-white hover:bg-white/20 transition"
+              >
+                <Feather className="h-4 w-4" />
+                Start Hindi Course B
+              </Link>
+
+              <Link
+                to="/subject/biology/basics-and-alleles/heredity-variation-dna-basics"
                 className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-bold text-white hover:bg-white/20 transition"
               >
                 <Dna className="h-4 w-4" />
-                Start Biology (Heredity)
+                Biology Heredity
               </Link>
 
               <Link
@@ -144,26 +176,34 @@ export function HomeDashboard({
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <div className="grid grid-cols-2 gap-2.5 text-xs">
-              <div className="rounded-xl bg-black/20 p-3 col-span-2 flex items-center justify-between">
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="rounded-xl bg-black/20 p-3 col-span-3 flex items-center justify-between">
                 <span className="text-teal-200">Subtopics Completed</span>
                 <span className="text-lg font-extrabold">
                   {completedCount} / {totalCount}
                 </span>
               </div>
-              <div className="rounded-xl bg-black/20 p-3">
-                <div className="text-teal-200 flex items-center gap-1">
-                  <Trophy className="h-3.5 w-3.5 text-amber-300" /> Hindi Quiz
+              <div className="rounded-xl bg-black/20 p-2.5">
+                <div className="text-teal-200 flex items-center gap-1 text-[11px]">
+                  <Trophy className="h-3 w-3 text-indigo-300 shrink-0" /> English Quiz
                 </div>
-                <div className="mt-0.5 text-base font-extrabold">
+                <div className="mt-0.5 text-sm font-extrabold">
+                  {englishScore ? `${englishScore.correct}/${englishScore.total}` : 'Not taken'}
+                </div>
+              </div>
+              <div className="rounded-xl bg-black/20 p-2.5">
+                <div className="text-teal-200 flex items-center gap-1 text-[11px]">
+                  <Trophy className="h-3 w-3 text-amber-300 shrink-0" /> Hindi Quiz
+                </div>
+                <div className="mt-0.5 text-sm font-extrabold">
                   {hindiScore ? `${hindiScore.correct}/${hindiScore.total}` : 'Not taken'}
                 </div>
               </div>
-              <div className="rounded-xl bg-black/20 p-3">
-                <div className="text-teal-200 flex items-center gap-1">
-                  <Trophy className="h-3.5 w-3.5 text-emerald-300" /> Biology Quiz
+              <div className="rounded-xl bg-black/20 p-2.5">
+                <div className="text-teal-200 flex items-center gap-1 text-[11px]">
+                  <Trophy className="h-3 w-3 text-emerald-300 shrink-0" /> Biology Quiz
                 </div>
-                <div className="mt-0.5 text-base font-extrabold">
+                <div className="mt-0.5 text-sm font-extrabold">
                   {bioScore ? `${bioScore.correct}/${bioScore.total}` : 'Not taken'}
                 </div>
               </div>
@@ -198,6 +238,24 @@ export function HomeDashboard({
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
+            {
+              title: 'English Literature Matrix & 84-Q Arena',
+              desc: 'Revise all 28 First Flight & Footprints chapters/poems + practice 84 board-pattern RTC, Assertion–Reason & MCQ drills.',
+              icon: <BookOpen className="h-5 w-5 text-indigo-600" />,
+              path: '/subject/english/first-flight-prose/first-flight-prose-board-mastery#english-prose-quiz-section',
+            },
+            {
+              title: 'Poetic Devices Matrix & 20-Q Drill Lab',
+              desc: 'Search 48 CBSE literary devices across 14 categories, compare all 10 rhyme schemes & take the 20-Q Spot-the-Device drill.',
+              icon: <Sparkles className="h-5 w-5 text-violet-600" />,
+              path: '/subject/english/first-flight-poetry/first-flight-poetry-board-mastery#poetry-devices-interactive-lab',
+            },
+            {
+              title: 'Character Evolution & Twist Trainer Lab',
+              desc: 'Explore 18 Footprints Before→After character arcs, 5-adjective packs, 9-chapter twist matrix & 20-Q speed drill.',
+              icon: <BookMarked className="h-5 w-5 text-teal-600" />,
+              path: '/subject/english/footprints-without-feet/footprints-board-mastery#english-literature-trainer-section',
+            },
             {
               title: '16-Mark व्यावहारिक व्याकरण Interactive Lab',
               desc: 'Practice 42 board-pattern MCQs on पदबंध, वाक्य रूपांतरण, समास & मुहावरे with instant explanations.',
@@ -297,12 +355,13 @@ export function HomeDashboard({
             Curriculum Map: Subject › Topic › Subtopic
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Active CBSE Class 10 Subjects: Biology (Chapter 8: Heredity) &amp; Hindi Course B (संपूर्ण 80-अंक पाठ्यक्रम: स्पर्श, संचयन, अपठित व व्याकरण Lab, तथा रचनात्मक लेखन)
+            Active CBSE Class 10 Subjects: English Language &amp; Literature (Code 184 — First Flight Prose &amp; Poetry + Footprints without Feet), Hindi Course B (Code 085 — संपूर्ण 80-अंक पाठ्यक्रम), &amp; Biology (Chapter 8: Heredity)
           </p>
         </div>
 
         <div className="space-y-8">
           {SUBJECTS.map((subject) => {
+            const isEnglish = subject.slug === 'english';
             const isHindi = subject.slug === 'hindi';
             return (
               <div key={subject.id} className="space-y-4">
@@ -310,10 +369,16 @@ export function HomeDashboard({
                   <div className="flex items-center gap-3">
                     <span
                       className={`inline-flex h-10 w-10 items-center justify-center rounded-xl text-white ${
-                        isHindi ? 'bg-amber-600' : 'bg-teal-700'
+                        isEnglish
+                          ? 'bg-indigo-600'
+                          : isHindi
+                          ? 'bg-amber-600'
+                          : 'bg-teal-700'
                       }`}
                     >
-                      {isHindi ? (
+                      {isEnglish ? (
+                        <BookOpen className="h-5 w-5" />
+                      ) : isHindi ? (
                         <Feather className="h-5 w-5" />
                       ) : (
                         <Dna className="h-5 w-5" />
@@ -398,7 +463,9 @@ export function HomeDashboard({
                               </div>
                               <div className="flex items-center justify-between text-xs font-bold text-teal-700 dark:text-teal-400">
                                 <span>
-                                  {isHindi
+                                  {isEnglish
+                                    ? 'Open 7-Pillar Guide, Word Lens, RTC & NCERT Text'
+                                    : isHindi
                                     ? 'Open Word Lens, Transcript, मुहावरे, समास & Q&A'
                                     : 'Open Lesson & Lab'}
                                 </span>
@@ -426,11 +493,17 @@ export function HomeDashboard({
               Works Online &amp; Offline + Modular Multi-Subject Ready
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-              Install this PWA on Android, Windows, macOS, or iOS to study without internet. Covers full 80-mark CBSE Class 10 Hindi Course B (स्पर्श, संचयन, अपठित व व्याकरण Lab, रचनात्मक लेखन) and Biology (Chapter 8: Heredity).
+              Install this PWA on Android, Windows, macOS, or iOS to study without internet. Covers CBSE Class 10 English (Code 184 — First Flight Prose + NCERT PDFs), full 80-mark Hindi Course B, and Biology (Chapter 8: Heredity).
             </p>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
+          <Link
+            to="/subject/english/first-flight-prose/first-flight-prose-board-mastery#english-prose-quiz-section"
+            className="rounded-xl bg-indigo-600 px-4 py-2 text-xs font-bold text-white hover:bg-indigo-700 transition"
+          >
+            English Prose Quiz →
+          </Link>
           <Link
             to="/subject/hindi/rachanatmak-lekhan/lekhan-board-mastery#hindi-full-syllabus-quiz-section"
             className="rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700 transition"
@@ -447,10 +520,4 @@ export function HomeDashboard({
       </section>
     </div>
   );
-}
-
-function flatSubtopicFirstPath(
-  entries: ReturnType<typeof getFlattenedSubtopics>
-): string {
-  return entries[0]?.path ?? '/';
 }

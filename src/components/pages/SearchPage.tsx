@@ -58,7 +58,7 @@ export function SearchPage() {
           type="text"
           value={query}
           onChange={(e) => handleQueryChange(e.target.value)}
-          placeholder="Try: कबीर, मुहावरे, समास, आत्मत्राण, allele, punnett square, 9:3:3:1..."
+          placeholder="Try: Letter to God, Mandela, Anne Frank, कबीर, मुहावरे, allele, 9:3:3:1..."
           autoFocus
           className="flex-1 bg-transparent py-2 text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400 dark:text-white"
         />

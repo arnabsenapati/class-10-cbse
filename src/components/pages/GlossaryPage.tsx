@@ -1,8 +1,17 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookMarked, Feather, Printer, Search } from 'lucide-react';
+import { ArrowRight, BookMarked, BookOpen, Feather, Printer, Search } from 'lucide-react';
 import { ALL_GLOSSARY_TERMS, buildSubtopicPath } from '../../data/registry';
 import { GlossaryTerm } from '../../types/curriculum';
+
+const ENGLISH_CATEGORIES: GlossaryTerm['category'][] = [
+  'Poetic & Literary Devices',
+  'First Flight — Prose Vocab',
+  'First Flight — Poetry Vocab',
+  'Footprints — Supplementary Vocab',
+  'Tone & Mood Descriptors',
+  'Grammar & Writing Rules',
+];
 
 const BIOLOGY_CATEGORIES: GlossaryTerm['category'][] = [
   'Basics',
@@ -21,7 +30,7 @@ const HINDI_CATEGORIES: GlossaryTerm['category'][] = [
   'व्याकरण व लेखन शब्दावली',
 ];
 
-type SubjectFilter = 'all' | 'biology' | 'hindi';
+type SubjectFilter = 'all' | 'english' | 'hindi' | 'biology';
 
 export function GlossaryPage() {
   const [subjectFilter, setSubjectFilter] = useState<SubjectFilter>('all');
@@ -29,9 +38,10 @@ export function GlossaryPage() {
   const [category, setCategory] = useState<'All' | GlossaryTerm['category']>('All');
 
   const categories = useMemo<('All' | GlossaryTerm['category'])[]>(() => {
+    if (subjectFilter === 'english') return ['All', ...ENGLISH_CATEGORIES];
     if (subjectFilter === 'biology') return ['All', ...BIOLOGY_CATEGORIES];
     if (subjectFilter === 'hindi') return ['All', ...HINDI_CATEGORIES];
-    return ['All', ...HINDI_CATEGORIES, ...BIOLOGY_CATEGORIES];
+    return ['All', ...ENGLISH_CATEGORIES, ...HINDI_CATEGORIES, ...BIOLOGY_CATEGORIES];
   }, [subjectFilter]);
 
   const terms = useMemo(() => {
@@ -65,7 +75,7 @@ export function GlossaryPage() {
             Class 10 Multi-Subject Glossary &amp; Cheat Sheet
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-            Biology (Heredity &amp; Ratios) + Hindi Course B (स्पर्श, संचयन, व्यावहारिक व्याकरण व रचनात्मक लेखन — मानक हिंदी व English Helper)
+            English Language &amp; Literature (Code 184) + Hindi Course B (Code 085) + Biology (Heredity &amp; Ratios)
           </p>
         </div>
         <button
@@ -81,6 +91,12 @@ export function GlossaryPage() {
       <div className="no-print flex flex-wrap gap-2">
         {[
           { key: 'all' as const, label: `All Subjects (${ALL_GLOSSARY_TERMS.length})` },
+          {
+            key: 'english' as const,
+            label: `English — Code 184 (${
+              ALL_GLOSSARY_TERMS.filter((t) => t.subtopicPath.subjectSlug === 'english').length
+            })`,
+          },
           {
             key: 'hindi' as const,
             label: `Hindi Course B — संपूर्ण 80-अंक (${
@@ -103,7 +119,9 @@ export function GlossaryPage() {
             }}
             className={`rounded-xl px-3.5 py-2 text-xs font-extrabold transition cursor-pointer ${
               subjectFilter === tab.key
-                ? tab.key === 'hindi'
+                ? tab.key === 'english'
+                  ? 'bg-indigo-600 text-white'
+                  : tab.key === 'hindi'
                   ? 'bg-amber-600 text-white'
                   : 'bg-teal-700 text-white'
                 : 'bg-white border border-slate-200 text-slate-700 hover:border-teal-400 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200'
@@ -114,8 +132,54 @@ export function GlossaryPage() {
         ))}
       </div>
 
+      {/* English (Code 184) Cheat Box */}
+      {(subjectFilter === 'all' || subjectFilter === 'english') && (
+        <section className="print-avoid-break rounded-2xl border border-indigo-200 bg-indigo-50/70 p-5 dark:border-indigo-900/60 dark:bg-indigo-950/20">
+          <h2 className="text-sm font-extrabold uppercase tracking-wider text-indigo-900 dark:text-indigo-300 mb-3 flex items-center gap-1.5">
+            <BookOpen className="h-4 w-4" /> English (Code 184) — 4 CBSE Board Scoring Rules
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                label: '1. 5-Mark RTC Rule',
+                val: 'Quote + Tone',
+                sub: 'Anchor every extract MCQ in textual proof & speaker attitude',
+              },
+              {
+                label: '2. 3-Mark Short Answer',
+                val: '40–50 Words',
+                sub: '2M Content (3 value points) + 1M Expression; avoid plot retelling',
+              },
+              {
+                label: '3. 6-Mark Competency',
+                val: '100–120 Words',
+                sub: 'Follow Diary/Speech/Dialogue format with cross-chapter links',
+              },
+              {
+                label: '4. 7-Pillar Chapter Map',
+                val: 'Full Coverage',
+                sub: 'Arc • Extracts • Traits • Lang Vocab • Oral/Text Q&A • Bridges',
+              },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="rounded-xl bg-white border border-indigo-200 p-3 dark:bg-slate-900 dark:border-slate-800"
+              >
+                <div className="text-[11px] font-bold text-slate-500">{item.label}</div>
+                <div className="mt-1 text-base font-extrabold text-indigo-700 dark:text-indigo-300">
+                  {item.val}
+                </div>
+                <div className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                  {item.sub}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Hindi Course B Cheat Box */}
-      {subjectFilter !== 'biology' && (
+      {(subjectFilter === 'all' || subjectFilter === 'hindi') && (
         <section className="print-avoid-break rounded-2xl border border-amber-200 bg-amber-50/70 p-5 dark:border-amber-900/60 dark:bg-amber-950/20">
           <h2 className="text-sm font-extrabold uppercase tracking-wider text-amber-900 dark:text-amber-300 mb-3 flex items-center gap-1.5">
             <Feather className="h-4 w-4" /> Hindi Course B (संपूर्ण 80-अंक पाठ्यक्रम: स्पर्श, संचयन, व्याकरण व लेखन) — 4 Exam Cheat Rules
@@ -161,7 +225,7 @@ export function GlossaryPage() {
       )}
 
       {/* Quick Ratios Summary Box (Biology) */}
-      {subjectFilter !== 'hindi' && (
+      {(subjectFilter === 'all' || subjectFilter === 'biology') && (
         <section className="print-avoid-break rounded-2xl border border-teal-200 bg-teal-50/70 p-5 dark:border-teal-900 dark:bg-teal-950/30">
           <h2 className="text-sm font-extrabold uppercase tracking-wider text-teal-900 dark:text-teal-300 mb-3">
             Must-Memorize CBSE Genetics Ratios at a Glance

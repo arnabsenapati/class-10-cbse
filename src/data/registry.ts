@@ -1,18 +1,27 @@
 import { FlatSubtopicEntry, Subject, Subtopic, Topic } from '../types/curriculum';
 import { biologySubject } from './subjects/biology';
 import { biologyGlossary, biologyQuizBank } from './subjects/biology/glossary';
+import { englishSubject } from './subjects/english';
+import { englishGlossary, englishQuizBank } from './subjects/english/glossary';
 import { hindiSubject } from './subjects/hindi';
 import { hindiGlossary, hindiQuizBank } from './subjects/hindi/glossary';
 
 /**
  * Central Modular Registry:
- * Add new Class 10 subjects (e.g., Chemistry, Physics, Mathematics) here
- * following the same Subject > Topic > Subtopic structure.
+ * Add new Class 10 subjects here following Subject > Topic > Subtopic structure.
  */
-export const SUBJECTS: Subject[] = [biologySubject, hindiSubject];
+export const SUBJECTS: Subject[] = [englishSubject, hindiSubject, biologySubject];
 
-export const ALL_GLOSSARY_TERMS = [...biologyGlossary, ...hindiGlossary];
-export const ALL_QUIZ_QUESTIONS = [...biologyQuizBank, ...hindiQuizBank];
+export const ALL_GLOSSARY_TERMS = [
+  ...englishGlossary,
+  ...biologyGlossary,
+  ...hindiGlossary,
+];
+export const ALL_QUIZ_QUESTIONS = [
+  ...englishQuizBank,
+  ...biologyQuizBank,
+  ...hindiQuizBank,
+];
 
 export function buildSubtopicPath(
   subjectSlug: string,

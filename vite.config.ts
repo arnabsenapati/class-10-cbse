@@ -48,6 +48,21 @@ export default defineConfig({
           if (normalized.includes('/src/data/subjects/hindi/lekhan-')) {
             return 'data-hindi-lekhan';
           }
+          if (normalized.includes('/src/data/subjects/english/ncert-texts/')) {
+            return 'data-english-ncert';
+          }
+          if (normalized.includes('/src/data/subjects/english/prose-')) {
+            return 'data-english-ff-prose';
+          }
+          if (normalized.includes('/src/data/subjects/english/poem-')) {
+            return 'data-english-ff-poetry';
+          }
+          if (normalized.includes('/src/data/subjects/english/footprints-')) {
+            return 'data-english-footprints';
+          }
+          if (normalized.includes('/src/data/subjects/english/')) {
+            return 'data-english-meta';
+          }
           if (normalized.includes('/src/data/subjects/hindi/')) {
             return 'data-hindi-meta';
           }
@@ -68,10 +83,10 @@ export default defineConfig({
         'icons/apple-touch-icon.png',
       ],
       manifest: {
-        name: 'Class 10 CBSE Study Hub — Hindi Course B & Biology',
+        name: 'Class 10 CBSE Study Hub — English, Hindi Course B & Biology',
         short_name: 'Class 10 Study Hub',
         description:
-          'Offline-ready Class 10 CBSE study companion featuring Complete 80-Mark Hindi Course B (Sparsh Bhag-2, Sanchayan Bhag-2, Apathit & 42-Q Vyakaran Lab, all 6 Creative Writing formats) and Biology (Heredity Punnett labs).',
+          'Offline-ready Class 10 CBSE study companion featuring English Language & Literature (Code 184 — First Flight Prose & Poetry + Footprints without Feet 7-pillar guides, Poetic Devices & Character Evolution Labs, Word Lens RTC extracts & NCERT PDFs), Complete 80-Mark Hindi Course B, and Biology (Heredity Punnett labs).',
         theme_color: '#0f766e',
         background_color: '#f8fafc',
         display: 'standalone',
@@ -107,6 +122,19 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true,
+        runtimeCaching: [
+          {
+            urlPattern: /^\/ncert\/.*\.pdf$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'ncert-pdfs-cache',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 180,
+              },
+            },
+          },
+        ],
       },
       devOptions: {
         enabled: false,

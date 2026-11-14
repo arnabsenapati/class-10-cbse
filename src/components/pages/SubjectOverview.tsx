@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import {
   ArrowRight,
+  BookOpen,
   CheckCircle2,
   ChevronRight,
   Clock,
@@ -47,10 +48,16 @@ export function SubjectOverview({ completedSubtopics }: SubjectOverviewProps) {
           <div className="flex items-center gap-3">
             <span
               className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white ${
-                subject.slug === 'hindi' ? 'bg-amber-600' : 'bg-teal-700'
+                subject.slug === 'english'
+                  ? 'bg-indigo-600'
+                  : subject.slug === 'hindi'
+                  ? 'bg-amber-600'
+                  : 'bg-teal-700'
               }`}
             >
-              {subject.slug === 'hindi' ? (
+              {subject.slug === 'english' ? (
+                <BookOpen className="h-6 w-6" />
+              ) : subject.slug === 'hindi' ? (
                 <Feather className="h-6 w-6" />
               ) : (
                 <Dna className="h-6 w-6" />

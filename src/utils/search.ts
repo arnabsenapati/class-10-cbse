@@ -102,9 +102,9 @@ function extractBlockText(block: ContentBlock): string {
           ...(block.poeticDevices ?? []),
           ...block.words.map(
             (w) =>
-              `${w.word} ${w.hindiMeaning} ${w.englishMeaning} ${w.grammarNote ?? ''} ${
-                w.exampleSentence ?? ''
-              }`
+              `${w.word} ${w.hindiMeaning ?? ''} ${w.englishMeaning} ${w.synonym ?? ''} ${
+                w.grammarNote ?? ''
+              } ${w.exampleSentence ?? ''}`
           ),
         ].join(' ')
       );
@@ -125,12 +125,14 @@ function extractBlockText(block: ContentBlock): string {
           block.intro ?? '',
           ...(block.extraWords ?? []).map(
             (w) =>
-              `${w.word} ${w.hindiMeaning} ${w.englishMeaning} ${w.grammarNote ?? ''} ${
-                w.exampleSentence ?? ''
-              }`
+              `${w.word} ${w.hindiMeaning ?? ''} ${w.englishMeaning} ${w.synonym ?? ''} ${
+                w.grammarNote ?? ''
+              } ${w.exampleSentence ?? ''}`
           ),
         ].join(' ')
       );
+    case 'ncert-reference':
+      return stripMarkdown(`${block.title} ${block.bookName} ${block.note ?? ''}`);
     case 'muhavre-list':
       return stripMarkdown(
         [
@@ -276,24 +278,37 @@ function buildSearchIndex(): IndexedDocument[] {
   for (const q of ALL_QUIZ_QUESTIONS) {
     const subj = q.subjectSlug ?? 'biology';
     const isHindi = subj === 'hindi';
+    const isEnglish = subj === 'english';
+    const quizPath = isEnglish
+      ? q.topicSlug === 'first-flight-poetry'
+        ? `/subject/english/first-flight-poetry/poetry-board-mastery#english-poetry-quiz-section`
+        : q.topicSlug === 'footprints-without-feet'
+        ? `/subject/english/footprints-without-feet/footprints-board-mastery#english-footprints-quiz-section`
+        : q.topicSlug === 'english-writing-skills'
+        ? `/subject/english/english-writing-skills/exam-strategy-and-countdown#english-full-quiz-section`
+        : `/subject/english/first-flight-prose/first-flight-prose-mastery#english-prose-quiz-section`
+      : isHindi
+      ? q.topicSlug === 'sparsh-gadyakhand'
+        ? `/subject/hindi/sparsh-gadyakhand/gadyakhand-board-mastery#hindi-gadya-quiz-section`
+        : q.topicSlug === 'sanchayan-bhag-2'
+        ? `/subject/hindi/sanchayan-bhag-2/sanchayan-board-mastery#hindi-sanchayan-quiz-section`
+        : q.topicSlug === 'apathit-aur-vyakaran'
+        ? `/subject/hindi/apathit-aur-vyakaran/vyakaran-board-mastery#hindi-vyakaran-quiz-section`
+        : q.topicSlug === 'rachanatmak-lekhan'
+        ? `/subject/hindi/rachanatmak-lekhan/lekhan-board-mastery#hindi-full-syllabus-quiz-section`
+        : `/subject/hindi/sparsh-kavyakhand/kavyakhand-board-mastery#hindi-kavya-quiz-section`
+      : `/subject/biology/cbse-exam-mastery/cbse-traps-question-bank-and-quiz#interactive-cbse-quiz-section`;
+
     docs.push({
       id: `quiz:${q.id}`,
       kind: 'quiz',
       title: stripMarkdown(q.question).slice(0, 95) + (q.question.length > 95 ? '...' : ''),
-      breadcrumb: isHindi
+      breadcrumb: isEnglish
+        ? `English (Code 184) › Quiz Arena › ${q.subtopicTitle}`
+        : isHindi
         ? `Hindi (Course B) › स्पर्श Quiz Arena › ${q.subtopicTitle}`
         : `Biology › CBSE Quiz Arena › ${q.subtopicTitle}`,
-      path: isHindi
-        ? q.topicSlug === 'sparsh-gadyakhand'
-          ? `/subject/hindi/sparsh-gadyakhand/gadyakhand-board-mastery#hindi-gadya-quiz-section`
-          : q.topicSlug === 'sanchayan-bhag-2'
-          ? `/subject/hindi/sanchayan-bhag-2/sanchayan-board-mastery#hindi-sanchayan-quiz-section`
-          : q.topicSlug === 'apathit-aur-vyakaran'
-          ? `/subject/hindi/apathit-aur-vyakaran/vyakaran-board-mastery#hindi-vyakaran-quiz-section`
-          : q.topicSlug === 'rachanatmak-lekhan'
-          ? `/subject/hindi/rachanatmak-lekhan/lekhan-board-mastery#hindi-full-syllabus-quiz-section`
-          : `/subject/hindi/sparsh-kavyakhand/kavyakhand-board-mastery#hindi-kavya-quiz-section`
-        : `/subject/biology/cbse-exam-mastery/cbse-traps-question-bank-and-quiz#interactive-cbse-quiz-section`,
+      path: quizPath,
       badge: 'CBSE Quiz',
       subjectSlug: subj,
       topicSlug: q.topicSlug,
@@ -397,22 +412,20 @@ export function searchCurriculum(
 }
 
 export const POPULAR_SEARCH_SUGGESTIONS = [
+  'A Letter to God',
+  'Nelson Mandela',
+  'Anne Frank',
+  'Glimpses of India',
+  'Madam Rides the Bus',
+  'The Proposal',
+  'Irony',
   'हरिहर काका',
   'टोपी शुक्ला',
-  'सपनों के-से दिन',
   'पदबंध',
-  'वाक्य रूपांतरण',
   'समास',
   'मुहावरे',
-  'सूचना लेखन',
-  'विज्ञापन लेखन',
-  'ई-मेल',
-  'लघुकथा',
-  'बड़े भाई साहब',
   'कबीर साखी',
-  'मीरा के पद',
   'allele',
   'punnett square',
   '9:3:3:1',
-  'monohybrid cross',
 ];

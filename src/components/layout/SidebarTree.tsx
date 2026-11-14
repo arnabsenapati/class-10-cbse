@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   BookMarked,
+  BookOpen,
   CheckCircle2,
   ChevronDown,
   ChevronRight,
@@ -104,7 +105,9 @@ export function SidebarTree({
                   onClick={onNavigate}
                   className="flex items-center gap-2 text-xs font-extrabold text-slate-900 hover:text-teal-700 dark:text-white dark:hover:text-teal-400"
                 >
-                  {subject.slug === 'hindi' ? (
+                  {subject.slug === 'english' ? (
+                    <BookOpen className="h-4 w-4 text-indigo-600 shrink-0" />
+                  ) : subject.slug === 'hindi' ? (
                     <Feather className="h-4 w-4 text-amber-600 shrink-0" />
                   ) : (
                     <Dna className="h-4 w-4 text-teal-600 shrink-0" />

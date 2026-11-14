@@ -74,7 +74,7 @@ export function TopBar({
         >
           <span className="flex items-center gap-2 truncate">
             <Search className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-            <span className="truncate">Search कबीर, मुहावरे, समास, allele, Punnett square...</span>
+            <span className="truncate">Search Letter to God, Mandela, कबीर, मुहावरे, allele...</span>
           </span>
           <kbd className="hidden md:inline-block rounded border border-slate-300 bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">
             Ctrl K

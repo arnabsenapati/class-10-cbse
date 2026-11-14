@@ -3,10 +3,26 @@ import { Award, CheckCircle2, RotateCcw, Trophy, XCircle } from 'lucide-react';
 import { ALL_QUIZ_QUESTIONS } from '../../data/registry';
 
 interface CbseQuizArenaProps {
-  subjectSlug?: 'biology' | 'hindi';
+  subjectSlug?: 'biology' | 'hindi' | 'english';
   bestScore?: { correct: number; total: number } | null;
   onSaveScore?: (correct: number, total: number, subjectSlug?: string) => void;
 }
+
+const ENGLISH_TOPIC_ORDER = [
+  'first-flight-prose',
+  'first-flight-poetry',
+  'footprints-without-feet',
+  'english-reading-grammar',
+  'english-writing-skills',
+] as const;
+
+const ENGLISH_TOPIC_LABELS: Record<string, string> = {
+  'first-flight-prose': 'First Flight: Prose',
+  'first-flight-poetry': 'First Flight: Poetry',
+  'footprints-without-feet': 'Footprints without Feet',
+  'english-reading-grammar': 'Reading & Grammar',
+  'english-writing-skills': 'Writing Skills',
+};
 
 export function CbseQuizArena({
   subjectSlug = 'biology',
@@ -25,10 +41,20 @@ export function CbseQuizArena({
     [subjectSlug]
   );
 
+  const availableEnglishTopics = useMemo(() => {
+    if (subjectSlug !== 'english') return [];
+    const present = new Set(subjectQuestions.map((q) => q.topicSlug));
+    return ENGLISH_TOPIC_ORDER.filter((slug) => present.has(slug));
+  }, [subjectSlug, subjectQuestions]);
+
   const questions = useMemo(() => {
     return subjectQuestions.filter((q) => {
       if (filterType !== 'all' && q.type !== filterType) return false;
-      if (subjectSlug === 'hindi' && topicFilter !== 'all' && q.topicSlug !== topicFilter) {
+      if (
+        (subjectSlug === 'hindi' || subjectSlug === 'english') &&
+        topicFilter !== 'all' &&
+        q.topicSlug !== topicFilter
+      ) {
         return false;
       }
       return true;
@@ -66,12 +92,16 @@ export function CbseQuizArena({
           </span>
           <div>
             <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-              {subjectSlug === 'hindi'
+              {subjectSlug === 'english'
+                ? 'CBSE Class 10 English (Code 184) Self-Test & RTC Arena'
+                : subjectSlug === 'hindi'
                 ? 'CBSE Class 10 Hindi Course B (80-Mark Full Syllabus) Self-Test Arena'
                 : 'CBSE Class 10 Heredity Self-Test Arena'}
             </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              {subjectSlug === 'hindi'
+              {subjectSlug === 'english'
+                ? '100% offline • Reference-to-Context (RTC) Extracts, Competency MCQs & Assertion–Reason with examiner trap alerts'
+                : subjectSlug === 'hindi'
                 ? '100% ऑफ़लाइन • स्पर्श, संचयन, अपठित गद्यांश, व्याकरण (पदबंध-वाक्य-समास-मुहावरे) व लेखन अभ्यास'
                 : '100% offline quiz with instant NCERT explanations & common trap alerts'}
             </p>
@@ -96,7 +126,12 @@ export function CbseQuizArena({
               { key: 'assertion-reason' as const, label: 'Assertion–Reason' },
               {
                 key: 'case-based' as const,
-                label: subjectSlug === 'hindi' ? 'पठित / अपठित गद्यांश व काव्यांश' : 'Case-Based',
+                label:
+                  subjectSlug === 'english'
+                    ? 'RTC Extracts (Case-Based)'
+                    : subjectSlug === 'hindi'
+                    ? 'पठित / अपठित गद्यांश व काव्यांश'
+                    : 'Case-Based',
               },
             ].map((tab) => (
               <button
@@ -150,6 +185,34 @@ export function CbseQuizArena({
             ))}
           </div>
         )}
+
+        {subjectSlug === 'english' && availableEnglishTopics.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              { key: 'all', label: 'All Units' },
+              ...availableEnglishTopics.map((slug) => ({
+                key: slug,
+                label: ENGLISH_TOPIC_LABELS[slug] ?? slug,
+              })),
+            ].map((u) => (
+              <button
+                key={u.key}
+                type="button"
+                onClick={() => {
+                  setTopicFilter(u.key);
+                  setSubmitted(false);
+                }}
+                className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition cursor-pointer ${
+                  topicFilter === u.key
+                    ? 'bg-slate-800 text-white dark:bg-white dark:text-slate-900'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:border-amber-400 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300'
+                }`}
+              >
+                {u.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Question Cards */}
@@ -175,7 +238,11 @@ export function CbseQuizArena({
               {q.casePassage && (
                 <div className="rounded-lg border-l-4 border-amber-400 bg-amber-50/70 p-3 text-xs text-slate-700 whitespace-pre-line leading-relaxed dark:bg-amber-950/30 dark:text-slate-300">
                   <strong>
-                    {subjectSlug === 'hindi' ? 'पठित काव्यांश / गद्यांश:' : 'Case Passage:'}
+                    {subjectSlug === 'english'
+                      ? 'NCERT Reference Extract:'
+                      : subjectSlug === 'hindi'
+                      ? 'पठित काव्यांश / गद्यांश:'
+                      : 'Case Passage:'}
                   </strong>{' '}
                   {q.casePassage}
                 </div>

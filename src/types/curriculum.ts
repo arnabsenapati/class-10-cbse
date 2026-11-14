@@ -9,12 +9,17 @@ export type LabWidgetId =
   | 'cbse-quiz-arena'
   | 'kavya-word-flashcards'
   | 'hindi-kavya-quiz-arena'
-  | 'hindi-vyakaran-lab';
+  | 'hindi-vyakaran-lab'
+  | 'english-quiz-arena'
+  | 'english-poetic-devices-lab'
+  | 'english-literature-trainer'
+  | 'english-grammar-lab';
 
 export interface WordAnnotation {
   word: string;
-  hindiMeaning: string;
+  hindiMeaning?: string;
   englishMeaning: string;
+  synonym?: string;
   grammarNote?: string;
   exampleSentence?: string;
 }
@@ -142,13 +147,22 @@ export type ContentBlock =
         | 'संचयन मूल्यपरक'
         | 'व्यावहारिक व्याकरण'
         | 'रचनात्मक लेखन प्रारूप'
-        | 'मूल्यपरक प्रश्न (Competency)';
+        | 'मूल्यपरक प्रश्न (Competency)'
+        | 'RTC Extract (5 Marks)'
+        | 'NCERT Oral Comprehension'
+        | 'NCERT Thinking About Text'
+        | 'Short Answer (40–50 Words)'
+        | 'Competency / Cross-Chapter (6 Marks)'
+        | 'Title & Theme Justification'
+        | 'Thinking About Language'
+        | 'Formal Writing Model';
       question: string;
       answer: string;
       markingTip?: string;
     }
   | {
       type: 'poetic-stanza';
+      lang?: 'hi' | 'en';
       passageMode?: 'verse' | 'prose';
       stanzaLabel: string;
       stanzaText: string;
@@ -161,13 +175,16 @@ export type ContentBlock =
     }
   | {
       type: 'writing-sample';
+      lang?: 'hi' | 'en';
       formatType:
         | 'anuchchhed'
         | 'patra'
         | 'suchna'
         | 'vigyapan'
         | 'email'
-        | 'laghukatha';
+        | 'laghukatha'
+        | 'formal-letter'
+        | 'analytical-paragraph';
       badge: string;
       title: string;
       prompt: string;
@@ -189,9 +206,20 @@ export type ContentBlock =
     }
   | {
       type: 'chapter-word-bank';
+      lang?: 'hi' | 'en';
       title: string;
       intro?: string;
       extraWords?: WordAnnotation[];
+    }
+  | {
+      type: 'ncert-reference';
+      chapterKey: string;
+      title: string;
+      bookName: 'First Flight — Prose' | 'First Flight — Poetry' | 'Footprints without Feet';
+      pdfPath: string;
+      pdfStartPage: number;
+      pdfEndPage?: number;
+      note?: string;
     }
   | {
       type: 'muhavre-list';
@@ -267,7 +295,13 @@ export interface GlossaryTerm {
     | 'उर्दू-फ़ारसी काव्य शब्द'
     | 'काव्य-प्रतीक व अलंकार'
     | 'गद्य व कथा शब्दावली'
-    | 'व्याकरण व लेखन शब्दावली';
+    | 'व्याकरण व लेखन शब्दावली'
+    | 'Poetic & Literary Devices'
+    | 'First Flight — Prose Vocab'
+    | 'First Flight — Poetry Vocab'
+    | 'Footprints — Supplementary Vocab'
+    | 'Tone & Mood Descriptors'
+    | 'Grammar & Writing Rules';
   simpleMeaning: string;
   englishMeaning?: string;
   grammarNote?: string;

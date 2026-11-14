@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  ExternalLink,
   Eye,
   Feather,
   FileText,
@@ -23,6 +24,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { CalloutVariant, ContentBlock, WordAnnotation } from '../../types/curriculum';
+import type { NcertReferenceEntry } from '../../data/subjects/english/ncert-texts/types';
 import { LabResolver } from '../labs/LabResolver';
 import { ConceptDiagram } from '../visuals/GeneticsSvg';
 
@@ -456,7 +458,7 @@ function CrossFlowCard({
   );
 }
 
-const DEVANAGARI_LETTER = '[\\u0900-\\u0963\\u0966-\\u096F\\u0971-\\u097F]';
+const WORD_CHAR = '[\\u0900-\\u0963\\u0966-\\u096F\\u0971-\\u097FA-Za-z0-9]';
 
 type LineSegment =
   | { kind: 'text'; text: string }
@@ -486,7 +488,8 @@ function tokenizeStanzaLine(
     if (start > cursor) {
       segments.push({ kind: 'text', text: line.slice(cursor, start) });
     }
-    const wordIdx = wordIndexMap.get(matchedText);
+    const wordIdx =
+      wordIndexMap.get(matchedText) ?? wordIndexMap.get(matchedText.toLowerCase());
     if (wordIdx !== undefined) {
       segments.push({ kind: 'word', text: matchedText, wordIndex: wordIdx });
     } else {
@@ -511,37 +514,60 @@ function PoeticStanzaCard({
   const [pinnedWordIdx, setPinnedWordIdx] = useState<number | null>(null);
   const [showAllWords, setShowAllWords] = useState(false);
 
+  const isEn = block.lang === 'en';
+  const isProse = block.passageMode === 'prose';
+
   const { matcher, wordIndexMap } = useMemo(() => {
     const idxMap = new Map<string, number>();
+    const rawMap = new Map<string, string>();
     block.words.forEach((w, idx) => {
-      if (!idxMap.has(w.word)) {
-        idxMap.set(w.word, idx);
+      const lookupKey = isEn ? w.word.toLowerCase() : w.word;
+      if (!idxMap.has(lookupKey)) {
+        idxMap.set(lookupKey, idx);
+        rawMap.set(lookupKey, w.word);
       }
     });
-    const uniqueSorted = [...idxMap.keys()].sort((a, b) => b.length - a.length);
+    const uniqueSorted = [...rawMap.values()].sort((a, b) => b.length - a.length);
     if (uniqueSorted.length === 0) {
       return { matcher: null, wordIndexMap: idxMap };
     }
     const pattern = uniqueSorted.map(escapeRegExp).join('|');
     const regex = new RegExp(
-      `(?<!${DEVANAGARI_LETTER})(${pattern})(?!${DEVANAGARI_LETTER})`,
-      'g'
+      `(?<!${WORD_CHAR})(${pattern})(?!${WORD_CHAR})`,
+      isEn ? 'gi' : 'g'
     );
     return { matcher: regex, wordIndexMap: idxMap };
-  }, [block.words]);
+  }, [block.words, isEn]);
 
   const lines = useMemo(() => block.stanzaText.split('\n'), [block.stanzaText]);
-  const isProse = block.passageMode === 'prose';
   const activeIdx = hoveredWordIdx ?? pinnedWordIdx;
   const activeWord = activeIdx !== null ? block.words[activeIdx] : null;
   const isPinned = pinnedWordIdx !== null && hoveredWordIdx === null;
 
   return (
-    <div className="print-avoid-break rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50/60 via-white to-orange-50/40 overflow-visible shadow-xs dark:border-amber-900/60 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
+    <div
+      className={`print-avoid-break rounded-2xl border overflow-visible shadow-xs ${
+        isEn
+          ? 'border-indigo-200 bg-gradient-to-br from-indigo-50/50 via-white to-slate-50/40 dark:border-indigo-900/60 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950'
+          : 'border-amber-200 bg-gradient-to-br from-amber-50/60 via-white to-orange-50/40 dark:border-amber-900/60 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950'
+      }`}
+    >
       {/* Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-200/70 bg-amber-50/80 px-4 py-2.5 rounded-t-2xl dark:border-amber-900/50 dark:bg-amber-950/30">
+      <div
+        className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 rounded-t-2xl ${
+          isEn
+            ? 'border-indigo-200/70 bg-indigo-50/80 dark:border-indigo-900/50 dark:bg-indigo-950/30'
+            : 'border-amber-200/70 bg-amber-50/80 dark:border-amber-900/50 dark:bg-amber-950/30'
+        }`}
+      >
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-amber-900 dark:text-amber-300">
+          <span
+            className={`inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider ${
+              isEn
+                ? 'text-indigo-900 dark:text-indigo-300'
+                : 'text-amber-900 dark:text-amber-300'
+            }`}
+          >
             {isProse ? (
               <BookOpen className="h-3.5 w-3.5" />
             ) : (
@@ -550,7 +576,13 @@ function PoeticStanzaCard({
             {block.stanzaLabel}
           </span>
           {block.dialectBadge && (
-            <span className="rounded-full bg-white border border-amber-200 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:bg-slate-900 dark:border-amber-800 dark:text-amber-300">
+            <span
+              className={`rounded-full bg-white border px-2.5 py-0.5 text-[11px] font-bold dark:bg-slate-900 ${
+                isEn
+                  ? 'border-indigo-200 text-indigo-800 dark:border-indigo-800 dark:text-indigo-300'
+                  : 'border-amber-200 text-amber-800 dark:border-amber-800 dark:text-amber-300'
+              }`}
+            >
               {block.dialectBadge}
             </span>
           )}
@@ -559,10 +591,18 @@ function PoeticStanzaCard({
         <button
           type="button"
           onClick={() => setShowAllWords((s) => !s)}
-          className="no-print inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-bold text-amber-900 hover:bg-amber-100/70 transition cursor-pointer dark:border-amber-800 dark:bg-slate-900 dark:text-amber-300 dark:hover:bg-amber-950/60"
+          className={`no-print inline-flex items-center gap-1.5 rounded-lg border bg-white px-2.5 py-1 text-[11px] font-bold transition cursor-pointer dark:bg-slate-900 ${
+            isEn
+              ? 'border-indigo-300 text-indigo-900 hover:bg-indigo-100/70 dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-950/60'
+              : 'border-amber-300 text-amber-900 hover:bg-amber-100/70 dark:border-amber-800 dark:text-amber-300 dark:hover:bg-amber-950/60'
+          }`}
         >
           <Languages className="h-3.5 w-3.5" />
-          {showAllWords
+          {isEn
+            ? showAllWords
+              ? 'Hide Vocabulary'
+              : `Vocabulary & Phrases (${block.words.length})`
+            : showAllWords
             ? 'तालिका छिपाएँ (Hide Table)'
             : `शब्दार्थ तालिका (${block.words.length})`}
         </button>
@@ -571,9 +611,9 @@ function PoeticStanzaCard({
       <div className="p-4 sm:p-5 space-y-4">
         {/* Passage Box with Interactive Inline Word Tokens */}
         <div
-          className={`rounded-xl border border-amber-200/80 bg-white/95 px-4 py-4 sm:px-6 sm:py-5 shadow-2xs dark:border-slate-800 dark:bg-slate-950/90 ${
-            isProse ? 'text-left' : 'text-center'
-          }`}
+          className={`rounded-xl border bg-white/95 px-4 py-4 sm:px-6 sm:py-5 shadow-2xs dark:border-slate-800 dark:bg-slate-950/90 ${
+            isEn ? 'border-indigo-200/80' : 'border-amber-200/80'
+          } ${isProse ? 'text-left' : 'text-center'}`}
         >
           <div
             className={
@@ -621,16 +661,30 @@ function PoeticStanzaCard({
                               curr === seg.wordIndex ? null : seg.wordIndex
                             )
                           }
-                          aria-label={`${seg.text}: ${wordObj.hindiMeaning} (${wordObj.englishMeaning})`}
+                          aria-label={
+                            isEn
+                              ? `${seg.text}: ${wordObj.englishMeaning}`
+                              : `${seg.text}: ${wordObj.hindiMeaning ?? ''} (${wordObj.englishMeaning})`
+                          }
                           className={`inline rounded px-1 py-0.5 border-b-2 border-dotted transition cursor-pointer ${
-                            isActive
+                            isEn
+                              ? isActive
+                                ? 'bg-indigo-300/90 border-indigo-800 text-slate-950 ring-2 ring-indigo-400/70 dark:bg-indigo-500/40 dark:border-indigo-300 dark:text-indigo-100'
+                                : 'bg-indigo-100/80 border-indigo-600 text-indigo-950 hover:bg-indigo-200/80 dark:bg-indigo-950/70 dark:border-indigo-400 dark:text-indigo-200 dark:hover:bg-indigo-900/80 dark:hover:text-indigo-100'
+                              : isActive
                               ? 'bg-amber-300/90 border-amber-800 text-slate-950 ring-2 ring-amber-400/70 dark:bg-amber-500/35 dark:border-amber-300 dark:text-amber-100'
                               : 'bg-amber-100/80 border-amber-600 text-amber-950 hover:bg-amber-200/80 dark:bg-amber-950/70 dark:border-amber-400 dark:text-amber-200 dark:hover:bg-amber-900/80 dark:hover:text-amber-100'
                           }`}
                         >
                           {seg.text}
                           {isPin && (
-                            <span className="ml-0.5 inline-block text-[10px] align-top text-amber-800 dark:text-amber-300">
+                            <span
+                              className={`ml-0.5 inline-block text-[10px] align-top ${
+                                isEn
+                                  ? 'text-indigo-800 dark:text-indigo-300'
+                                  : 'text-amber-800 dark:text-amber-300'
+                              }`}
+                            >
                               •
                             </span>
                           )}
@@ -643,7 +697,11 @@ function PoeticStanzaCard({
                             className="no-print hidden sm:block pointer-events-none absolute left-1/2 bottom-full z-30 mb-2 w-72 -translate-x-1/2 rounded-xl border border-slate-200 bg-slate-900 px-3.5 py-2.5 text-left text-xs text-white shadow-xl dark:border-slate-700 dark:bg-slate-800"
                           >
                             <div className="flex items-center justify-between gap-2 border-b border-white/15 pb-1 mb-1.5">
-                              <span className="font-extrabold text-amber-300 text-sm">
+                              <span
+                                className={`font-extrabold text-sm ${
+                                  isEn ? 'text-indigo-300' : 'text-amber-300'
+                                }`}
+                              >
                                 {wordObj.word}
                               </span>
                               {wordObj.grammarNote && (
@@ -652,21 +710,46 @@ function PoeticStanzaCard({
                                 </span>
                               )}
                             </div>
-                            <div className="text-white font-semibold leading-snug">
-                              <span className="text-emerald-300">हिंदी:</span>{' '}
-                              {wordObj.hindiMeaning}
-                            </div>
-                            <div className="text-slate-200 mt-0.5 leading-snug">
-                              <span className="text-indigo-300">English:</span>{' '}
-                              {wordObj.englishMeaning}
-                            </div>
-                            {wordObj.exampleSentence && (
-                              <div className="mt-1.5 pt-1 border-t border-white/10 text-[11px] text-amber-100/95 leading-snug">
-                                <span className="font-bold text-amber-300">
-                                  प्रयोग:
-                                </span>{' '}
-                                {wordObj.exampleSentence}
-                              </div>
+                            {isEn ? (
+                              <>
+                                <div className="text-white font-semibold leading-snug">
+                                  <span className="text-emerald-300">Meaning:</span>{' '}
+                                  {wordObj.englishMeaning}
+                                </div>
+                                {(wordObj.synonym || wordObj.hindiMeaning) && (
+                                  <div className="text-slate-200 mt-0.5 leading-snug">
+                                    <span className="text-indigo-300">Synonyms / Tone:</span>{' '}
+                                    {wordObj.synonym || wordObj.hindiMeaning}
+                                  </div>
+                                )}
+                                {wordObj.exampleSentence && (
+                                  <div className="mt-1.5 pt-1 border-t border-white/10 text-[11px] text-amber-100/95 leading-snug">
+                                    <span className="font-bold text-amber-300">
+                                      Board Usage:
+                                    </span>{' '}
+                                    {wordObj.exampleSentence}
+                                  </div>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                <div className="text-white font-semibold leading-snug">
+                                  <span className="text-emerald-300">हिंदी:</span>{' '}
+                                  {wordObj.hindiMeaning}
+                                </div>
+                                <div className="text-slate-200 mt-0.5 leading-snug">
+                                  <span className="text-indigo-300">English:</span>{' '}
+                                  {wordObj.englishMeaning}
+                                </div>
+                                {wordObj.exampleSentence && (
+                                  <div className="mt-1.5 pt-1 border-t border-white/10 text-[11px] text-amber-100/95 leading-snug">
+                                    <span className="font-bold text-amber-300">
+                                      प्रयोग:
+                                    </span>{' '}
+                                    {wordObj.exampleSentence}
+                                  </div>
+                                )}
+                              </>
                             )}
                             <div className="mt-1 text-[10px] text-slate-400">
                               Click/Tap word to pin below
@@ -682,20 +765,48 @@ function PoeticStanzaCard({
           </div>
 
           <p className="no-print mt-3 text-[11px] font-medium text-slate-500 dark:text-slate-400">
-            Tip: Hover or tap any{' '}
-            <span className="rounded bg-amber-100/90 border-b border-dotted border-amber-600 px-1 text-amber-950 dark:bg-amber-950/70 dark:text-amber-200">
-              highlighted word
-            </span>{' '}
-            for its exam-safe मानक हिंदी अर्थ, English helper, grammar note, and usage sentence.
+            {isEn ? (
+              <>
+                Tip: Hover or tap any{' '}
+                <span className="rounded bg-indigo-100/90 border-b border-dotted border-indigo-600 px-1 text-indigo-950 dark:bg-indigo-950/70 dark:text-indigo-200">
+                  highlighted word or phrase
+                </span>{' '}
+                for its contextual meaning, board-level synonyms, and model sentence.
+              </>
+            ) : (
+              <>
+                Tip: Hover or tap any{' '}
+                <span className="rounded bg-amber-100/90 border-b border-dotted border-amber-600 px-1 text-amber-950 dark:bg-amber-950/70 dark:text-amber-200">
+                  highlighted word
+                </span>{' '}
+                for its exam-safe मानक हिंदी अर्थ, English helper, grammar note, and usage sentence.
+              </>
+            )}
           </p>
         </div>
 
         {/* Live Word Lens Inspector (Responsive for Mobile Tap + Desktop Pin) */}
         {activeWord && (
-          <div className="no-print animate-slide-down rounded-xl border-2 border-amber-400 bg-white p-3.5 shadow-sm dark:border-amber-700 dark:bg-slate-900">
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-amber-100 dark:border-slate-800">
+          <div
+            className={`no-print animate-slide-down rounded-xl border-2 bg-white p-3.5 shadow-sm dark:bg-slate-900 ${
+              isEn
+                ? 'border-indigo-400 dark:border-indigo-700'
+                : 'border-amber-400 dark:border-amber-700'
+            }`}
+          >
+            <div
+              className={`flex flex-wrap items-center justify-between gap-2 pb-2 border-b dark:border-slate-800 ${
+                isEn ? 'border-indigo-100' : 'border-amber-100'
+              }`}
+            >
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 px-2 py-0.5 text-[11px] font-extrabold text-amber-900 dark:bg-amber-950 dark:text-amber-300">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-extrabold ${
+                    isEn
+                      ? 'bg-indigo-100 text-indigo-900 dark:bg-indigo-950 dark:text-indigo-300'
+                      : 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300'
+                  }`}
+                >
                   <Languages className="h-3 w-3" /> Word Lens
                 </span>
                 <span className="text-base font-extrabold text-slate-900 dark:text-white">
@@ -724,30 +835,52 @@ function PoeticStanzaCard({
               )}
             </div>
 
-            <div className="mt-2.5 grid gap-2 sm:grid-cols-2 text-xs sm:text-sm">
-              <div className="rounded-lg bg-emerald-50/70 border border-emerald-200 px-3 py-2 dark:bg-emerald-950/30 dark:border-emerald-900">
-                <div className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
-                  मानक हिंदी अर्थ (Exam-Safe Hindi)
+            {isEn ? (
+              <div className="mt-2.5 grid gap-2 sm:grid-cols-2 text-xs sm:text-sm">
+                <div className="rounded-lg bg-emerald-50/70 border border-emerald-200 px-3 py-2 dark:bg-emerald-950/30 dark:border-emerald-900">
+                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
+                    Contextual Meaning
+                  </div>
+                  <div className="mt-0.5 font-bold text-slate-900 dark:text-slate-100">
+                    {activeWord.englishMeaning}
+                  </div>
                 </div>
-                <div className="mt-0.5 font-bold text-slate-900 dark:text-slate-100">
-                  {activeWord.hindiMeaning}
-                </div>
-              </div>
 
-              <div className="rounded-lg bg-indigo-50/70 border border-indigo-200 px-3 py-2 dark:bg-indigo-950/30 dark:border-indigo-900">
-                <div className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-800 dark:text-indigo-400">
-                  English Helper Meaning
-                </div>
-                <div className="mt-0.5 font-semibold text-slate-900 dark:text-slate-100">
-                  {activeWord.englishMeaning}
+                <div className="rounded-lg bg-indigo-50/70 border border-indigo-200 px-3 py-2 dark:bg-indigo-950/30 dark:border-indigo-900">
+                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-800 dark:text-indigo-400">
+                    Board Synonyms &amp; Tone Cue
+                  </div>
+                  <div className="mt-0.5 font-semibold text-slate-900 dark:text-slate-100">
+                    {activeWord.synonym || activeWord.hindiMeaning || '—'}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="mt-2.5 grid gap-2 sm:grid-cols-2 text-xs sm:text-sm">
+                <div className="rounded-lg bg-emerald-50/70 border border-emerald-200 px-3 py-2 dark:bg-emerald-950/30 dark:border-emerald-900">
+                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
+                    मानक हिंदी अर्थ (Exam-Safe Hindi)
+                  </div>
+                  <div className="mt-0.5 font-bold text-slate-900 dark:text-slate-100">
+                    {activeWord.hindiMeaning}
+                  </div>
+                </div>
+
+                <div className="rounded-lg bg-indigo-50/70 border border-indigo-200 px-3 py-2 dark:bg-indigo-950/30 dark:border-indigo-900">
+                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-800 dark:text-indigo-400">
+                    English Helper Meaning
+                  </div>
+                  <div className="mt-0.5 font-semibold text-slate-900 dark:text-slate-100">
+                    {activeWord.englishMeaning}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {activeWord.exampleSentence && (
               <div className="mt-2 rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-700 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-300">
                 <strong className="text-slate-900 dark:text-white">
-                  वाक्य प्रयोग (Exam Usage):
+                  {isEn ? 'Board Usage (Model Sentence):' : 'वाक्य प्रयोग (Exam Usage):'}
                 </strong>{' '}
                 {activeWord.exampleSentence}
               </div>
@@ -758,24 +891,36 @@ function PoeticStanzaCard({
         {/* Full Word Meanings Table (Togglable + Always Visible in Print) */}
         {block.words.length > 0 && (
           <div className={showAllWords ? 'block' : 'hidden print:block'}>
-            <div className="overflow-x-auto rounded-xl border border-amber-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-              <div className="border-b border-amber-100 bg-amber-50/70 px-3.5 py-2 text-xs font-extrabold text-amber-900 dark:border-slate-800 dark:bg-slate-950 dark:text-amber-300">
-                कठिन शब्दार्थ व व्याकरण तालिका (Word Meanings &amp; Usage)
+            <div
+              className={`overflow-x-auto rounded-xl border bg-white dark:border-slate-800 dark:bg-slate-900 ${
+                isEn ? 'border-indigo-200' : 'border-amber-200'
+              }`}
+            >
+              <div
+                className={`border-b px-3.5 py-2 text-xs font-extrabold dark:border-slate-800 dark:bg-slate-950 ${
+                  isEn
+                    ? 'border-indigo-100 bg-indigo-50/70 text-indigo-900 dark:text-indigo-300'
+                    : 'border-amber-100 bg-amber-50/70 text-amber-900 dark:text-amber-300'
+                }`}
+              >
+                {isEn
+                  ? 'Contextual Vocabulary & Synonyms Table'
+                  : 'कठिन शब्दार्थ व व्याकरण तालिका (Word Meanings & Usage)'}
               </div>
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60">
                     <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
-                      शब्द
+                      {isEn ? 'Word / Phrase' : 'शब्द'}
                     </th>
                     <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
-                      मानक हिंदी अर्थ
+                      {isEn ? 'Contextual Meaning' : 'मानक हिंदी अर्थ'}
                     </th>
                     <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
-                      English Helper
+                      {isEn ? 'Synonyms & Tone' : 'English Helper'}
                     </th>
                     <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
-                      व्याकरण व वाक्य प्रयोग
+                      {isEn ? 'Grammar & Board Sentence' : 'व्याकरण व वाक्य प्रयोग'}
                     </th>
                   </tr>
                 </thead>
@@ -783,16 +928,28 @@ function PoeticStanzaCard({
                   {block.words.map((w, idx) => (
                     <tr
                       key={`${w.word}-${idx}`}
-                      className="hover:bg-amber-50/40 dark:hover:bg-slate-800/40"
+                      className={
+                        isEn
+                          ? 'hover:bg-indigo-50/40 dark:hover:bg-slate-800/40'
+                          : 'hover:bg-amber-50/40 dark:hover:bg-slate-800/40'
+                      }
                     >
-                      <td className="px-3 py-2 font-bold text-amber-900 dark:text-amber-300 whitespace-nowrap">
+                      <td
+                        className={`px-3 py-2 font-bold whitespace-nowrap ${
+                          isEn
+                            ? 'text-indigo-900 dark:text-indigo-300'
+                            : 'text-amber-900 dark:text-amber-300'
+                        }`}
+                      >
                         {w.word}
                       </td>
                       <td className="px-3 py-2 font-semibold text-slate-800 dark:text-slate-200">
-                        {w.hindiMeaning}
+                        {isEn ? w.englishMeaning : w.hindiMeaning}
                       </td>
                       <td className="px-3 py-2 text-slate-700 dark:text-slate-300">
-                        {w.englishMeaning}
+                        {isEn
+                          ? w.synonym ?? w.hindiMeaning ?? '—'
+                          : w.englishMeaning}
                       </td>
                       <td className="px-3 py-2 text-slate-600 dark:text-slate-400 space-y-0.5">
                         {w.grammarNote && (
@@ -810,11 +967,17 @@ function PoeticStanzaCard({
           </div>
         )}
 
-        {/* Passage Explanations: Prasang + Hindi Meaning + English Helper + Literary/Language Style */}
+        {/* Passage Explanations */}
         <div className="space-y-3">
           <div className="rounded-xl border border-teal-200 bg-teal-50/60 p-3.5 space-y-1.5 dark:border-teal-900/60 dark:bg-teal-950/30">
             <div className="text-xs font-extrabold uppercase tracking-wider text-teal-900 dark:text-teal-300">
-              {isProse ? 'प्रसंग व संदर्भ (Context)' : 'प्रसंग (Context)'}
+              {isEn
+                ? isProse
+                  ? 'Context, Speaker & Tone (5-Mark RTC Focus)'
+                  : 'Context, Rhyme Scheme & Tone'
+                : isProse
+                ? 'प्रसंग व संदर्भ (Context)'
+                : 'प्रसंग (Context)'}
             </div>
             <p className="text-xs sm:text-sm leading-relaxed text-slate-800 dark:text-slate-200">
               {renderInlineText(block.prasang)}
@@ -823,7 +986,11 @@ function PoeticStanzaCard({
 
           <div className="rounded-xl border border-slate-200 bg-white p-3.5 sm:p-4 space-y-1.5 dark:border-slate-800 dark:bg-slate-900">
             <div className="text-xs font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
-              {isProse
+              {isEn
+                ? isProse
+                  ? 'Detailed Explanation, Subtext & Inference'
+                  : 'Stanza-by-Stanza Explanation & Subtext'
+                : isProse
                 ? 'सरल हिंदी व्याख्या व आशय (Exam-Standard Hindi Explanation)'
                 : 'सरल हिंदी भावार्थ (Exam-Standard Hindi Explanation)'}
             </div>
@@ -832,19 +999,28 @@ function PoeticStanzaCard({
             </p>
           </div>
 
-          <div className="rounded-xl border border-indigo-200 bg-indigo-50/60 p-3.5 space-y-1.5 dark:border-indigo-900/60 dark:bg-indigo-950/30">
-            <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-indigo-900 dark:text-indigo-300">
-              <Sparkles className="h-3.5 w-3.5" /> English Helper Explanation (Concept Bridge)
+          {block.englishHelper.trim().length > 0 && (
+            <div className="rounded-xl border border-indigo-200 bg-indigo-50/60 p-3.5 space-y-1.5 dark:border-indigo-900/60 dark:bg-indigo-950/30">
+              <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-indigo-900 dark:text-indigo-300">
+                <Sparkles className="h-3.5 w-3.5" />{' '}
+                {isEn
+                  ? 'CBSE Marking-Scheme Value Points (Keywords to Include)'
+                  : 'English Helper Explanation (Concept Bridge)'}
+              </div>
+              <p className="text-xs sm:text-sm leading-relaxed text-slate-800 whitespace-pre-line dark:text-slate-200">
+                {renderInlineText(block.englishHelper)}
+              </p>
             </div>
-            <p className="text-xs sm:text-sm leading-relaxed text-slate-800 whitespace-pre-line dark:text-slate-200">
-              {renderInlineText(block.englishHelper)}
-            </p>
-          </div>
+          )}
 
           {block.poeticDevices && block.poeticDevices.length > 0 && (
             <div className="rounded-xl border border-sky-200 bg-sky-50/60 p-3.5 space-y-1.5 dark:border-sky-900/60 dark:bg-sky-950/30">
               <div className="text-xs font-extrabold uppercase tracking-wider text-sky-900 dark:text-sky-300">
-                {isProse
+                {isEn
+                  ? isProse
+                    ? 'Literary Devices, Irony & RTC Exam Traps'
+                    : 'Poetic Devices & Line-by-Line Analysis'
+                  : isProse
                   ? 'भाषा-शैली व परीक्षा संकेत (Language Style & Board Focus)'
                   : 'काव्य-सौंदर्य व परीक्षा संकेत (Poetic Devices & Board Focus)'}
               </div>
@@ -985,19 +1161,20 @@ function ChapterWordBankCard({
   const [query, setQuery] = useState('');
   const [hideMeanings, setHideMeanings] = useState(false);
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
+  const isEn = block.lang === 'en';
 
   const mergedWords = useMemo(() => {
     const seen = new Set<string>();
     const combined: WordAnnotation[] = [];
     for (const w of [...(subtopicWords ?? []), ...(block.extraWords ?? [])]) {
-      const key = w.word.trim();
+      const key = isEn ? w.word.trim().toLowerCase() : w.word.trim();
       if (!seen.has(key)) {
         seen.add(key);
         combined.push(w);
       }
     }
     return combined;
-  }, [subtopicWords, block.extraWords]);
+  }, [subtopicWords, block.extraWords, isEn]);
 
   const filteredWords = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -1005,18 +1182,40 @@ function ChapterWordBankCard({
     return mergedWords.filter(
       (w) =>
         w.word.toLowerCase().includes(q) ||
-        w.hindiMeaning.toLowerCase().includes(q) ||
+        (w.hindiMeaning ?? '').toLowerCase().includes(q) ||
+        (w.synonym ?? '').toLowerCase().includes(q) ||
         w.englishMeaning.toLowerCase().includes(q) ||
         (w.grammarNote ?? '').toLowerCase().includes(q)
     );
   }, [mergedWords, query]);
 
   return (
-    <div className="rounded-2xl border border-amber-200 bg-amber-50/35 overflow-hidden shadow-xs dark:border-amber-900/60 dark:bg-slate-950/60">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-100 bg-amber-50/90 px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+    <div
+      className={`rounded-2xl border overflow-hidden shadow-xs dark:bg-slate-950/60 ${
+        isEn
+          ? 'border-indigo-200 bg-indigo-50/35 dark:border-indigo-900/60'
+          : 'border-amber-200 bg-amber-50/35 dark:border-amber-900/60'
+      }`}
+    >
+      <div
+        className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-3 dark:border-slate-800 dark:bg-slate-900 ${
+          isEn
+            ? 'border-indigo-100 bg-indigo-50/90'
+            : 'border-amber-100 bg-amber-50/90'
+        }`}
+      >
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 px-2 py-0.5 text-[11px] font-extrabold text-amber-900 dark:bg-amber-950 dark:text-amber-300">
-            <BookOpen className="h-3.5 w-3.5" /> शब्दार्थ संकलन ({mergedWords.length} शब्द)
+          <span
+            className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-extrabold ${
+              isEn
+                ? 'bg-indigo-100 text-indigo-900 dark:bg-indigo-950 dark:text-indigo-300'
+                : 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300'
+            }`}
+          >
+            <BookOpen className="h-3.5 w-3.5" />{' '}
+            {isEn
+              ? `NCERT Vocabulary & Language (${mergedWords.length} items)`
+              : `शब्दार्थ संकलन (${mergedWords.length} शब्द)`}
           </span>
           <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
             {block.title}
@@ -1031,12 +1230,22 @@ function ChapterWordBankCard({
           }}
           className={`no-print inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-bold transition cursor-pointer ${
             hideMeanings
-              ? 'border-amber-600 bg-amber-600 text-white'
+              ? isEn
+                ? 'border-indigo-600 bg-indigo-600 text-white'
+                : 'border-amber-600 bg-amber-600 text-white'
+              : isEn
+              ? 'border-indigo-300 bg-white text-indigo-900 hover:bg-indigo-50 dark:border-slate-700 dark:bg-slate-800 dark:text-indigo-300 dark:hover:bg-slate-700'
               : 'border-amber-300 bg-white text-amber-900 hover:bg-amber-50 dark:border-slate-700 dark:bg-slate-800 dark:text-amber-300 dark:hover:bg-slate-700'
           }`}
         >
           <Eye className="h-3.5 w-3.5" />
-          {hideMeanings ? 'सभी अर्थ दिखाएँ' : 'Self-Test: अर्थ छिपाएँ'}
+          {isEn
+            ? hideMeanings
+              ? 'Show All Meanings'
+              : 'Self-Test: Hide Meanings'
+            : hideMeanings
+            ? 'सभी अर्थ दिखाएँ'
+            : 'Self-Test: अर्थ छिपाएँ'}
         </button>
       </div>
 
@@ -1047,13 +1256,21 @@ function ChapterWordBankCard({
           </p>
         )}
 
-        <div className="no-print flex items-center gap-2 rounded-xl border border-amber-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-slate-900">
+        <div
+          className={`no-print flex items-center gap-2 rounded-xl border bg-white px-3 py-2 dark:border-slate-800 dark:bg-slate-900 ${
+            isEn ? 'border-indigo-200' : 'border-amber-200'
+          }`}
+        >
           <Search className="h-4 w-4 text-slate-400 shrink-0" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="शब्द, मानक हिंदी अर्थ या English खोजें..."
+            placeholder={
+              isEn
+                ? 'Filter words, idioms, phrasal verbs, or meanings...'
+                : 'शब्द, मानक हिंदी अर्थ या English खोजें...'
+            }
             className="flex-1 bg-transparent text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none dark:text-white"
           />
           {query && (
@@ -1067,21 +1284,25 @@ function ChapterWordBankCard({
           )}
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-amber-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+        <div
+          className={`overflow-x-auto rounded-xl border bg-white dark:border-slate-800 dark:bg-slate-900 ${
+            isEn ? 'border-indigo-200' : 'border-amber-200'
+          }`}
+        >
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60">
                 <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
-                  शब्द (Word)
+                  {isEn ? 'Word / Phrase' : 'शब्द (Word)'}
                 </th>
                 <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
-                  मानक हिंदी अर्थ
+                  {isEn ? 'Contextual Meaning' : 'मानक हिंदी अर्थ'}
                 </th>
                 <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
-                  English Helper
+                  {isEn ? 'Synonyms & Nuance' : 'English Helper'}
                 </th>
                 <th className="px-3 py-2 font-bold text-slate-800 dark:text-slate-200">
-                  व्याकरण व वाक्य प्रयोग
+                  {isEn ? 'Grammar & Exam Sentence' : 'व्याकरण व वाक्य प्रयोग'}
                 </th>
               </tr>
             </thead>
@@ -1092,9 +1313,19 @@ function ChapterWordBankCard({
                 return (
                   <tr
                     key={`${key}-${idx}`}
-                    className="hover:bg-amber-50/40 dark:hover:bg-slate-800/40"
+                    className={
+                      isEn
+                        ? 'hover:bg-indigo-50/40 dark:hover:bg-slate-800/40'
+                        : 'hover:bg-amber-50/40 dark:hover:bg-slate-800/40'
+                    }
                   >
-                    <td className="px-3 py-2.5 font-extrabold text-amber-900 dark:text-amber-300 whitespace-nowrap align-top">
+                    <td
+                      className={`px-3 py-2.5 font-extrabold whitespace-nowrap align-top ${
+                        isEn
+                          ? 'text-indigo-900 dark:text-indigo-300'
+                          : 'text-amber-900 dark:text-amber-300'
+                      }`}
+                    >
                       {w.word}
                     </td>
                     <td className="px-3 py-2.5 font-semibold text-slate-800 dark:text-slate-200 align-top">
@@ -1102,18 +1333,24 @@ function ChapterWordBankCard({
                         <button
                           type="button"
                           onClick={() => setRevealed((r) => ({ ...r, [key]: true }))}
-                          className="no-print rounded-md border border-dashed border-amber-400 bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-900 hover:bg-amber-100 cursor-pointer dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-300 dark:hover:bg-amber-900/60"
+                          className={`no-print rounded-md border border-dashed px-2 py-1 text-[11px] font-bold cursor-pointer ${
+                            isEn
+                              ? 'border-indigo-400 bg-indigo-50 text-indigo-900 hover:bg-indigo-100 dark:border-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 dark:hover:bg-indigo-900/60'
+                              : 'border-amber-400 bg-amber-50 text-amber-900 hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-300 dark:hover:bg-amber-900/60'
+                          }`}
                         >
                           Click to reveal meaning
                         </button>
                       )}
                       <span className={masked ? 'hidden print:inline' : 'inline'}>
-                        {w.hindiMeaning}
+                        {isEn ? w.englishMeaning : w.hindiMeaning}
                       </span>
                     </td>
                     <td className="px-3 py-2.5 text-slate-700 dark:text-slate-300 align-top">
                       <span className={masked ? 'hidden print:inline' : 'inline'}>
-                        {w.englishMeaning}
+                        {isEn
+                          ? w.synonym ?? w.hindiMeaning ?? '—'
+                          : w.englishMeaning}
                       </span>
                       {masked && (
                         <span className="no-print text-[11px] italic text-slate-400">
@@ -1136,11 +1373,218 @@ function ChapterWordBankCard({
           </table>
           {filteredWords.length === 0 && (
             <div className="p-4 text-center text-xs text-slate-500">
-              कोई मेल खाने वाला शब्द नहीं मिला।
+              {isEn
+                ? 'No matching vocabulary item found.'
+                : 'कोई मेल खाने वाला शब्द नहीं मिला।'}
             </div>
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function NcertReferenceCard({
+  block,
+}: {
+  block: Extract<ContentBlock, { type: 'ncert-reference' }>;
+}) {
+  const [mode, setMode] = useState<'closed' | 'text' | 'pdf'>('closed');
+  const [loadedEntry, setLoadedEntry] = useState<NcertReferenceEntry | null>(null);
+  const [loadingText, setLoadingText] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [textSearch, setTextSearch] = useState('');
+
+  const handleToggleText = async () => {
+    if (mode === 'text') {
+      setMode('closed');
+      return;
+    }
+    setMode('text');
+    if (loadedEntry || loadingText) return;
+    setLoadingText(true);
+    setLoadError(null);
+    try {
+      const mod = await import('../../data/subjects/english/ncert-texts');
+      const entry = mod.NCERT_ENGLISH_TEXTS[block.chapterKey];
+      if (!entry) {
+        setLoadError('Reference text for this chapter is not indexed yet.');
+      } else {
+        setLoadedEntry(entry);
+      }
+    } catch {
+      setLoadError('Unable to load offline NCERT text bundle.');
+    } finally {
+      setLoadingText(false);
+    }
+  };
+
+  const pageLabel = `Pages ${block.pdfStartPage}${
+    block.pdfEndPage && block.pdfEndPage !== block.pdfStartPage
+      ? `–${block.pdfEndPage}`
+      : ''
+  }`;
+  const pdfUrl = `${block.pdfPath}#page=${block.pdfStartPage}`;
+
+  const filteredSections = useMemo(() => {
+    if (!loadedEntry) return [];
+    const q = textSearch.trim().toLowerCase();
+    if (!q) return loadedEntry.sections;
+    return loadedEntry.sections
+      .map((sec) => ({
+        ...sec,
+        paragraphs: sec.paragraphs.filter(
+          (p) =>
+            p.toLowerCase().includes(q) ||
+            (sec.heading ?? '').toLowerCase().includes(q)
+        ),
+      }))
+      .filter((sec) => sec.paragraphs.length > 0);
+  }, [loadedEntry, textSearch]);
+
+  return (
+    <div className="no-print rounded-2xl border border-indigo-200 bg-slate-50/80 overflow-hidden shadow-xs dark:border-indigo-900/60 dark:bg-slate-950/70">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 bg-indigo-50/70 border-b border-indigo-100 dark:bg-slate-900 dark:border-slate-800">
+        <div className="space-y-0.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded-md bg-indigo-100 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-indigo-900 dark:bg-indigo-950 dark:text-indigo-300">
+              <BookOpen className="h-3 w-3" /> Optional Reference Material • Verbatim NCERT Textbook
+            </span>
+            <span className="rounded-md bg-white border border-indigo-200 px-2 py-0.5 text-[10px] font-bold text-slate-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+              {block.bookName} • {pageLabel}
+            </span>
+          </div>
+          <div className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
+            {block.title}
+          </div>
+          {block.note && (
+            <p className="text-[11px] text-slate-600 dark:text-slate-400">
+              {block.note}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={handleToggleText}
+            className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+              mode === 'text'
+                ? 'border-indigo-600 bg-indigo-600 text-white'
+                : 'border-indigo-300 bg-white text-indigo-900 hover:bg-indigo-50 dark:border-indigo-800 dark:bg-slate-800 dark:text-indigo-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            <BookOpen className="h-3.5 w-3.5" />
+            {mode === 'text' ? 'Hide NCERT Text' : '📖 Read Full NCERT Text (In-App)'}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setMode((m) => (m === 'pdf' ? 'closed' : 'pdf'))}
+            className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+              mode === 'pdf'
+                ? 'border-slate-800 bg-slate-800 text-white dark:border-slate-200 dark:bg-slate-200 dark:text-slate-900'
+                : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            <FileText className="h-3.5 w-3.5" />
+            {mode === 'pdf' ? 'Hide PDF Viewer' : '📄 Preview Official NCERT PDF'}
+          </button>
+
+          <a
+            href={pdfUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:border-indigo-400 hover:text-indigo-700 transition dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+          >
+            Open NCERT PDF <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
+      </div>
+
+      {mode === 'text' && (
+        <div className="p-4 sm:p-5 space-y-4 bg-white dark:bg-slate-900/90">
+          {loadingText ? (
+            <div className="py-6 text-center text-xs font-semibold text-slate-500">
+              Loading offline NCERT verbatim chapter text...
+            </div>
+          ) : loadError ? (
+            <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-semibold text-rose-800 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-300">
+              {loadError}
+            </div>
+          ) : loadedEntry ? (
+            <>
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div className="text-xs text-slate-600 dark:text-slate-400">
+                  <strong>{loadedEntry.title}</strong> — {loadedEntry.author} ({loadedEntry.bookName}, PDF {pageLabel})
+                </div>
+                <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 dark:border-slate-700 dark:bg-slate-950">
+                  <Search className="h-3.5 w-3.5 text-slate-400" />
+                  <input
+                    type="text"
+                    value={textSearch}
+                    onChange={(e) => setTextSearch(e.target.value)}
+                    placeholder="Find a line in textbook..."
+                    className="bg-transparent text-xs text-slate-900 outline-none placeholder:text-slate-400 w-44 sm:w-56 dark:text-white"
+                  />
+                  {textSearch && (
+                    <button
+                      type="button"
+                      onClick={() => setTextSearch('')}
+                      className="text-[11px] font-bold text-slate-400 hover:text-slate-700 cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="max-h-[540px] overflow-y-auto pr-2 space-y-5">
+                {(() => {
+                  let paraCounter = 0;
+                  return filteredSections.map((sec, sIdx) => (
+                    <div key={sIdx} className="space-y-2.5">
+                      {sec.heading && (
+                        <h4 className="text-xs font-extrabold uppercase tracking-wider text-indigo-700 dark:text-indigo-400 border-b border-indigo-100 pb-1 dark:border-slate-800">
+                          {sec.heading}
+                        </h4>
+                      )}
+                      {sec.paragraphs.map((p, pIdx) => {
+                        paraCounter += 1;
+                        return (
+                          <div key={pIdx} className="flex items-start gap-2.5">
+                            <span className="mt-1 shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                              ¶{paraCounter}
+                            </span>
+                            <p className="text-sm leading-7 text-slate-800 dark:text-slate-200 whitespace-pre-line">
+                              {p}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ));
+                })()}
+                {filteredSections.length === 0 && (
+                  <p className="text-xs text-slate-500 text-center py-4">
+                    No textbook paragraph matched "{textSearch}".
+                  </p>
+                )}
+              </div>
+            </>
+          ) : null}
+        </div>
+      )}
+
+      {mode === 'pdf' && (
+        <div className="p-4 bg-white dark:bg-slate-900">
+          <iframe
+            title={block.title}
+            src={pdfUrl}
+            className="w-full h-[640px] rounded-xl border border-slate-300 bg-white dark:border-slate-700"
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -1803,6 +2247,9 @@ export function BlockRenderer({
       return (
         <ChapterWordBankCard block={block} subtopicWords={subtopicWords} />
       );
+
+    case 'ncert-reference':
+      return <NcertReferenceCard block={block} />;
 
     case 'muhavre-list':
       return <MuhavreListCard block={block} />;
