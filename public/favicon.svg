@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- Subtle 2x2 Punnett grid motif in background -->
+  <g stroke="rgba(255,255,255,0.18)" stroke-width="6" fill="none">
+    <rect x="96" y="96" width="320" height="320" rx="28"/>
+    <line x1="256" y1="96" x2="256" y2="416"/>
+    <line x1="96" y1="256" x2="416" y2="256"/>
+  </g>
+  <!-- Crisp DNA double-helix / allele badge -->
+  <g fill="none" stroke="#ffffff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M168 136 C168 206, 344 206, 344 256 C344 306, 168 306, 168 376"/>
+    <path d="M344 136 C344 206, 168 206, 168 256 C168 306, 344 306, 344 376"/>
+    <line x1="194" y1="168" x2="318" y2="168" stroke-width="14" stroke="#a7f3d0"/>
+    <line x1="212" y1="212" x2="300" y2="212" stroke-width="14" stroke="#fde68a"/>
+    <line x1="212" y1="300" x2="300" y2="300" stroke-width="14" stroke="#fde68a"/>
+    <line x1="194" y1="344" x2="318" y2="344" stroke-width="14" stroke="#a7f3d0"/>
+  </g>
+</svg>
