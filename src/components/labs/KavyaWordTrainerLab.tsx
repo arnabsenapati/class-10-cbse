@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   BookOpen,
   CheckCircle2,
@@ -8,6 +8,7 @@ import {
   Scale,
   Shuffle,
   Sparkles,
+  Trash2,
   Trophy,
   XCircle,
 } from 'lucide-react';
@@ -18,9 +19,26 @@ import {
   MuhavraItem,
   SamasItem,
 } from '../../types/curriculum';
+import {
+  SAVED_WORDS_EVENT,
+  SavedVocabularyItem,
+  getSavedWords,
+  removeSavedWord,
+} from '../../utils/hindiWordLookup';
 
 type TrainerTab = 'words' | 'muhavre' | 'samas';
 type TrainerMode = 'flashcard' | 'drill';
+
+const SAVED_WORDS_CATEGORY = '★ मेरे सहेजे शब्द' as const;
+type WordCategoryFilter =
+  | 'All'
+  | typeof SAVED_WORDS_CATEGORY
+  | GlossaryTerm['category'];
+
+interface TrainerWordTerm extends Omit<GlossaryTerm, 'category'> {
+  category: GlossaryTerm['category'] | typeof SAVED_WORDS_CATEGORY;
+  isUserSaved?: boolean;
+}
 
 interface TaggedMuhavra extends MuhavraItem {
   chapterSlug: string;
@@ -32,8 +50,7 @@ interface TaggedSamas extends SamasItem {
   chapterTitle: string;
 }
 
-const WORD_CATEGORIES: ('All' | GlossaryTerm['category'])[] = [
-  'All',
+const BASE_WORD_CATEGORIES: GlossaryTerm['category'][] = [
   'सधुक्कड़ी व ब्रज शब्द',
   'तत्सम व साहित्यिक शब्द',
   'उर्दू-फ़ारसी काव्य शब्द',
@@ -75,9 +92,21 @@ function buildFourOptions<T>(
 export function KavyaWordTrainerLab() {
   const [tab, setTab] = useState<TrainerTab>('words');
   const [mode, setMode] = useState<TrainerMode>('flashcard');
-  const [wordCategory, setWordCategory] =
-    useState<'All' | GlossaryTerm['category']>('All');
+  const [wordCategory, setWordCategory] = useState<WordCategoryFilter>('All');
   const [chapterFilter, setChapterFilter] = useState<string>('all');
+  const [savedWords, setSavedWords] = useState<SavedVocabularyItem[]>(() =>
+    getSavedWords()
+  );
+
+  useEffect(() => {
+    const refresh = () => setSavedWords(getSavedWords());
+    window.addEventListener(SAVED_WORDS_EVENT, refresh);
+    window.addEventListener('storage', refresh);
+    return () => {
+      window.removeEventListener(SAVED_WORDS_EVENT, refresh);
+      window.removeEventListener('storage', refresh);
+    };
+  }, []);
 
   const [cardIndex, setCardIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -151,10 +180,57 @@ export function KavyaWordTrainerLab() {
 
   const activeChapters = tab === 'muhavre' ? muhavreChapters : samasChapters;
 
-  const filteredWords = useMemo(() => {
-    if (wordCategory === 'All') return hindiGlossary;
+  const savedGlossaryTerms = useMemo<TrainerWordTerm[]>(
+    () =>
+      savedWords.map((item) => ({
+        id: `saved-${item.word}`,
+        term: item.word,
+        symbol: item.chapterTitle
+          ? `मेरे शब्द • ${item.chapterTitle}`
+          : 'मेरे सहेजे शब्द',
+        category: SAVED_WORDS_CATEGORY,
+        simpleMeaning: item.hindiMeaning,
+        englishMeaning: item.englishMeaning,
+        grammarNote: item.grammarNote || undefined,
+        ncertDefinition: item.contextMeaning || item.hindiMeaning,
+        example: item.exampleSentence || item.contextMeaning || '—',
+        subtopicPath: {
+          subjectSlug: 'hindi',
+          topicSlug: 'sparsh-kavyakhand',
+          subtopicSlug: 'kabir-ki-sakhi',
+        },
+        isUserSaved: true,
+      })),
+    [savedWords]
+  );
+
+  const allWordsPool = useMemo<TrainerWordTerm[]>(() => {
+    const merged: TrainerWordTerm[] = [...savedGlossaryTerms];
+    const seen = new Set(
+      savedGlossaryTerms.map((t) => t.term.trim().toLowerCase())
+    );
+    for (const term of hindiGlossary) {
+      if (!seen.has(term.term.trim().toLowerCase())) {
+        merged.push(term);
+      }
+    }
+    return merged;
+  }, [savedGlossaryTerms]);
+
+  const wordCategories = useMemo<WordCategoryFilter[]>(
+    () => [
+      'All',
+      ...(savedGlossaryTerms.length > 0 ? [SAVED_WORDS_CATEGORY] : []),
+      ...BASE_WORD_CATEGORIES,
+    ],
+    [savedGlossaryTerms.length]
+  );
+
+  const filteredWords = useMemo<TrainerWordTerm[]>(() => {
+    if (wordCategory === SAVED_WORDS_CATEGORY) return savedGlossaryTerms;
+    if (wordCategory === 'All') return allWordsPool;
     return hindiGlossary.filter((t) => t.category === wordCategory);
-  }, [wordCategory]);
+  }, [wordCategory, savedGlossaryTerms, allWordsPool]);
 
   const filteredMuhavre = useMemo(() => {
     if (chapterFilter === 'all') return allMuhavre;
@@ -207,8 +283,8 @@ export function KavyaWordTrainerLab() {
     if (tab === 'words' && filteredWords.length > 0) {
       const target =
         filteredWords[(drillSeed * 3 + 1) % filteredWords.length];
-      const { options, correctIdx } = buildFourOptions(
-        hindiGlossary,
+      const { options, correctIdx } = buildFourOptions<TrainerWordTerm>(
+        allWordsPool,
         target,
         (x) => x.simpleMeaning,
         drillSeed
@@ -275,6 +351,7 @@ export function KavyaWordTrainerLab() {
     tab,
     drillSeed,
     filteredWords,
+    allWordsPool,
     filteredMuhavre,
     filteredSamas,
     allMuhavre,
@@ -312,7 +389,7 @@ export function KavyaWordTrainerLab() {
               3-in-1 हिंदी (ब) Trainer Lab — शब्दार्थ • मुहावरे • समास
             </h4>
             <p className="text-xs text-slate-600 dark:text-slate-400">
-              {hindiGlossary.length} शब्दार्थ • {allMuhavre.length} मुहावरे •{' '}
+              {allWordsPool.length} शब्दार्थ • {allMuhavre.length} मुहावरे •{' '}
               {allSamas.length} समास — स्पर्श, संचयन व व्याकरण Flashcards व Speed Drill (100% Offline)
             </p>
           </div>
@@ -364,7 +441,7 @@ export function KavyaWordTrainerLab() {
             }`}
           >
             <BookOpen className="h-3.5 w-3.5" />
-            1. शब्दार्थ ({hindiGlossary.length})
+            1. शब्दार्थ ({allWordsPool.length})
           </button>
           <button
             type="button"
@@ -404,7 +481,7 @@ export function KavyaWordTrainerLab() {
       {/* Category / Chapter Filter Pills */}
       {tab === 'words' ? (
         <div className="flex flex-wrap gap-1.5">
-          {WORD_CATEGORIES.map((cat) => (
+          {wordCategories.map((cat) => (
             <button
               key={cat}
               type="button"
@@ -420,7 +497,9 @@ export function KavyaWordTrainerLab() {
                   : 'bg-white border border-slate-200 text-slate-600 hover:border-teal-400 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300'
               }`}
             >
-              {cat}
+              {cat === SAVED_WORDS_CATEGORY
+                ? `${cat} (${savedGlossaryTerms.length})`
+                : cat}
             </button>
           ))}
         </div>
@@ -480,9 +559,31 @@ export function KavyaWordTrainerLab() {
                   ? currentMuhavra.chapterTitle
                   : currentSamas?.chapterTitle}
               </span>
-              <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
-                {flipped ? 'Answer Side (Tap to flip)' : 'Prompt Side (Tap to flip)'}
-              </span>
+              <div className="flex items-center gap-2">
+                {tab === 'words' && currentWord?.isUserSaved && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const nextList = removeSavedWord(currentWord.term);
+                      if (
+                        nextList.length === 0 &&
+                        wordCategory === SAVED_WORDS_CATEGORY
+                      ) {
+                        setWordCategory('All');
+                      }
+                      setFlipped(false);
+                    }}
+                    title="Remove from My Saved Words"
+                    className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-700 hover:bg-rose-100 cursor-pointer dark:border-rose-800 dark:bg-rose-950/60 dark:text-rose-300 dark:hover:bg-rose-900/70"
+                  >
+                    <Trash2 className="h-3 w-3" /> Remove
+                  </button>
+                )}
+                <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+                  {flipped ? 'Answer Side (Tap to flip)' : 'Prompt Side (Tap to flip)'}
+                </span>
+              </div>
             </div>
 
             {!flipped ? (

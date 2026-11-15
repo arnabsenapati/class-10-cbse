@@ -14,7 +14,7 @@ export const topicSparshGadyakhand: Topic = {
   order: 2,
   title: 'स्पर्श भाग-2: गद्यखंड (Prose)',
   description:
-    'All 7 CBSE Class 10 Hindi Course B prose lessons (प्रेमचंद से हबीब तनवीर तक) — every chapter includes Word Lens hover meanings on NCERT passages, Scene-by-Scene English Transcript, Searchable Word Bank, Muhavre, Samas-Vigrah, and NCERT Q&As.',
+    'All 7 CBSE Class 10 Hindi Course B prose lessons (प्रेमचंद से हबीब तनवीर तक) — every chapter includes Official NCERT PDF preview & link, Word Lens hover meanings on NCERT passages, Scene-by-Scene English Transcript, Searchable Word Bank, Muhavre, Samas-Vigrah, and NCERT Q&As.',
   ncertChapter: 'स्पर्श भाग-2 (पाठ 1 से 7 — संपूर्ण गद्यखंड)',
   subtopics: [
     gadya01BadeBhaiSahab,

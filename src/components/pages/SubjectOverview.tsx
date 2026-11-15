@@ -2,11 +2,15 @@ import { Link, useParams } from 'react-router-dom';
 import {
   ArrowRight,
   BookOpen,
+  Calculator,
   CheckCircle2,
   ChevronRight,
   Clock,
   Dna,
   Feather,
+  FlaskConical,
+  Globe,
+  Zap,
 } from 'lucide-react';
 import { buildSubtopicPath, getSubjectBySlug } from '../../data/registry';
 
@@ -48,14 +52,30 @@ export function SubjectOverview({ completedSubtopics }: SubjectOverviewProps) {
           <div className="flex items-center gap-3">
             <span
               className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white ${
-                subject.slug === 'english'
+                subject.slug === 'physics'
+                  ? 'bg-cyan-600'
+                  : subject.slug === 'chemistry'
+                  ? 'bg-violet-600'
+                  : subject.slug === 'mathematics'
+                  ? 'bg-blue-600'
+                  : subject.slug === 'social-science'
+                  ? 'bg-rose-600'
+                  : subject.slug === 'english'
                   ? 'bg-indigo-600'
                   : subject.slug === 'hindi'
                   ? 'bg-amber-600'
                   : 'bg-teal-700'
               }`}
             >
-              {subject.slug === 'english' ? (
+              {subject.slug === 'physics' ? (
+                <Zap className="h-6 w-6" />
+              ) : subject.slug === 'chemistry' ? (
+                <FlaskConical className="h-6 w-6" />
+              ) : subject.slug === 'mathematics' ? (
+                <Calculator className="h-6 w-6" />
+              ) : subject.slug === 'social-science' ? (
+                <Globe className="h-6 w-6" />
+              ) : subject.slug === 'english' ? (
                 <BookOpen className="h-6 w-6" />
               ) : subject.slug === 'hindi' ? (
                 <Feather className="h-6 w-6" />

@@ -10,7 +10,7 @@ export const topicSanchayanBhag2: Topic = {
   order: 3,
   title: 'संचयन भाग-2 (पूरक पाठ्यपुस्तक — 6 अंक)',
   description:
-    'CBSE Class 10 Hindi Course B की पूरक पुस्तक के तीनों पाठ (हरिहर काका, सपनों के-से दिन, टोपी शुक्ला) — Word Lens, Complete English Transcript, आंचलिक Word Bank, मुहावरे, समास व 3-अंक मूल्यपरक प्रश्नोत्तर।',
+    'CBSE Class 10 Hindi Course B की पूरक पुस्तक के तीनों पाठ (हरिहर काका, सपनों के-से दिन, टोपी शुक्ला) — Official NCERT PDF preview & link, Word Lens, Complete English Transcript, आंचलिक Word Bank, मुहावरे, समास व 3-अंक मूल्यपरक प्रश्नोत्तर।',
   ncertChapter: 'संचयन भाग-2 (पाठ 1 से 3 — संपूर्ण पूरक पुस्तक)',
   subtopics: [
     sanchayan01HariharKaka,

@@ -3,7 +3,7 @@ import { Topic } from '../../../types/curriculum';
 export const topicCbseExamMastery: Topic = {
   id: 'bio-topic-5',
   slug: 'cbse-exam-mastery',
-  order: 5,
+  order: 9,
   title: 'CBSE Board Exam Mastery & Chapter Wrap-Up',
   description:
     'Complete the rest of NCERT Chapter 8 (Sex Determination), verify CBSE syllabus boundaries, avoid top examiner traps, and test yourself offline.',

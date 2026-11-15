@@ -3,25 +3,103 @@ import { Award, CheckCircle2, RotateCcw, Trophy, XCircle } from 'lucide-react';
 import { ALL_QUIZ_QUESTIONS } from '../../data/registry';
 
 interface CbseQuizArenaProps {
-  subjectSlug?: 'biology' | 'hindi' | 'english';
+  subjectSlug?: 'physics' | 'chemistry' | 'biology' | 'hindi' | 'english' | 'social-science' | 'mathematics';
   bestScore?: { correct: number; total: number } | null;
   onSaveScore?: (correct: number, total: number, subjectSlug?: string) => void;
 }
 
-const ENGLISH_TOPIC_ORDER = [
-  'first-flight-prose',
-  'first-flight-poetry',
-  'footprints-without-feet',
-  'english-reading-grammar',
-  'english-writing-skills',
-] as const;
+const TOPIC_ORDERS: Record<string, readonly string[]> = {
+  physics: [
+    'phy-light-reflection-refraction',
+    'phy-human-eye-colourful-world',
+    'phy-electricity',
+    'phy-magnetic-effects',
+    'phy-board-mastery',
+  ],
+  chemistry: [
+    'chem-reactions-and-equations',
+    'chem-acids-bases-salts',
+    'chem-metals-and-non-metals',
+    'chem-carbon-and-compounds',
+    'chem-board-mastery',
+  ],
+  biology: [
+    'bio-life-processes-nutrition-respiration',
+    'bio-life-processes-transport-excretion',
+    'bio-control-and-coordination',
+    'bio-reproduction',
+    'basics-and-alleles',
+    'mendel-and-punnett-square',
+    'monohybrid-cross',
+    'dihybrid-cross',
+    'cbse-exam-mastery',
+    'bio-our-environment',
+  ],
+  mathematics: [
+    'math-number-systems',
+    'math-algebra',
+    'math-coordinate-geometry',
+    'math-geometry',
+    'math-trigonometry',
+    'math-mensuration',
+    'math-statistics-probability',
+    'math-board-mastery',
+  ],
+  english: [
+    'first-flight-prose',
+    'first-flight-poetry',
+    'footprints-without-feet',
+    'english-reading-grammar',
+    'english-writing-skills',
+  ],
+  'social-science': [
+    'sst-history',
+    'sst-civics',
+    'sst-economics',
+    'sst-geography',
+    'sst-map-mastery',
+  ],
+};
 
-const ENGLISH_TOPIC_LABELS: Record<string, string> = {
+const TOPIC_LABELS: Record<string, string> = {
+  'phy-light-reflection-refraction': 'Ch 9: Light',
+  'phy-human-eye-colourful-world': 'Ch 10: Human Eye',
+  'phy-electricity': 'Ch 11: Electricity',
+  'phy-magnetic-effects': 'Ch 12: Magnetism',
+  'phy-board-mastery': '25M Mastery',
+  'chem-reactions-and-equations': 'Ch 1: Reactions',
+  'chem-acids-bases-salts': 'Ch 2: Acids & Salts',
+  'chem-metals-and-non-metals': 'Ch 3: Metals',
+  'chem-carbon-and-compounds': 'Ch 4: Carbon',
+  'chem-board-mastery': '25M Mastery',
+  'bio-life-processes-nutrition-respiration': 'Ch 5A: Nutrition & Resp.',
+  'bio-life-processes-transport-excretion': 'Ch 5B: Transport & Excr.',
+  'bio-control-and-coordination': 'Ch 6: Control & Coord.',
+  'bio-reproduction': 'Ch 7: Reproduction',
+  'basics-and-alleles': 'Ch 8: DNA & Alleles',
+  'mendel-and-punnett-square': 'Ch 8: Punnett Square',
+  'monohybrid-cross': 'Ch 8: Monohybrid',
+  'dihybrid-cross': 'Ch 8: Dihybrid',
+  'cbse-exam-mastery': 'Ch 8: Sex Det. & Traps',
+  'bio-our-environment': 'Ch 13: Environment',
+  'math-number-systems': 'Ch 1: Real Numbers',
+  'math-algebra': 'Ch 2–5: Algebra',
+  'math-coordinate-geometry': 'Ch 7: Coordinate Geo',
+  'math-geometry': 'Ch 6 & 10: Triangles & Circles',
+  'math-trigonometry': 'Ch 8–9: Trigonometry',
+  'math-mensuration': 'Ch 11–12: Mensuration',
+  'math-statistics-probability': 'Ch 13–14: Stats & Prob',
+  'math-board-mastery': '80M Mastery',
   'first-flight-prose': 'First Flight: Prose',
   'first-flight-poetry': 'First Flight: Poetry',
   'footprints-without-feet': 'Footprints without Feet',
   'english-reading-grammar': 'Reading & Grammar',
   'english-writing-skills': 'Writing Skills',
+  'sst-civics': 'Democratic Politics II (Civics)',
+  'sst-economics': 'Economics + G20',
+  'sst-history': 'History',
+  'sst-geography': 'Geography',
+  'sst-map-mastery': 'India Map & Mastery',
 };
 
 export function CbseQuizArena({
@@ -41,17 +119,24 @@ export function CbseQuizArena({
     [subjectSlug]
   );
 
-  const availableEnglishTopics = useMemo(() => {
-    if (subjectSlug !== 'english') return [];
+  const availableUnitTopics = useMemo(() => {
+    const order = TOPIC_ORDERS[subjectSlug];
+    if (!order) return [];
     const present = new Set(subjectQuestions.map((q) => q.topicSlug));
-    return ENGLISH_TOPIC_ORDER.filter((slug) => present.has(slug));
+    return order.filter((slug) => present.has(slug));
   }, [subjectSlug, subjectQuestions]);
 
   const questions = useMemo(() => {
     return subjectQuestions.filter((q) => {
       if (filterType !== 'all' && q.type !== filterType) return false;
       if (
-        (subjectSlug === 'hindi' || subjectSlug === 'english') &&
+        (subjectSlug === 'physics' ||
+          subjectSlug === 'chemistry' ||
+          subjectSlug === 'biology' ||
+          subjectSlug === 'hindi' ||
+          subjectSlug === 'english' ||
+          subjectSlug === 'social-science' ||
+          subjectSlug === 'mathematics') &&
         topicFilter !== 'all' &&
         q.topicSlug !== topicFilter
       ) {
@@ -92,18 +177,34 @@ export function CbseQuizArena({
           </span>
           <div>
             <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-              {subjectSlug === 'english'
+              {subjectSlug === 'physics'
+                ? 'CBSE Class 10 Physics (Code 086 — Ch 9–12) Self-Test Arena'
+                : subjectSlug === 'chemistry'
+                ? 'CBSE Class 10 Chemistry (Code 086 — Ch 1–4) Self-Test Arena'
+                : subjectSlug === 'mathematics'
+                ? 'CBSE Class 10 Mathematics Standard (Code 041) Section A & Case-Study Arena'
+                : subjectSlug === 'social-science'
+                ? 'CBSE Class 10 Social Science (Code 087) Self-Test & Source Arena'
+                : subjectSlug === 'english'
                 ? 'CBSE Class 10 English (Code 184) Self-Test & RTC Arena'
                 : subjectSlug === 'hindi'
                 ? 'CBSE Class 10 Hindi Course B (80-Mark Full Syllabus) Self-Test Arena'
-                : 'CBSE Class 10 Heredity Self-Test Arena'}
+                : 'CBSE Class 10 Biology (Code 086 — Ch 5, 6, 7, 8 & 13) Self-Test Arena'}
             </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              {subjectSlug === 'english'
+              {subjectSlug === 'physics'
+                ? '100% offline • Light ray signs, Eye defects, Ohm/Joule numericals, Fleming’s Left-Hand Rule & Domestic Circuits'
+                : subjectSlug === 'chemistry'
+                ? '100% offline • Reaction colours/gases/precipitates, pH & 5 Salts, Metallurgy/HNO₃ traps & Carbon Isomers/Micelles'
+                : subjectSlug === 'mathematics'
+                ? '100% offline • Keep a rough page beside you! Standard (041) MCQs, Assertion–Reason & 4M Case Studies targeting silly traps'
+                : subjectSlug === 'social-science'
+                ? '100% offline • Board MCQs, Assertion–Reason, Case Extracts, Cartoon/Chart Checks & G20'
+                : subjectSlug === 'english'
                 ? '100% offline • Reference-to-Context (RTC) Extracts, Competency MCQs & Assertion–Reason with examiner trap alerts'
                 : subjectSlug === 'hindi'
                 ? '100% ऑफ़लाइन • स्पर्श, संचयन, अपठित गद्यांश, व्याकरण (पदबंध-वाक्य-समास-मुहावरे) व लेखन अभ्यास'
-                : '100% offline quiz with instant NCERT explanations & common trap alerts'}
+                : '100% offline • Life Processes, Control & Coordination, Reproduction, Heredity & 10% Law / Ozone with trap alerts'}
             </p>
           </div>
         </div>
@@ -127,7 +228,9 @@ export function CbseQuizArena({
               {
                 key: 'case-based' as const,
                 label:
-                  subjectSlug === 'english'
+                  subjectSlug === 'social-science'
+                    ? 'Source / Case-Based'
+                    : subjectSlug === 'english'
                     ? 'RTC Extracts (Case-Based)'
                     : subjectSlug === 'hindi'
                     ? 'पठित / अपठित गद्यांश व काव्यांश'
@@ -186,13 +289,19 @@ export function CbseQuizArena({
           </div>
         )}
 
-        {subjectSlug === 'english' && availableEnglishTopics.length > 0 && (
+        {(subjectSlug === 'physics' ||
+          subjectSlug === 'chemistry' ||
+          subjectSlug === 'biology' ||
+          subjectSlug === 'english' ||
+          subjectSlug === 'social-science' ||
+          subjectSlug === 'mathematics') &&
+          availableUnitTopics.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {[
               { key: 'all', label: 'All Units' },
-              ...availableEnglishTopics.map((slug) => ({
+              ...availableUnitTopics.map((slug) => ({
                 key: slug,
-                label: ENGLISH_TOPIC_LABELS[slug] ?? slug,
+                label: TOPIC_LABELS[slug] ?? slug,
               })),
             ].map((u) => (
               <button
@@ -238,7 +347,9 @@ export function CbseQuizArena({
               {q.casePassage && (
                 <div className="rounded-lg border-l-4 border-amber-400 bg-amber-50/70 p-3 text-xs text-slate-700 whitespace-pre-line leading-relaxed dark:bg-amber-950/30 dark:text-slate-300">
                   <strong>
-                    {subjectSlug === 'english'
+                    {subjectSlug === 'social-science'
+                      ? 'NCERT Source / Case Extract:'
+                      : subjectSlug === 'english'
                       ? 'NCERT Reference Extract:'
                       : subjectSlug === 'hindi'
                       ? 'पठित काव्यांश / गद्यांश:'

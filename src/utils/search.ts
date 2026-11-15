@@ -174,6 +174,16 @@ function extractBlockText(block: ContentBlock): string {
           block.examinerNote ?? '',
         ].join(' ')
       );
+    case 'hand-practice':
+      return stripMarkdown(
+        [
+          block.title,
+          block.subtitle ?? '',
+          ...block.problems.map(
+            (p) => `${p.numberLabel} ${p.tag} ${p.question} ${p.sillyTrapNote ?? ''}`
+          ),
+        ].join(' ')
+      );
     case 'lab':
       return stripMarkdown(`${block.title} ${block.caption ?? ''}`);
   }
@@ -277,9 +287,29 @@ function buildSearchIndex(): IndexedDocument[] {
 
   for (const q of ALL_QUIZ_QUESTIONS) {
     const subj = q.subjectSlug ?? 'biology';
+    const isPhysics = subj === 'physics';
+    const isChemistry = subj === 'chemistry';
+    const isMath = subj === 'mathematics';
+    const isSst = subj === 'social-science';
     const isHindi = subj === 'hindi';
     const isEnglish = subj === 'english';
-    const quizPath = isEnglish
+    const quizPath = isPhysics
+      ? `/subject/physics/phy-board-mastery/phy-formulas-traps-and-quiz#physics-quiz-section`
+      : isChemistry
+      ? `/subject/chemistry/chem-board-mastery/chem-observation-vault-detective-quiz#chemistry-quiz-section`
+      : isMath
+      ? `/subject/mathematics/math-board-mastery/endless-drill-and-80m-blueprint#math-quiz-section`
+      : isSst
+      ? q.topicSlug === 'sst-civics'
+        ? `/subject/social-science/sst-civics/civics-board-mastery#sst-civics-quiz-section`
+        : q.topicSlug === 'sst-history'
+        ? `/subject/social-science/sst-history/history-board-mastery#sst-history-quiz-section`
+        : q.topicSlug === 'sst-geography'
+        ? `/subject/social-science/sst-geography/geography-board-mastery#sst-geography-quiz-section`
+        : q.topicSlug === 'sst-map-mastery'
+        ? `/subject/social-science/sst-map-mastery/sst-80m-board-blueprint-and-mock#sst-full-syllabus-quiz-section`
+        : `/subject/social-science/sst-economics/economics-board-mastery#sst-economics-quiz-section`
+      : isEnglish
       ? q.topicSlug === 'first-flight-poetry'
         ? `/subject/english/first-flight-poetry/poetry-board-mastery#english-poetry-quiz-section`
         : q.topicSlug === 'footprints-without-feet'
@@ -297,17 +327,31 @@ function buildSearchIndex(): IndexedDocument[] {
         : q.topicSlug === 'rachanatmak-lekhan'
         ? `/subject/hindi/rachanatmak-lekhan/lekhan-board-mastery#hindi-full-syllabus-quiz-section`
         : `/subject/hindi/sparsh-kavyakhand/kavyakhand-board-mastery#hindi-kavya-quiz-section`
+      : q.topicSlug === 'bio-life-processes-nutrition-respiration' ||
+        q.topicSlug === 'bio-life-processes-transport-excretion' ||
+        q.topicSlug === 'bio-control-and-coordination' ||
+        q.topicSlug === 'bio-reproduction' ||
+        q.topicSlug === 'bio-our-environment'
+      ? `/subject/biology/bio-our-environment/bio13-ozone-waste-science-blueprint#biology-full-quiz-section`
       : `/subject/biology/cbse-exam-mastery/cbse-traps-question-bank-and-quiz#interactive-cbse-quiz-section`;
 
     docs.push({
       id: `quiz:${q.id}`,
       kind: 'quiz',
       title: stripMarkdown(q.question).slice(0, 95) + (q.question.length > 95 ? '...' : ''),
-      breadcrumb: isEnglish
+      breadcrumb: isPhysics
+        ? `Physics (Code 086) › Quiz Arena › ${q.subtopicTitle}`
+        : isChemistry
+        ? `Chemistry (Code 086) › Quiz Arena › ${q.subtopicTitle}`
+        : isMath
+        ? `Mathematics Standard (Code 041) › Quiz Arena › ${q.subtopicTitle}`
+        : isSst
+        ? `Social Science (Code 087) › Quiz Arena › ${q.subtopicTitle}`
+        : isEnglish
         ? `English (Code 184) › Quiz Arena › ${q.subtopicTitle}`
         : isHindi
         ? `Hindi (Course B) › स्पर्श Quiz Arena › ${q.subtopicTitle}`
-        : `Biology › CBSE Quiz Arena › ${q.subtopicTitle}`,
+        : `Biology (Code 086) › CBSE Quiz Arena › ${q.subtopicTitle}`,
       path: quizPath,
       badge: 'CBSE Quiz',
       subjectSlug: subj,
@@ -412,20 +456,24 @@ export function searchCurriculum(
 }
 
 export const POPULAR_SEARCH_SUGGESTIONS = [
-  'A Letter to God',
-  'Nelson Mandela',
-  'Anne Frank',
-  'Glimpses of India',
-  'Madam Rides the Bus',
-  'The Proposal',
-  'Irony',
-  'हरिहर काका',
-  'टोपी शुक्ला',
-  'पदबंध',
-  'समास',
-  'मुहावरे',
+  'Mirror Formula',
+  'Fleming Left-Hand',
+  'Ohm’s Law',
+  'Myopia',
+  'Chlor-Alkali',
+  'Thermit Reaction',
+  'Soap Micelle',
+  'Double Circulation',
+  'Nephron',
+  'Reflex Arc',
+  '10% Energy Law',
+  'BPT Theorem',
+  'Quadratic',
+  'Trigonometry',
+  'G20',
+  'Federalism',
+  'Letter to God',
   'कबीर साखी',
   'allele',
-  'punnett square',
   '9:3:3:1',
 ];

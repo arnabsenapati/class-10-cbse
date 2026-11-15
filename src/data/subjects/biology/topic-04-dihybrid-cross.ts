@@ -3,7 +3,7 @@ import { Topic } from '../../../types/curriculum';
 export const topicDihybridCross: Topic = {
   id: 'bio-topic-4',
   slug: 'dihybrid-cross',
-  order: 4,
+  order: 8,
   title: 'Dihybrid Cross (Two-Trait Inheritance)',
   description:
     'Master Mendel’s 16-box Round-Yellow × Wrinkled-Green cross, discover how new trait combinations appear, and prove the 9:3:3:1 ratio.',

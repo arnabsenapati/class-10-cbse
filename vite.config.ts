@@ -1,7 +1,25 @@
-import { defineConfig } from 'vite';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { createAskTeacherMiddleware } from './scripts/ask-teacher-middleware.mjs';
+
+const projectRoot = dirname(fileURLToPath(import.meta.url));
+
+function askTeacherApiPlugin(): Plugin {
+  const middleware = createAskTeacherMiddleware({ projectRoot });
+  return {
+    name: 'ask-teacher-api-plugin',
+    configureServer(server) {
+      server.middlewares.use('/api/ask-teacher', middleware);
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use('/api/ask-teacher', middleware);
+    },
+  };
+}
 
 export default defineConfig({
   server: {
@@ -30,8 +48,32 @@ export default defineConfig({
           if (normalized.includes('/node_modules/lucide-react/')) {
             return 'icons-vendor';
           }
+          if (normalized.includes('/src/data/subjects/physics/')) {
+            return 'data-physics';
+          }
+          if (normalized.includes('/src/data/subjects/chemistry/')) {
+            return 'data-chemistry';
+          }
           if (normalized.includes('/src/data/subjects/biology/')) {
             return 'data-biology';
+          }
+          if (normalized.includes('/src/data/subjects/social-science/civ-')) {
+            return 'data-sst-civics';
+          }
+          if (normalized.includes('/src/data/subjects/social-science/eco-')) {
+            return 'data-sst-economics';
+          }
+          if (normalized.includes('/src/data/subjects/social-science/hist-')) {
+            return 'data-sst-history';
+          }
+          if (normalized.includes('/src/data/subjects/social-science/geo-')) {
+            return 'data-sst-geography';
+          }
+          if (normalized.includes('/src/data/subjects/social-science/map-')) {
+            return 'data-sst-map';
+          }
+          if (normalized.includes('/src/data/subjects/social-science/')) {
+            return 'data-sst-meta';
           }
           if (normalized.includes('/src/data/subjects/hindi/gadya-')) {
             return 'data-hindi-gadya';
@@ -66,6 +108,39 @@ export default defineConfig({
           if (normalized.includes('/src/data/subjects/english/writing-')) {
             return 'data-english-writing';
           }
+          if (
+            normalized.includes('/src/data/subjects/mathematics/ch01-') ||
+            normalized.includes('/src/data/subjects/mathematics/ch02-') ||
+            normalized.includes('/src/data/subjects/mathematics/ch03-') ||
+            normalized.includes('/src/data/subjects/mathematics/ch04-') ||
+            normalized.includes('/src/data/subjects/mathematics/ch05-')
+          ) {
+            return 'data-math-num-alg';
+          }
+          if (
+            normalized.includes('/src/data/subjects/mathematics/ch06-') ||
+            normalized.includes('/src/data/subjects/mathematics/ch07-') ||
+            normalized.includes('/src/data/subjects/mathematics/ch10-')
+          ) {
+            return 'data-math-geo-coord';
+          }
+          if (
+            normalized.includes('/src/data/subjects/mathematics/ch08-') ||
+            normalized.includes('/src/data/subjects/mathematics/ch09-')
+          ) {
+            return 'data-math-trig';
+          }
+          if (
+            normalized.includes('/src/data/subjects/mathematics/ch11-') ||
+            normalized.includes('/src/data/subjects/mathematics/ch12-') ||
+            normalized.includes('/src/data/subjects/mathematics/ch13-') ||
+            normalized.includes('/src/data/subjects/mathematics/ch14-')
+          ) {
+            return 'data-math-mens-stats';
+          }
+          if (normalized.includes('/src/data/subjects/mathematics/')) {
+            return 'data-math-mastery';
+          }
           if (normalized.includes('/src/data/subjects/english/')) {
             return 'data-english-meta';
           }
@@ -77,6 +152,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    askTeacherApiPlugin(),
     react(),
     tailwindcss(),
     VitePWA({
@@ -89,10 +165,10 @@ export default defineConfig({
         'icons/apple-touch-icon.png',
       ],
       manifest: {
-        name: 'Class 10 CBSE Study Hub — English, Hindi Course B & Biology',
+        name: 'Class 10 CBSE Study Hub — Science (086 — Physics, Chemistry & Biology 2D/3D Labs), Maths, SST, English & Hindi',
         short_name: 'Class 10 Study Hub',
         description:
-          'Offline-ready Class 10 CBSE study companion featuring Complete 80-Mark English Language & Literature (Code 184 — First Flight Prose & Poetry, Footprints without Feet, Unseen Passages, 50-Q Grammar Lab, Formal Letters & Analytical Paragraphs + NCERT PDFs), Complete 80-Mark Hindi Course B, and Biology (Heredity Punnett labs).',
+          'Offline-ready Class 10 CBSE study companion featuring Complete 80-Mark Science (Code 086 — Physics Ch 9-12 Ray Optics/Circuits/3D Solenoid, Chemistry Ch 1-4 Wet-Lab/Electrolysis/3D Carbon & Micelles, Biology Ch 5-8 & 13 Life Processes/Reflex Arc/3D Flower & DNA), Complete 80-Mark Mathematics Standard (041), Social Science (087), English (184), and Hindi Course B (085).',
         theme_color: '#0f766e',
         background_color: '#f8fafc',
         display: 'standalone',
@@ -125,17 +201,22 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,json}'],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//, /^\/ncert\//i],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true,
         runtimeCaching: [
+          {
+            urlPattern: /^\/api\//,
+            handler: 'NetworkOnly',
+          },
           {
             urlPattern: /^\/ncert\/.*\.pdf$/i,
             handler: 'CacheFirst',
             options: {
               cacheName: 'ncert-pdfs-cache',
               expiration: {
-                maxEntries: 30,
+                maxEntries: 60,
                 maxAgeSeconds: 60 * 60 * 24 * 180,
               },
             },

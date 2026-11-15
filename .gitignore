@@ -3,4 +3,5 @@ dist/
 .vite/
 logs/
 *.tsbuildinfo
+.env
 *.local

@@ -3,7 +3,7 @@ import { Topic } from '../../../types/curriculum';
 export const topicBasicsAndAlleles: Topic = {
   id: 'bio-topic-1',
   slug: 'basics-and-alleles',
-  order: 1,
+  order: 5,
   title: 'Foundations: DNA, Genes & Alleles',
   description:
     'Start from zero: understand how traits pass from parents to children through DNA, chromosomes, genes, and alleles before drawing any Punnett square.',
@@ -127,6 +127,12 @@ export const topicBasicsAndAlleles: Topic = {
               labId: 'cell-to-trait',
               title: 'Interactive Explorer: Zoom From Cell to Trait',
               caption: 'Click through each zoom level (Cell → Nucleus → Chromosomes → DNA → Gene → Protein → Trait) to see how microscopic molecules become visible traits.',
+            },
+            {
+              type: 'lab',
+              labId: 'bio-3d-dna-eco-pyramid',
+              title: '3D Interactive Lab: DNA Double Helix, Gene Locus & Variation',
+              caption: 'Drag to rotate the 3D DNA molecule and simulate how DNA copying creates variation.',
             },
           ],
         },

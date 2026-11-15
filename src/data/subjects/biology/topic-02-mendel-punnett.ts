@@ -3,7 +3,7 @@ import { Topic } from '../../../types/curriculum';
 export const topicMendelAndPunnett: Topic = {
   id: 'bio-topic-2',
   slug: 'mendel-and-punnett-square',
-  order: 2,
+  order: 6,
   title: 'Mendel & Punnett Square Mastery',
   description:
     'Learn why Gregor Mendel chose garden pea plants, read genetic cross symbols, and master the 4-step Punnett square & FOIL gamete method.',

@@ -3,7 +3,7 @@ import { Topic } from '../../../types/curriculum';
 export const topicMonohybridCross: Topic = {
   id: 'bio-topic-3',
   slug: 'monohybrid-cross',
-  order: 3,
+  order: 7,
   title: 'Monohybrid Cross (Single-Trait Inheritance)',
   description:
     'Trace Mendel’s famous Tall × Dwarf experiment across P, F₁, and F₂ generations, verify 3:1 and 1:2:1 ratios, and practice CBSE twist crosses.',

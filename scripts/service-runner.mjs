@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, appendFileSync, renameSync, statSync } from 'nod
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { preview } from 'vite';
+import { hasGeminiApiKey } from './ask-teacher-middleware.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,7 +11,13 @@ const distIndex = join(projectRoot, 'dist', 'index.html');
 const logDir = join(projectRoot, 'logs');
 const logFile = join(logDir, 'pwa-service.log');
 const maxLogBytes = 1024 * 1024; // 1 MiB
-const port = Number(process.env.PWA_PORT || 4174);
+const portArgIndex = process.argv.indexOf('--port');
+const cliPort =
+  portArgIndex !== -1 ? Number(process.argv[portArgIndex + 1]) : Number.NaN;
+const port =
+  Number.isFinite(cliPort) && cliPort > 0
+    ? cliPort
+    : Number(process.env.PWA_PORT || 4174);
 
 function rotateLogIfNeeded() {
   try {
@@ -50,6 +57,13 @@ async function main() {
   }
 
   logLine('INFO', `Starting Class 10 CBSE Study Hub PWA on 0.0.0.0:${port}...`);
+  const geminiStatus = hasGeminiApiKey(projectRoot);
+  logLine(
+    'INFO',
+    geminiStatus.available
+      ? `AI Teacher endpoint (/api/ask-teacher) ready using model "${geminiStatus.model}".`
+      : 'AI Teacher endpoint (/api/ask-teacher) awaiting GEMINI_API_KEY in .env.local (hot-loads automatically when added).'
+  );
 
   const server = await preview({
     root: projectRoot,

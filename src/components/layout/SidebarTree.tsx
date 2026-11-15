@@ -3,25 +3,32 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   BookMarked,
   BookOpen,
+  Calculator,
   CheckCircle2,
   ChevronDown,
   ChevronRight,
   Circle,
   Dna,
   Feather,
+  FlaskConical,
+  Globe,
   Home,
+  PanelLeftClose,
   Search,
+  Zap,
 } from 'lucide-react';
 import { SUBJECTS, buildSubtopicPath } from '../../data/registry';
 
 interface SidebarTreeProps {
   completedSubtopics: string[];
   onNavigate?: () => void;
+  onCollapseDesktop?: () => void;
 }
 
 export function SidebarTree({
   completedSubtopics,
   onNavigate,
+  onCollapseDesktop,
 }: SidebarTreeProps) {
   const location = useLocation();
   const [expandedSubjects, setExpandedSubjects] = useState<Record<string, boolean>>({});
@@ -37,6 +44,23 @@ export function SidebarTree({
 
   return (
     <div className="flex flex-col h-full py-4 px-3 space-y-5 overflow-y-auto">
+      {onCollapseDesktop && (
+        <div className="flex items-center justify-between px-2">
+          <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+            Navigation
+          </span>
+          <button
+            type="button"
+            onClick={onCollapseDesktop}
+            title="Collapse left sidebar"
+            aria-label="Collapse left sidebar"
+            className="rounded-lg p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition cursor-pointer dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+          >
+            <PanelLeftClose className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
       {/* Core Navigation */}
       <div className="space-y-1">
         <Link
@@ -105,7 +129,15 @@ export function SidebarTree({
                   onClick={onNavigate}
                   className="flex items-center gap-2 text-xs font-extrabold text-slate-900 hover:text-teal-700 dark:text-white dark:hover:text-teal-400"
                 >
-                  {subject.slug === 'english' ? (
+                  {subject.slug === 'physics' ? (
+                    <Zap className="h-4 w-4 text-cyan-600 shrink-0" />
+                  ) : subject.slug === 'chemistry' ? (
+                    <FlaskConical className="h-4 w-4 text-violet-600 shrink-0" />
+                  ) : subject.slug === 'mathematics' ? (
+                    <Calculator className="h-4 w-4 text-blue-600 shrink-0" />
+                  ) : subject.slug === 'social-science' ? (
+                    <Globe className="h-4 w-4 text-rose-600 shrink-0" />
+                  ) : subject.slug === 'english' ? (
                     <BookOpen className="h-4 w-4 text-indigo-600 shrink-0" />
                   ) : subject.slug === 'hindi' ? (
                     <Feather className="h-4 w-4 text-amber-600 shrink-0" />

@@ -87,7 +87,7 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search Letter to God, Mandela, कबीर साखी, मुहावरे, allele..."
+            placeholder="Search Mirror Formula, Chlor-Alkali, Nephron, BPT, कबीर, allele..."
             className="flex-1 bg-transparent text-sm font-medium text-slate-900 placeholder:text-slate-400 outline-none dark:text-white"
           />
           {query && (

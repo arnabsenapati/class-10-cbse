@@ -72,7 +72,7 @@ Stop-ExistingPortListener -Port $Port
 
 $action = New-ScheduledTaskAction `
     -Execute $nodeExe `
-    -Argument ('"' + $runnerScript + '"') `
+    -Argument ('"' + $runnerScript + '" --port ' + $Port) `
     -WorkingDirectory $projectRoot
 
 if ($Mode -eq 'BootService') {

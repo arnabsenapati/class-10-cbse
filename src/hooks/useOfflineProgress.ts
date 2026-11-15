@@ -7,6 +7,9 @@ export interface StudyProgressState {
   bestQuizScore: { correct: number; total: number } | null;
   bestQuizScoresBySubject: Record<string, { correct: number; total: number }>;
   theme: 'light' | 'dark';
+  aiTeacherEnabled: boolean;
+  leftSidebarCollapsed: boolean;
+  rightRailCollapsed: boolean;
 }
 
 const STORAGE_KEY = 'cbse_class10_study_hub_v1';
@@ -18,6 +21,9 @@ const DEFAULT_STATE: StudyProgressState = {
   bestQuizScore: null,
   bestQuizScoresBySubject: {},
   theme: 'light',
+  aiTeacherEnabled: true,
+  leftSidebarCollapsed: false,
+  rightRailCollapsed: false,
 };
 
 function loadInitialState(): StudyProgressState {
@@ -45,6 +51,18 @@ function loadInitialState(): StudyProgressState {
       bestQuizScore: parsed.bestQuizScore ?? null,
       bestQuizScoresBySubject: bySubject,
       theme: parsed.theme === 'dark' ? 'dark' : 'light',
+      aiTeacherEnabled:
+        typeof parsed.aiTeacherEnabled === 'boolean'
+          ? parsed.aiTeacherEnabled
+          : true,
+      leftSidebarCollapsed:
+        typeof parsed.leftSidebarCollapsed === 'boolean'
+          ? parsed.leftSidebarCollapsed
+          : false,
+      rightRailCollapsed:
+        typeof parsed.rightRailCollapsed === 'boolean'
+          ? parsed.rightRailCollapsed
+          : false,
     };
   } catch {
     return DEFAULT_STATE;
@@ -139,8 +157,46 @@ export function useOfflineProgress() {
     }));
   }, []);
 
+  const toggleAiTeacher = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      aiTeacherEnabled: !prev.aiTeacherEnabled,
+    }));
+  }, []);
+
+  const toggleLeftSidebar = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      leftSidebarCollapsed: !prev.leftSidebarCollapsed,
+    }));
+  }, []);
+
+  const toggleRightRail = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      rightRailCollapsed: !prev.rightRailCollapsed,
+    }));
+  }, []);
+
+  const toggleWideMode = useCallback(() => {
+    setState((prev) => {
+      const bothCollapsed = prev.leftSidebarCollapsed && prev.rightRailCollapsed;
+      return {
+        ...prev,
+        leftSidebarCollapsed: !bothCollapsed,
+        rightRailCollapsed: !bothCollapsed,
+      };
+    });
+  }, []);
+
   const resetProgress = useCallback(() => {
-    setState((prev) => ({ ...DEFAULT_STATE, theme: prev.theme }));
+    setState((prev) => ({
+      ...DEFAULT_STATE,
+      theme: prev.theme,
+      aiTeacherEnabled: prev.aiTeacherEnabled,
+      leftSidebarCollapsed: prev.leftSidebarCollapsed,
+      rightRailCollapsed: prev.rightRailCollapsed,
+    }));
   }, []);
 
   return {
@@ -150,6 +206,10 @@ export function useOfflineProgress() {
     recordVisitedPath,
     recordQuizScore,
     toggleTheme,
+    toggleAiTeacher,
+    toggleLeftSidebar,
+    toggleRightRail,
+    toggleWideMode,
     resetProgress,
   };
 }

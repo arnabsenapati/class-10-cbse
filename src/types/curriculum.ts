@@ -13,7 +13,25 @@ export type LabWidgetId =
   | 'english-quiz-arena'
   | 'english-poetic-devices-lab'
   | 'english-literature-trainer'
-  | 'english-grammar-lab';
+  | 'english-grammar-lab'
+  | 'sst-quiz-arena'
+  | 'sst-timeline-lab'
+  | 'sst-india-map-lab'
+  | 'math-endless-drill'
+  | 'math-silly-mistake-clinic'
+  | 'math-quiz-arena'
+  | 'physics-optics-bench'
+  | 'physics-circuit-simulator'
+  | 'physics-magnetism-3d'
+  | 'physics-quiz-arena'
+  | 'chemistry-reaction-bench'
+  | 'chemistry-metallurgy-ionic-lab'
+  | 'chemistry-3d-molecules'
+  | 'chemistry-quiz-arena'
+  | 'bio-life-processes-animator'
+  | 'bio-neuro-endocrine-lab'
+  | 'bio-reproduction-3d-lab'
+  | 'bio-3d-dna-eco-pyramid';
 
 export interface WordAnnotation {
   word: string;
@@ -52,7 +70,61 @@ export type DiagramId =
   | 'blend-vs-lego'
   | 'foil-arcs'
   | 'monohybrid-visual'
-  | 'dihybrid-visual';
+  | 'dihybrid-visual'
+  | 'gdp-vs-employment-bars'
+  | 'bank-loan-mechanism-flow'
+  | 'formal-vs-informal-credit-chart'
+  | 'mnc-global-production-and-g20'
+  | 'power-sharing-horizontal-vertical'
+  | 'india-federal-lists-and-tiers'
+  | 'civics-cartoon-gallery'
+  | 'germania-and-marianne-symbols'
+  | 'european-unification-lanes'
+  | 'indian-movement-timeline-arc'
+  | 'soil-profile-and-india-zones'
+  | 'rainwater-harvesting-and-dams'
+  | 'cropping-seasons-wheel'
+  | 'coastline-ports-and-airports'
+  | 'linear-pair-graphical-cases'
+  | 'quadratic-parabola-discriminant'
+  | 'bpt-and-similarity-criteria'
+  | 'coordinate-section-and-midpoint'
+  | 'trig-right-triangle-and-table'
+  | 'elevation-vs-depression-sightlines'
+  | 'circle-tangent-theorems'
+  | 'sector-and-segment-anatomy'
+  | 'combined-solids-visible-surface'
+  | 'statistics-mean-median-mode-map'
+  | 'mirror-6-cases-atlas'
+  | 'lens-6-cases-atlas'
+  | 'human-eye-and-defects-diagrams'
+  | 'prism-rainbow-scattering-diagrams'
+  | 'circuit-symbols-and-vi-graphs'
+  | 'domestic-circuit-and-bar-magnet'
+  | 'decomposition-trio-visual'
+  | 'ph-scale-and-chlor-alkali-map'
+  | 'metallurgy-flowchart-and-rusting'
+  | 'electron-dot-and-isomers-gallery'
+  | 'human-digestive-and-respiratory-atlas'
+  | 'xylem-transpiration-vs-phloem-translocation'
+  | 'neuron-and-reflex-arc-diagram'
+  | 'human-reproductive-and-seed-atlas'
+  | 'food-web-and-ozone-depletion-visual';
+
+export interface HandPracticeProblem {
+  id: string;
+  numberLabel: string;
+  marks: 1 | 2 | 3 | 4 | 5;
+  timeMinutes: number;
+  tag: string;
+  question: string;
+  copyCheck?: string;
+  step1Setup: string;
+  midwayCheckpoint: string;
+  finalAnswer: string;
+  fullSolution: string;
+  sillyTrapNote?: string;
+}
 
 export type CalloutVariant = 'analogy' | 'ncert' | 'tip' | 'trap' | 'law';
 
@@ -155,7 +227,17 @@ export type ContentBlock =
         | 'Competency / Cross-Chapter (6 Marks)'
         | 'Title & Theme Justification'
         | 'Thinking About Language'
-        | 'Formal Writing Model';
+        | 'Formal Writing Model'
+        | 'CBSE 2-Mark (40 Words)'
+        | 'CBSE 3-Mark (60 Words)'
+        | 'CBSE 5-Mark (120 Words)'
+        | 'Section E Source/Case (4 Marks)'
+        | 'Data & Numerical'
+        | 'Cartoon / Picture Based'
+        | 'G20 Special Focus'
+        | 'Standard 041 Proof (3M/5M)'
+        | 'Standard 041 Word Problem'
+        | 'Examiner Step-Marking Model';
       question: string;
       answer: string;
       markingTip?: string;
@@ -213,9 +295,15 @@ export type ContentBlock =
     }
   | {
       type: 'ncert-reference';
-      chapterKey: string;
+      chapterKey?: string;
       title: string;
-      bookName: 'First Flight — Prose' | 'First Flight — Poetry' | 'Footprints without Feet';
+      bookName:
+        | 'First Flight — Prose'
+        | 'First Flight — Poetry'
+        | 'Footprints without Feet'
+        | 'स्पर्श भाग-2 — काव्यखंड'
+        | 'स्पर्श भाग-2 — गद्यखंड'
+        | 'संचयन भाग-2';
       pdfPath: string;
       pdfStartPage: number;
       pdfEndPage?: number;
@@ -232,6 +320,12 @@ export type ContentBlock =
       title: string;
       note?: string;
       items: SamasItem[];
+    }
+  | {
+      type: 'hand-practice';
+      title: string;
+      subtitle?: string;
+      problems: HandPracticeProblem[];
     }
   | {
       type: 'lab';
@@ -301,7 +395,31 @@ export interface GlossaryTerm {
     | 'First Flight — Poetry Vocab'
     | 'Footprints — Supplementary Vocab'
     | 'Tone & Mood Descriptors'
-    | 'Grammar & Writing Rules';
+    | 'Grammar & Writing Rules'
+    | 'Economics — Indicators & Formulas'
+    | 'Economics — Money, Credit & G20'
+    | 'Civics — Constitution & Federalism'
+    | 'Civics — Parties & Democracy'
+    | 'History — Nationalism & Treaties'
+    | 'Geography — Resources, Crops & Maps'
+    | 'Maths — Number Systems & Algebra'
+    | 'Maths — Coordinate Geometry'
+    | 'Maths — Geometry Theorems (Triangles & Circles)'
+    | 'Maths — Trigonometry & Identities'
+    | 'Maths — Mensuration (Circles & Solids)'
+    | 'Maths — Statistics, Probability & Anti-Slip Rules'
+    | 'Physics — Light: Reflection & Mirrors'
+    | 'Physics — Refraction, Lenses & Human Eye'
+    | 'Physics — Electricity & Circuits'
+    | 'Physics — Magnetism & Domestic Circuits'
+    | 'Chemistry — Reactions, Redox & Corrosion'
+    | 'Chemistry — Acids, Bases, pH & Salts'
+    | 'Chemistry — Metals, Ionic Bonds & Metallurgy'
+    | 'Chemistry — Carbon, Isomers & Functional Groups'
+    | 'Biology — Life Processes (Ch 5)'
+    | 'Biology — Control & Coordination (Ch 6)'
+    | 'Biology — Reproduction (Ch 7)'
+    | 'Biology — Our Environment (Ch 13)';
   simpleMeaning: string;
   englishMeaning?: string;
   grammarNote?: string;

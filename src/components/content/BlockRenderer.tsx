@@ -1,8 +1,9 @@
-import { Fragment, ReactNode, useMemo, useState } from 'react';
+import { Fragment, ReactNode, useEffect, useMemo, useState } from 'react';
 import {
   AlertTriangle,
   ArrowDown,
   BookOpen,
+  Calculator,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -14,19 +15,46 @@ import {
   Lightbulb,
   Mail,
   Megaphone,
+  Pause,
   PenLine,
   Pin,
+  Play,
+  RefreshCw,
+  RotateCcw,
   Scale,
   Search,
   Sparkles,
+  Timer,
   X,
   XCircle,
   Zap,
 } from 'lucide-react';
-import { CalloutVariant, ContentBlock, WordAnnotation } from '../../types/curriculum';
+import {
+  CalloutVariant,
+  ContentBlock,
+  HandPracticeProblem,
+  WordAnnotation,
+} from '../../types/curriculum';
 import type { NcertReferenceEntry } from '../../data/subjects/english/ncert-texts/types';
+import {
+  MATH_SLIP_LABELS,
+  MathSlipCategory,
+  useMathNotebookProgress,
+} from '../../utils/mathNotebookProgress';
+import {
+  CHAPTER_SUBPATTERNS,
+  ChapterTopicKey,
+  GeneratedMathProblem,
+  chapterKeyFromProblemId,
+  generateMathProblem,
+} from '../../utils/mathProblemGenerator';
 import { LabResolver } from '../labs/LabResolver';
+import { BiologyConceptDiagram, isBiologyDiagramId } from '../visuals/BiologyVisuals';
+import { ChemistryConceptDiagram, isChemistryDiagramId } from '../visuals/ChemistryVisuals';
 import { ConceptDiagram } from '../visuals/GeneticsSvg';
+import { MathConceptDiagram, isMathDiagramId } from '../visuals/MathVisuals';
+import { PhysicsConceptDiagram, isPhysicsDiagramId } from '../visuals/PhysicsVisuals';
+import { SstConceptDiagram, isSstDiagramId } from '../visuals/SstVisuals';
 
 export function renderInlineText(text: string): ReactNode[] {
   // Supports **bold**, *italic*, and `code` cleanly without unsafe HTML injection
@@ -102,7 +130,7 @@ const CALLOUT_STYLES: Record<
       'border-amber-300 bg-amber-50/80 dark:border-amber-800 dark:bg-amber-950/40',
     badge: 'text-amber-900 dark:text-amber-300',
     icon: <Scale className="h-4 w-4 text-amber-700 dark:text-amber-400" />,
-    label: 'Mendel’s Law',
+    label: 'Core Law & Principle',
   },
 };
 
@@ -539,7 +567,16 @@ function PoeticStanzaCard({
     return { matcher: regex, wordIndexMap: idxMap };
   }, [block.words, isEn]);
 
-  const lines = useMemo(() => block.stanzaText.split('\n'), [block.stanzaText]);
+  const lines = useMemo(
+    () =>
+      isProse
+        ? block.stanzaText
+            .split(/\n+/)
+            .map((l) => l.trim())
+            .filter(Boolean)
+        : block.stanzaText.split('\n'),
+    [block.stanzaText, isProse]
+  );
   const activeIdx = hoveredWordIdx ?? pinnedWordIdx;
   const activeWord = activeIdx !== null ? block.words[activeIdx] : null;
   const isPinned = pinnedWordIdx !== null && hoveredWordIdx === null;
@@ -618,7 +655,7 @@ function PoeticStanzaCard({
           <div
             className={
               isProse
-                ? 'space-y-2 text-[16px] sm:text-[17px] leading-8 sm:leading-9 font-medium text-slate-900 dark:text-slate-100'
+                ? 'space-y-3.5 text-[16px] sm:text-[17px] leading-8 sm:leading-9 font-medium text-slate-900 dark:text-slate-100'
                 : 'space-y-1.5 text-lg sm:text-[19px] leading-9 sm:leading-10 font-semibold text-slate-900 dark:text-slate-100'
             }
           >
@@ -1394,8 +1431,11 @@ function NcertReferenceCard({
   const [loadingText, setLoadingText] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [textSearch, setTextSearch] = useState('');
+  const hasInAppText = Boolean(block.chapterKey);
 
   const handleToggleText = async () => {
+    if (!block.chapterKey) return;
+    const chapterKey = block.chapterKey;
     if (mode === 'text') {
       setMode('closed');
       return;
@@ -1406,7 +1446,7 @@ function NcertReferenceCard({
     setLoadError(null);
     try {
       const mod = await import('../../data/subjects/english/ncert-texts');
-      const entry = mod.NCERT_ENGLISH_TEXTS[block.chapterKey];
+      const entry = mod.NCERT_ENGLISH_TEXTS[chapterKey];
       if (!entry) {
         setLoadError('Reference text for this chapter is not indexed yet.');
       } else {
@@ -1448,7 +1488,10 @@ function NcertReferenceCard({
         <div className="space-y-0.5">
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1 rounded-md bg-indigo-100 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-indigo-900 dark:bg-indigo-950 dark:text-indigo-300">
-              <BookOpen className="h-3 w-3" /> Optional Reference Material • Verbatim NCERT Textbook
+              <BookOpen className="h-3 w-3" />{' '}
+              {hasInAppText
+                ? 'Optional Reference Material • Verbatim NCERT Textbook'
+                : 'Optional Reference Material • Official NCERT Textbook PDF'}
             </span>
             <span className="rounded-md bg-white border border-indigo-200 px-2 py-0.5 text-[10px] font-bold text-slate-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
               {block.bookName} • {pageLabel}
@@ -1465,18 +1508,20 @@ function NcertReferenceCard({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={handleToggleText}
-            className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
-              mode === 'text'
-                ? 'border-indigo-600 bg-indigo-600 text-white'
-                : 'border-indigo-300 bg-white text-indigo-900 hover:bg-indigo-50 dark:border-indigo-800 dark:bg-slate-800 dark:text-indigo-200 dark:hover:bg-slate-700'
-            }`}
-          >
-            <BookOpen className="h-3.5 w-3.5" />
-            {mode === 'text' ? 'Hide NCERT Text' : '📖 Read Full NCERT Text (In-App)'}
-          </button>
+          {hasInAppText && (
+            <button
+              type="button"
+              onClick={handleToggleText}
+              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+                mode === 'text'
+                  ? 'border-indigo-600 bg-indigo-600 text-white'
+                  : 'border-indigo-300 bg-white text-indigo-900 hover:bg-indigo-50 dark:border-indigo-800 dark:bg-slate-800 dark:text-indigo-200 dark:hover:bg-slate-700'
+              }`}
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              {mode === 'text' ? 'Hide NCERT Text' : '📖 Read Full NCERT Text (In-App)'}
+            </button>
+          )}
 
           <button
             type="button"
@@ -2045,6 +2090,806 @@ function WritingSampleCard({
   );
 }
 
+function formatTimer(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function HandPracticeItemCard({
+  problem,
+  status,
+  slipCategory,
+  onMarkClean,
+  onMarkSlip,
+  onClearMark,
+}: {
+  problem: HandPracticeProblem;
+  status?: 'clean' | 'slip';
+  slipCategory?: MathSlipCategory;
+  onMarkClean: (id: string) => void;
+  onMarkSlip: (id: string, cat: MathSlipCategory) => void;
+  onClearMark: (id: string) => void;
+}) {
+  const [showSetup, setShowSetup] = useState(false);
+  const [showMidway, setShowMidway] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [showSteps, setShowSteps] = useState(false);
+  const [slipPickerOpen, setSlipPickerOpen] = useState(false);
+
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const [running, setRunning] = useState(false);
+
+  useEffect(() => {
+    if (!running) return;
+    const id = window.setInterval(() => {
+      setElapsedSec((prev) => prev + 1);
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [running]);
+
+  const targetSeconds = problem.timeMinutes * 60;
+  const overTarget = elapsedSec > targetSeconds;
+
+  return (
+    <div
+      className={`print-avoid-break rounded-2xl border bg-white p-4 sm:p-5 space-y-3.5 shadow-xs transition dark:bg-slate-900 ${
+        status === 'clean'
+          ? 'border-emerald-300 dark:border-emerald-800/80'
+          : status === 'slip'
+          ? 'border-amber-300 dark:border-amber-800/80'
+          : 'border-slate-200 dark:border-slate-800'
+      }`}
+    >
+      {/* Top Bar: Labels + Status + Stopwatch */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="rounded-lg bg-blue-600 px-2.5 py-0.5 text-xs font-extrabold text-white">
+            {problem.numberLabel}
+          </span>
+          <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+            {problem.tag}
+          </span>
+          <span className="rounded-md bg-indigo-50 px-2 py-0.5 text-[11px] font-bold text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
+            {problem.marks} {problem.marks === 1 ? 'Mark' : 'Marks'}
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            <Timer className="h-3 w-3" /> Target: {problem.timeMinutes}m
+          </span>
+          {status === 'clean' && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-extrabold text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300">
+              <CheckCircle2 className="h-3 w-3" /> Clean ✓
+            </span>
+          )}
+          {status === 'slip' && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-extrabold text-amber-800 dark:bg-amber-950/70 dark:text-amber-300">
+              <AlertTriangle className="h-3 w-3" /> Retry Slip
+              {slipCategory ? ` (${MATH_SLIP_LABELS[slipCategory].short})` : ''}
+            </span>
+          )}
+        </div>
+
+        {/* Notebook Stopwatch */}
+        <div className="no-print flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1 dark:border-slate-700 dark:bg-slate-950">
+          <span
+            className={`font-mono text-xs font-extrabold px-1 ${
+              overTarget
+                ? 'text-amber-600 dark:text-amber-400'
+                : 'text-slate-700 dark:text-slate-200'
+            }`}
+          >
+            {formatTimer(elapsedSec)}
+          </span>
+          <button
+            type="button"
+            onClick={() => setRunning((r) => !r)}
+            aria-label={running ? 'Pause notebook timer' : 'Start notebook timer'}
+            className="rounded-md bg-white border border-slate-200 p-1 text-slate-700 hover:bg-slate-100 cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white"
+          >
+            {running ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setRunning(false);
+              setElapsedSec(0);
+            }}
+            aria-label="Reset notebook timer"
+            className="rounded-md bg-white border border-slate-200 p-1 text-slate-500 hover:bg-slate-100 cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
+          >
+            <RotateCcw className="h-3 w-3" />
+          </button>
+        </div>
+      </div>
+
+      {/* Problem Prompt */}
+      <div className="text-[15px] sm:text-base font-medium leading-7 text-slate-900 whitespace-pre-line dark:text-slate-100">
+        {renderInlineText(problem.question)}
+      </div>
+
+      {/* Pre-Flight Copy & Sign Shield */}
+      {problem.copyCheck && (
+        <div className="rounded-xl border border-sky-200 bg-sky-50/70 px-3 py-2 text-xs text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-200">
+          <strong className="text-sky-800 dark:text-sky-300">
+            Copy-Check before writing Line 1:
+          </strong>{' '}
+          {renderInlineText(problem.copyCheck)}
+        </div>
+      )}
+
+      {/* 4 Progressive Anti-Spoiler Reveal Buttons */}
+      <div className="no-print flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setShowSetup((v) => !v)}
+          className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+            showSetup
+              ? 'border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-200 dark:hover:bg-blue-950/80 dark:hover:text-white'
+              : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white'
+          }`}
+        >
+          {showSetup ? 'Hide Setup' : '1. Nudge Setup'}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowMidway((v) => !v)}
+          className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+            showMidway
+              ? 'border-amber-500 bg-amber-50 text-amber-900 hover:bg-amber-100 dark:bg-amber-950/60 dark:text-amber-200 dark:hover:bg-amber-900/70 dark:hover:text-amber-100'
+              : 'border-amber-200 bg-amber-50/50 text-amber-900 hover:bg-amber-100/70 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300 dark:hover:bg-amber-900/50 dark:hover:text-amber-100'
+          }`}
+        >
+          {showMidway ? 'Hide Mid-Way Check' : '2. Mid-Way Check'}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowAnswer((v) => !v)}
+          className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+            showAnswer
+              ? 'border-emerald-500 bg-emerald-50 text-emerald-900 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-200 dark:hover:bg-emerald-950/80 dark:hover:text-white'
+              : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white'
+          }`}
+        >
+          {showAnswer ? 'Hide Final Answer' : '3. Final Answer'}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowSteps((v) => !v)}
+          className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+            showSteps
+              ? 'border-teal-600 bg-teal-600 text-white hover:bg-teal-700'
+              : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white'
+          }`}
+        >
+          {showSteps ? 'Hide CBSE Steps' : '4. Full CBSE Steps'}
+        </button>
+      </div>
+
+      {/* Stage 1: Setup Nudge */}
+      {showSetup && (
+        <div className="rounded-xl border border-blue-200 bg-blue-50/70 p-3 text-xs sm:text-sm text-blue-950 space-y-1 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-200">
+          <div className="text-[11px] font-extrabold uppercase tracking-wider text-blue-800 dark:text-blue-300">
+            Stage 1 — Line-1 Setup / Equation Frame (Finish the algebra by hand!)
+          </div>
+          <div className="whitespace-pre-line leading-relaxed">
+            {renderInlineText(problem.step1Setup)}
+          </div>
+        </div>
+      )}
+
+      {/* Stage 2: Mid-Way Silly-Mistake Catcher */}
+      {showMidway && (
+        <div className="rounded-xl border border-amber-300 bg-amber-50/80 p-3 text-xs sm:text-sm text-amber-950 space-y-1 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
+          <div className="text-[11px] font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+            Stage 2 — Mid-Way Silly-Mistake Checkpoint
+          </div>
+          <div className="whitespace-pre-line leading-relaxed">
+            {renderInlineText(problem.midwayCheckpoint)}
+          </div>
+        </div>
+      )}
+
+      {/* Stage 3: Final Answer Only */}
+      {showAnswer && (
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 text-xs sm:text-sm text-emerald-950 space-y-1 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-200">
+          <div className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
+            Stage 3 — Final Answer Only (If yours differs, check signs &amp; LCM in your register before opening Stage 4!)
+          </div>
+          <div className="font-semibold whitespace-pre-line leading-relaxed">
+            {renderInlineText(problem.finalAnswer)}
+          </div>
+        </div>
+      )}
+
+      {/* Stage 4: Full Step-Marked CBSE Solution + Silly Trap Note */}
+      {showSteps && (
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-xs sm:text-sm text-slate-800 space-y-3 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200">
+          <div className="text-[11px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-400">
+            Stage 4 — Full CBSE Standard (041) Step-Marked Solution
+          </div>
+          <div className="whitespace-pre-line leading-relaxed">
+            {renderInlineText(problem.fullSolution)}
+          </div>
+          {problem.sillyTrapNote && (
+            <div className="rounded-lg border border-rose-200 bg-rose-50/80 px-3 py-2 text-xs text-rose-900 dark:border-rose-900/70 dark:bg-rose-950/30 dark:text-rose-200">
+              <strong>Where Students Lose Marks (Silly Slip Alert):</strong>{' '}
+              {renderInlineText(problem.sillyTrapNote)}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Notebook Self-Audit Footer */}
+      <div className="no-print border-t border-slate-100 pt-3 flex flex-wrap items-center justify-between gap-2 dark:border-slate-800">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setRunning(false);
+              setSlipPickerOpen(false);
+              onMarkClean(problem.id);
+            }}
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-extrabold transition cursor-pointer ${
+              status === 'clean'
+                ? 'bg-emerald-600 text-white shadow-xs hover:bg-emerald-700'
+                : 'border border-emerald-300 bg-emerald-50/70 text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/60 dark:hover:text-emerald-100'
+            }`}
+          >
+            <CheckCircle2 className="h-3.5 w-3.5" /> Solved Clean by Hand
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSlipPickerOpen((v) => !v)}
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-extrabold transition cursor-pointer ${
+              status === 'slip'
+                ? 'bg-amber-600 text-white shadow-xs hover:bg-amber-700'
+                : 'border border-amber-300 bg-amber-50/70 text-amber-800 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300 dark:hover:bg-amber-900/60 dark:hover:text-amber-100'
+            }`}
+          >
+            <AlertTriangle className="h-3.5 w-3.5" /> Made a Silly Slip (Retry)
+          </button>
+
+          {status && (
+            <button
+              type="button"
+              onClick={() => {
+                setSlipPickerOpen(false);
+                onClearMark(problem.id);
+              }}
+              className="text-[11px] font-semibold text-slate-500 hover:text-slate-800 underline cursor-pointer dark:text-slate-400 dark:hover:text-slate-200"
+            >
+              Clear Mark
+            </button>
+          )}
+        </div>
+      </div>
+
+      {slipPickerOpen && (
+        <div className="no-print rounded-xl border border-amber-200 bg-amber-50/70 p-3 space-y-2 dark:border-amber-900 dark:bg-amber-950/30">
+          <div className="text-[11px] font-extrabold text-amber-900 dark:text-amber-300">
+            Tag what slipped so your Silly-Mistake Radar tracks it:
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {(Object.keys(MATH_SLIP_LABELS) as MathSlipCategory[]).map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => {
+                  setRunning(false);
+                  onMarkSlip(problem.id, cat);
+                  setSlipPickerOpen(false);
+                }}
+                className={`rounded-lg px-2.5 py-1 text-xs font-bold transition cursor-pointer ${
+                  slipCategory === cat
+                    ? 'bg-amber-600 text-white hover:bg-amber-700'
+                    : 'bg-white border border-amber-300 text-amber-900 hover:bg-amber-100 dark:bg-slate-900 dark:border-amber-800 dark:text-amber-200 dark:hover:bg-amber-900/50 dark:hover:text-amber-100'
+                }`}
+              >
+                {MATH_SLIP_LABELS[cat].short}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ChapterOnTheFlyGenerator({ chapterKey }: { chapterKey: ChapterTopicKey }) {
+  const { todayCount, dailyTarget, recordEndlessResult } = useMathNotebookProgress();
+
+  const subPatterns = CHAPTER_SUBPATTERNS[chapterKey];
+  const [selectedSub, setSelectedSub] = useState<number | 'mix'>('mix');
+  const [recentSigs, setRecentSigs] = useState<string[]>([]);
+  const [generatedCount, setGeneratedCount] = useState(1);
+  const [problem, setProblem] = useState<GeneratedMathProblem>(() =>
+    generateMathProblem(chapterKey)
+  );
+
+  const [showSetup, setShowSetup] = useState(false);
+  const [showMidway, setShowMidway] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [showSteps, setShowSteps] = useState(false);
+  const [slipMenuOpen, setSlipMenuOpen] = useState(false);
+  const [loggedNote, setLoggedNote] = useState<string | null>(null);
+
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const [running, setRunning] = useState(false);
+
+  useEffect(() => {
+    if (!running) return;
+    const id = window.setInterval(() => {
+      setElapsedSec((prev) => prev + 1);
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [running]);
+
+  const handleGenerateNext = (subOverride?: number | 'mix') => {
+    const activeSub = subOverride !== undefined ? subOverride : selectedSub;
+    const history = [problem.signature, ...recentSigs].slice(0, 12);
+    const next = generateMathProblem(chapterKey, {
+      subPatternIndex: activeSub === 'mix' ? undefined : activeSub,
+      recentSignatures: history,
+      lastSubPattern: activeSub === 'mix' ? problem.subPatternIndex : undefined,
+    });
+    setRecentSigs(history);
+    setProblem(next);
+    setGeneratedCount((c) => c + 1);
+    setShowSetup(false);
+    setShowMidway(false);
+    setShowAnswer(false);
+    setShowSteps(false);
+    setSlipMenuOpen(false);
+    setLoggedNote(null);
+    setRunning(false);
+    setElapsedSec(0);
+  };
+
+  const overTarget = elapsedSec > problem.targetMinutes * 60;
+
+  return (
+    <div className="no-print rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/70 p-4 sm:p-5 space-y-4 dark:border-indigo-800/80 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/30">
+      {/* Live Generator Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-100 pb-3.5 dark:border-slate-800">
+        <div className="space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-indigo-600 px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-white">
+              <Zap className="h-3 w-3" /> Live On-The-Fly Generator (Unlimited)
+            </span>
+            <span className="rounded-md bg-white border border-indigo-200 px-2 py-0.5 font-mono text-[11px] font-bold text-indigo-800 dark:bg-slate-800 dark:border-indigo-800 dark:text-indigo-200">
+              Today: {todayCount}/{dailyTarget} Sums
+            </span>
+          </div>
+          <p className="text-xs text-slate-600 dark:text-slate-300">
+            Click <strong>Generate New Question</strong> as many times as you like — fresh numbers every time for non-stop notebook practice.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => handleGenerateNext()}
+          className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-extrabold text-white shadow-xs hover:bg-blue-700 cursor-pointer transition"
+        >
+          <RefreshCw className="h-3.5 w-3.5" /> Generate New Question
+        </button>
+      </div>
+
+      {/* Sub-pattern selector pills */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => {
+            setSelectedSub('mix');
+            handleGenerateNext('mix');
+          }}
+          className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition cursor-pointer ${
+            selectedSub === 'mix'
+              ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+              : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-indigo-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white'
+          }`}
+        >
+          Mix All 3 Types
+        </button>
+        {subPatterns.map((label, idx) => (
+          <button
+            key={label}
+            type="button"
+            onClick={() => {
+              setSelectedSub(idx);
+              handleGenerateNext(idx);
+            }}
+            className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition cursor-pointer ${
+              selectedSub === idx
+                ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-indigo-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* Generated Question Card */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 space-y-3.5 shadow-xs dark:border-slate-800 dark:bg-slate-950">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="rounded-lg bg-indigo-600 px-2.5 py-0.5 text-xs font-extrabold text-white">
+              Live #{generatedCount}
+            </span>
+            <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+              {problem.subPatternLabel}
+            </span>
+            <span className="rounded-md bg-indigo-50 px-2 py-0.5 text-[11px] font-bold text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
+              {problem.marks} {problem.marks === 1 ? 'Mark' : 'Marks'}
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+              <Timer className="h-3 w-3" /> Target: {problem.targetMinutes}m
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1 dark:border-slate-700 dark:bg-slate-900">
+            <span
+              className={`font-mono text-xs font-extrabold px-1 ${
+                overTarget
+                  ? 'text-amber-600 dark:text-amber-400'
+                  : 'text-slate-700 dark:text-slate-200'
+              }`}
+            >
+              {formatTimer(elapsedSec)}
+            </span>
+            <button
+              type="button"
+              onClick={() => setRunning((r) => !r)}
+              aria-label={running ? 'Pause live timer' : 'Start live timer'}
+              className="rounded-md bg-white border border-slate-200 p-1 text-slate-700 hover:bg-slate-100 cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white"
+            >
+              {running ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setRunning(false);
+                setElapsedSec(0);
+              }}
+              aria-label="Reset live timer"
+              className="rounded-md bg-white border border-slate-200 p-1 text-slate-500 hover:bg-slate-100 cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
+            >
+              <RotateCcw className="h-3 w-3" />
+            </button>
+          </div>
+        </div>
+
+        <div className="text-[15px] sm:text-base font-medium leading-7 text-slate-900 whitespace-pre-line dark:text-slate-100">
+          {renderInlineText(problem.prompt)}
+        </div>
+
+        {problem.table && (
+          <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+            <table className="w-full text-center border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200 dark:bg-slate-900 dark:border-slate-800">
+                  {problem.table.headers.map((h) => (
+                    <th key={h} className="px-3 py-2 font-extrabold text-slate-800 dark:text-slate-200">
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {problem.table.rows.map((row, idx) => (
+                  <tr key={idx}>
+                    {row.map((cell, cIdx) => (
+                      <td
+                        key={cIdx}
+                        className="px-3 py-2 font-mono font-bold text-slate-700 dark:text-slate-300"
+                      >
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <div className="rounded-xl border border-sky-200 bg-sky-50/70 px-3 py-2 text-xs text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-200">
+          <strong className="text-sky-800 dark:text-sky-300">
+            Copy-Check before writing Line 1:
+          </strong>{' '}
+          {renderInlineText(problem.copyCheck)}
+        </div>
+
+        {/* 4 Progressive Anti-Spoiler Reveal Buttons */}
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setShowSetup((v) => !v)}
+            className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+              showSetup
+                ? 'border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-200 dark:hover:bg-blue-950/80 dark:hover:text-white'
+                : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white'
+            }`}
+          >
+            {showSetup ? 'Hide Setup' : '1. Nudge Setup'}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowMidway((v) => !v)}
+            className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+              showMidway
+                ? 'border-amber-500 bg-amber-50 text-amber-900 hover:bg-amber-100 dark:bg-amber-950/60 dark:text-amber-200 dark:hover:bg-amber-900/70 dark:hover:text-amber-100'
+                : 'border-amber-200 bg-amber-50/50 text-amber-900 hover:bg-amber-100/70 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300 dark:hover:bg-amber-900/50 dark:hover:text-amber-100'
+            }`}
+          >
+            {showMidway ? 'Hide Mid-Way Check' : '2. Mid-Way Check'}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowAnswer((v) => !v)}
+            className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+              showAnswer
+                ? 'border-emerald-500 bg-emerald-50 text-emerald-900 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-200 dark:hover:bg-emerald-950/80 dark:hover:text-white'
+                : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white'
+            }`}
+          >
+            {showAnswer ? 'Hide Final Answer' : '3. Final Answer'}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowSteps((v) => !v)}
+            className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+              showSteps
+                ? 'border-teal-600 bg-teal-600 text-white hover:bg-teal-700'
+                : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white'
+            }`}
+          >
+            {showSteps ? 'Hide CBSE Steps' : '4. Full CBSE Steps'}
+          </button>
+        </div>
+
+        {showSetup && (
+          <div className="rounded-xl border border-blue-200 bg-blue-50/70 p-3 text-xs sm:text-sm text-blue-950 space-y-1 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-200">
+            <div className="text-[11px] font-extrabold uppercase tracking-wider text-blue-800 dark:text-blue-300">
+              Stage 1 — Line-1 Setup / Equation Frame
+            </div>
+            <div className="whitespace-pre-line leading-relaxed">
+              {renderInlineText(problem.setupNudge)}
+            </div>
+          </div>
+        )}
+
+        {showMidway && (
+          <div className="rounded-xl border border-amber-300 bg-amber-50/80 p-3 text-xs sm:text-sm text-amber-950 space-y-1 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
+            <div className="text-[11px] font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+              Stage 2 — Mid-Way Silly-Mistake Checkpoint
+            </div>
+            <div className="whitespace-pre-line leading-relaxed">
+              {renderInlineText(problem.midwayCheck)}
+            </div>
+          </div>
+        )}
+
+        {showAnswer && (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 text-xs sm:text-sm text-emerald-950 space-y-1 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-200">
+            <div className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
+              Stage 3 — Final Answer Only
+            </div>
+            <div className="font-semibold whitespace-pre-line leading-relaxed">
+              {renderInlineText(problem.finalAnswer)}
+            </div>
+          </div>
+        )}
+
+        {showSteps && (
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-xs sm:text-sm text-slate-800 space-y-3 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+            <div className="text-[11px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-400">
+              Stage 4 — Full CBSE Standard (041) Step-Marked Solution
+            </div>
+            <div className="whitespace-pre-line leading-relaxed">
+              {renderInlineText(problem.fullSteps)}
+            </div>
+            <div className="rounded-lg border border-rose-200 bg-rose-50/80 px-3 py-2 text-xs text-rose-900 dark:border-rose-900/70 dark:bg-rose-950/30 dark:text-rose-200">
+              <strong>Where Students Lose Marks (Silly Slip Alert):</strong>{' '}
+              {renderInlineText(problem.sillyTrap)}
+            </div>
+          </div>
+        )}
+
+        {loggedNote && (
+          <div className="rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-900 flex flex-wrap items-center justify-between gap-2 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">
+            <span>{loggedNote}</span>
+            <button
+              type="button"
+              onClick={() => handleGenerateNext()}
+              className="inline-flex items-center gap-1 rounded-lg bg-emerald-700 px-3 py-1 text-white hover:bg-emerald-800 cursor-pointer"
+            >
+              <RefreshCw className="h-3 w-3" /> Generate Next Question →
+            </button>
+          </div>
+        )}
+
+        {/* Self-Audit Footer */}
+        <div className="border-t border-slate-100 pt-3 flex flex-wrap items-center gap-2 dark:border-slate-800">
+          <button
+            type="button"
+            onClick={() => {
+              recordEndlessResult('clean');
+              setRunning(false);
+              setSlipMenuOpen(false);
+              setLoggedNote('Logged +1 Clean Handwritten Sum to your daily count!');
+            }}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-extrabold text-white hover:bg-emerald-700 cursor-pointer"
+          >
+            <CheckCircle2 className="h-3.5 w-3.5" /> Solved Clean by Hand (+1)
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSlipMenuOpen((v) => !v)}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-extrabold text-amber-900 hover:bg-amber-100 cursor-pointer dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300 dark:hover:bg-amber-900/60 dark:hover:text-amber-100"
+          >
+            <AlertTriangle className="h-3.5 w-3.5" /> Made a Silly Slip
+          </button>
+        </div>
+
+        {slipMenuOpen && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-3 space-y-2 dark:border-amber-900 dark:bg-amber-950/30">
+            <div className="text-[11px] font-extrabold text-amber-900 dark:text-amber-300">
+              Tag what slipped (added to your Silly-Mistake Radar):
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {(Object.keys(MATH_SLIP_LABELS) as MathSlipCategory[]).map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => {
+                    recordEndlessResult('slip', cat);
+                    setRunning(false);
+                    setSlipMenuOpen(false);
+                    setLoggedNote(
+                      `Logged "${MATH_SLIP_LABELS[cat].short}" slip — Shield Rule: ${MATH_SLIP_LABELS[cat].shield}`
+                    );
+                  }}
+                  className="rounded-lg bg-white border border-amber-300 px-2.5 py-1 text-xs font-bold text-amber-900 hover:bg-amber-100 cursor-pointer dark:bg-slate-900 dark:border-amber-800 dark:text-amber-200 dark:hover:bg-amber-900/50 dark:hover:text-amber-100"
+                >
+                  {MATH_SLIP_LABELS[cat].short}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function HandPracticeDeckCard({
+  block,
+}: {
+  block: Extract<ContentBlock, { type: 'hand-practice' }>;
+}) {
+  const {
+    state,
+    markProblemClean,
+    markProblemSlip,
+    clearProblemMark,
+  } = useMathNotebookProgress();
+  const [filter, setFilter] = useState<'all' | 'unsolved' | 'slip'>('all');
+
+  const chapterKey = chapterKeyFromProblemId(block.problems[0]?.id);
+
+  const cleanCount = block.problems.filter(
+    (p) => state.problemStatus[p.id] === 'clean'
+  ).length;
+  const slipCount = block.problems.filter(
+    (p) => state.problemStatus[p.id] === 'slip'
+  ).length;
+
+  const visibleProblems = useMemo(() => {
+    if (filter === 'unsolved') {
+      return block.problems.filter((p) => !state.problemStatus[p.id]);
+    }
+    if (filter === 'slip') {
+      return block.problems.filter((p) => state.problemStatus[p.id] === 'slip');
+    }
+    return block.problems;
+  }, [block.problems, filter, state.problemStatus]);
+
+  return (
+    <div className="rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50/70 to-white p-4 sm:p-5 space-y-5 dark:border-blue-900/60 dark:from-slate-900 dark:to-slate-900">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-blue-100 pb-3.5 dark:border-slate-800">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-blue-700 dark:text-blue-400">
+            <Calculator className="h-4 w-4" /> Screen-to-Notebook Hand-Practice Deck
+          </div>
+          <h4 className="text-base font-extrabold text-slate-900 dark:text-white">
+            {renderInlineText(block.title)}
+          </h4>
+          {block.subtitle && (
+            <p className="text-xs text-slate-600 dark:text-slate-400">
+              {renderInlineText(block.subtitle)}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold">
+          <span className="rounded-lg bg-emerald-100 px-2.5 py-1 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+            {cleanCount}/{block.problems.length} Curated Clean
+          </span>
+          <span className="rounded-lg bg-amber-100 px-2.5 py-1 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+            {slipCount} Flagged for Retry
+          </span>
+        </div>
+      </div>
+
+      {/* Continuous On-The-Fly Chapter Generator */}
+      {chapterKey && <ChapterOnTheFlyGenerator key={chapterKey} chapterKey={chapterKey} />}
+
+      {/* Curated Board Archetypes & Proofs */}
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="text-xs font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+            Curated Board Archetypes &amp; Proofs ({block.problems.length} Fixed Must-Solve Sums)
+          </div>
+          <div className="no-print flex flex-wrap gap-1.5">
+            {[
+              { key: 'all' as const, label: `All (${block.problems.length})` },
+              {
+                key: 'unsolved' as const,
+                label: `Unsolved (${block.problems.length - cleanCount - slipCount})`,
+              },
+              { key: 'slip' as const, label: `Retry Silly Slips (${slipCount})` },
+            ].map((pill) => (
+              <button
+                key={pill.key}
+                type="button"
+                onClick={() => setFilter(pill.key)}
+                className={`rounded-lg px-3 py-1 text-xs font-bold transition cursor-pointer ${
+                  filter === pill.key
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-blue-400 dark:bg-slate-950 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                }`}
+              >
+                {pill.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {visibleProblems.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-slate-300 bg-white/80 p-6 text-center text-xs font-semibold text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">
+          {filter === 'slip'
+            ? 'Zero silly slips flagged in this deck! Switch to All to solve or review sums.'
+            : 'Every sum in this deck has been attempted in your notebook!'}
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {visibleProblems.map((prob) => (
+            <HandPracticeItemCard
+              key={prob.id}
+              problem={prob}
+              status={state.problemStatus[prob.id]}
+              slipCategory={state.problemSlipCategory[prob.id]}
+              onMarkClean={markProblemClean}
+              onMarkSlip={markProblemSlip}
+              onClearMark={clearProblemMark}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface BlockRendererProps {
   block: ContentBlock;
   subtopicWords?: WordAnnotation[];
@@ -2094,7 +2939,19 @@ export function BlockRenderer({
           <div className="text-xs font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300">
             Visual Diagram — {renderInlineText(block.title)}
           </div>
-          <ConceptDiagram diagramId={block.diagramId} />
+          {isMathDiagramId(block.diagramId) ? (
+            <MathConceptDiagram diagramId={block.diagramId} />
+          ) : isSstDiagramId(block.diagramId) ? (
+            <SstConceptDiagram diagramId={block.diagramId} />
+          ) : isPhysicsDiagramId(block.diagramId) ? (
+            <PhysicsConceptDiagram diagramId={block.diagramId} />
+          ) : isChemistryDiagramId(block.diagramId) ? (
+            <ChemistryConceptDiagram diagramId={block.diagramId} />
+          ) : isBiologyDiagramId(block.diagramId) ? (
+            <BiologyConceptDiagram diagramId={block.diagramId} />
+          ) : (
+            <ConceptDiagram diagramId={block.diagramId} />
+          )}
           {block.caption && (
             <p className="text-xs text-slate-500 dark:text-slate-400 italic">
               {renderInlineText(block.caption)}
@@ -2261,6 +3118,9 @@ export function BlockRenderer({
 
     case 'samas-list':
       return <SamasListCard block={block} />;
+
+    case 'hand-practice':
+      return <HandPracticeDeckCard block={block} />;
 
     case 'lab':
       return (

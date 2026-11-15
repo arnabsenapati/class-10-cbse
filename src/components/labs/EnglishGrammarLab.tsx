@@ -906,7 +906,7 @@ export function EnglishGrammarLab() {
           <button
             type="button"
             onClick={() => setShowCheatStrip((prev) => !prev)}
-            className="inline-flex items-center gap-1 rounded-lg border border-indigo-200 bg-indigo-50 px-2.5 py-1.5 text-xs font-bold text-indigo-800 hover:bg-indigo-100 cursor-pointer dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-200"
+            className="inline-flex items-center gap-1 rounded-lg border border-indigo-200 bg-indigo-50 px-2.5 py-1.5 text-xs font-bold text-indigo-800 hover:bg-indigo-100 cursor-pointer dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-200 dark:hover:bg-indigo-900/60 dark:hover:text-white"
           >
             {showCheatStrip ? (
               <>

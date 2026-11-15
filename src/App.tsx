@@ -14,19 +14,27 @@ function SubtopicRoute({
   bookmarkedSubtopics,
   bestQuizScore,
   bestQuizScoresBySubject,
+  rightRailCollapsed,
+  isWideMode,
   onToggleComplete,
   onToggleBookmark,
   onVisitPath,
   onSaveQuizScore,
+  onToggleRightRail,
+  onToggleWideMode,
 }: {
   completedSubtopics: string[];
   bookmarkedSubtopics: string[];
   bestQuizScore?: { correct: number; total: number } | null;
   bestQuizScoresBySubject?: Record<string, { correct: number; total: number }>;
+  rightRailCollapsed: boolean;
+  isWideMode: boolean;
   onToggleComplete: (id: string) => void;
   onToggleBookmark: (id: string) => void;
   onVisitPath: (path: string) => void;
   onSaveQuizScore: (correct: number, total: number, subjectSlug?: string) => void;
+  onToggleRightRail: () => void;
+  onToggleWideMode: () => void;
 }) {
   const { subjectSlug = '', topicSlug = '', subtopicSlug = '' } = useParams();
   return (
@@ -38,10 +46,14 @@ function SubtopicRoute({
       bookmarkedSubtopics={bookmarkedSubtopics}
       bestQuizScore={bestQuizScore}
       bestQuizScoresBySubject={bestQuizScoresBySubject}
+      rightRailCollapsed={rightRailCollapsed}
+      isWideMode={isWideMode}
       onToggleComplete={onToggleComplete}
       onToggleBookmark={onToggleBookmark}
       onVisitPath={onVisitPath}
       onSaveQuizScore={onSaveQuizScore}
+      onToggleRightRail={onToggleRightRail}
+      onToggleWideMode={onToggleWideMode}
     />
   );
 }
@@ -54,21 +66,32 @@ export function App() {
     recordVisitedPath,
     recordQuizScore,
     toggleTheme,
+    toggleAiTeacher,
+    toggleLeftSidebar,
+    toggleRightRail,
+    toggleWideMode,
     resetProgress,
   } = useOfflineProgress();
 
   const pwa = usePwaStatus();
+  const isWideMode = state.leftSidebarCollapsed && state.rightRailCollapsed;
 
   return (
     <BrowserRouter>
       <AppShell
         completedSubtopics={state.completedSubtopics}
         theme={state.theme}
+        aiTeacherEnabled={state.aiTeacherEnabled}
+        leftSidebarCollapsed={state.leftSidebarCollapsed}
+        rightRailCollapsed={state.rightRailCollapsed}
         isOnline={pwa.isOnline}
         offlineReady={pwa.offlineReady}
         needRefresh={pwa.needRefresh}
         canInstall={pwa.canInstall}
         onToggleTheme={toggleTheme}
+        onToggleAiTeacher={toggleAiTeacher}
+        onToggleLeftSidebar={toggleLeftSidebar}
+        onToggleWideMode={toggleWideMode}
         onPromptInstall={pwa.promptInstall}
         onApplyUpdate={pwa.applyUpdate}
       >
@@ -108,10 +131,14 @@ export function App() {
                 bookmarkedSubtopics={state.bookmarkedSubtopics}
                 bestQuizScore={state.bestQuizScore}
                 bestQuizScoresBySubject={state.bestQuizScoresBySubject}
+                rightRailCollapsed={state.rightRailCollapsed}
+                isWideMode={isWideMode}
                 onToggleComplete={toggleCompleted}
                 onToggleBookmark={toggleBookmark}
                 onVisitPath={recordVisitedPath}
                 onSaveQuizScore={recordQuizScore}
+                onToggleRightRail={toggleRightRail}
+                onToggleWideMode={toggleWideMode}
               />
             }
           />
