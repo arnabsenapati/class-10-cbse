@@ -36,6 +36,15 @@ export const subtopicMeeraKePad: Subtopic = {
       title: '1. कवयित्री-परिचय, भक्ति-भाव और पौराणिक संदर्भ',
       blocks: [
         {
+          type: 'ncert-reference',
+          title: 'पाठ 2: मीरा — पद — Official NCERT PDF',
+          bookName: 'स्पर्श भाग-2 — काव्यखंड',
+          pdfPath: '/ncert/hindi/jhsp102.pdf',
+          pdfStartPage: 1,
+          pdfEndPage: 5,
+          note: 'Preview or open the official NCERT Sparsh Bhag-2 chapter PDF (कवयित्री-परिचय, दोनों पद, प्रश्न-अभ्यास व शब्दार्थ) alongside the Word Lens & bilingual transcript below.',
+        },
+        {
           type: 'quick-summary',
           title: 'मीराबाई और उनके पद — Exam Glance',
           bullets: [
@@ -424,6 +433,48 @@ export const subtopicMeeraKePad: Subtopic = {
               grammarNote: 'तत्सम संज्ञा',
               exampleSentence: 'वृंदावन की कुंज गलियों में मधुर संगीत गूँजता रहता है।',
             },
+            {
+              word: 'बढ़ायो',
+              hindiMeaning: 'बढ़ाया / मान रखा',
+              englishMeaning: 'lengthened / increased (protected honor)',
+              grammarNote: 'ब्रज/राजस्थानी भूतकाल क्रिया • मानक: बढ़ाया (द्रौपदी के संदर्भ में)',
+              exampleSentence: 'श्रीकृष्ण ने द्रौपदी का चीर अनंत बढ़ाकर उसकी लाज रखी।',
+            },
+            {
+              word: 'पास्यूँ',
+              hindiMeaning: 'पाऊँगी / प्राप्त करूँगी',
+              englishMeaning: 'I shall receive / attain',
+              grammarNote: 'राजस्थानी भविष्यत् काल क्रिया • मानक: पाऊँगी',
+              exampleSentence: 'नित्य उठकर प्रभु के दर्शन पाऊँगी — यही मीरा की कामना है।',
+            },
+            {
+              word: 'लीला',
+              hindiMeaning: 'विविध रूप / दिव्य क्रीड़ाएँ और चरित्र',
+              englishMeaning: 'divine plays / wondrous deeds',
+              grammarNote: 'तत्सम संज्ञा • गोविन्द की लीलाओं का गान',
+              exampleSentence: 'मीरा वृंदावन की कुंज गलियों में गोविंद की लीला गाने को उत्सुक हैं।',
+            },
+          ],
+        },
+        {
+          type: 'table',
+          caption: 'NCERT भाषा अध्ययन प्रश्न 1 — ब्रज-राजस्थानी शब्दों के प्रचलित मानक हिंदी रूप',
+          headers: ['पाठ का शब्द', 'प्रचलित हिंदी रूप', 'अर्थ (Meaning)'],
+          rows: [
+            ['भीर (उदाहरण)', 'पीड़ा / कष्ट / दुख', 'pain / distress (NOT भीड़/crowd)'],
+            ['री (उदाहरण)', 'की', 'of (possessive particle)'],
+            ['चीर', 'वस्त्र / साड़ी', 'garment / saree'],
+            ['धर्यो', 'धारण किया / रखा', 'assumed / took form'],
+            ['कुण्जर', 'हाथी', 'elephant'],
+            ['बिन्दरावन', 'वृंदावन', 'Vrindavan'],
+            ['रहस्यूँ', 'रहूँगी', 'I shall live / stay'],
+            ['राखो', 'रखो / रख लीजिए', 'keep'],
+            ['बूढ़ता (बूढ़तो)', 'डूबता हुआ', 'drowning / sinking'],
+            ['लगास्यूँ', 'लगाऊँगी', 'I shall plant'],
+            ['घणा (घणो)', 'बहुत / अत्यधिक', 'very / deeply'],
+            ['सरसी', 'पूरा होना / सफल होना', 'will be fulfilled / accomplished'],
+            ['हिवड़ा (हिवड़ो)', 'हृदय / मन', 'heart'],
+            ['कुसुम्बी', 'केसरिया / गहरे लाल रंग की', 'saffron / bright crimson-red'],
           ],
         },
       ],
@@ -573,6 +624,15 @@ export const subtopicMeeraKePad: Subtopic = {
           answer:
             'मीरा के अनुसार श्रीकृष्ण के सिर पर मोरपंख का मुकुट और शरीर पर पीले वस्त्र (पीतांबर) अत्यंत शोभायमान हैं। उनके गले में वनफूलों की वैजंती माला सुशोभित है और वे वृंदावन में मधुर मुरली बजाते हुए गायें चराते हैं।',
           markingTip: '4 मुख्य विशेषण याद रखें: मोर-मुकुट, पीतांबर, वैजंती माला और मुरली बजाते हुए धेनु चराना।',
+        },
+        {
+          type: 'qa',
+          marks: 3,
+          tag: 'NCERT प्रश्न-अभ्यास',
+          question: 'मीराबाई की भाषा शैली पर प्रकाश डालिए। (NCERT क-4)',
+          answer:
+            'मीराबाई की काव्य-भाषा में राजस्थानी, ब्रज और गुजराती भाषाओं का स्वाभाविक मिश्रण मिलता है तथा कहीं-कहीं पंजाबी, खड़ी बोली और पूर्वी बोलियों के प्रयोग भी दिखाई देते हैं (जैसे— म्हाने, रहस्यूँ, पास्यूँ, घणो, हिवड़ो)। उनकी शैली अत्यंत सरल, सहज, भावानुकूल और संगीतात्मक गेय पद शैली है, जिसमें दैन्य एवं माधुर्य भाव की भक्ति, अनुप्रास-दृष्टांत अलंकार तथा सजीव बिंब-विधान प्रमुखता से दिखाई देते हैं।',
+          markingTip: 'तीन प्रमुख बोलियाँ (राजस्थानी, ब्रज, गुजराती) + संगीतात्मक गेय शैली + उदाहरण शब्द अवश्य लिखें।',
         },
         {
           type: 'qa',
