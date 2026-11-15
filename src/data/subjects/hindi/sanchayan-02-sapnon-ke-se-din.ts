@@ -29,6 +29,15 @@ export const sanchayan02SapnonKeSeDin: Subtopic = {
       title: '1. लेखक परिचय व आत्मकथा-संदर्भ (Author & Childhood World)',
       blocks: [
         {
+          type: 'ncert-reference',
+          title: 'पाठ 2: सपनों के-से दिन (गुरदयाल सिंह) — Official NCERT PDF',
+          bookName: 'संचयन भाग-2',
+          pdfPath: '/ncert/hindi/jhsy102.pdf',
+          pdfStartPage: 1,
+          pdfEndPage: 12,
+          note: 'Preview or open the official NCERT Sanchayan Bhag-2 supplementary reader PDF (संपूर्ण संस्मरण व बोध-प्रश्न) alongside the Word Lens & bilingual transcript below.',
+        },
+        {
           type: 'callout',
           variant: 'ncert',
           title: 'गुरदयाल सिंह (1933–2016) — ज्ञानपीठ व पद्मश्री से सम्मानित कथाकार',
@@ -48,23 +57,30 @@ export const sanchayan02SapnonKeSeDin: Subtopic = {
     },
     {
       id: 'passages',
-      title: '2. प्रमुख NCERT गद्यांश व Inline Word Lens (होवर/टैप शब्दार्थ)',
+      title: '2. संपूर्ण कथा-प्रसंग व Inline Word Lens (होवर/टैप शब्दार्थ)',
       blocks: [
+        {
+          type: 'callout',
+          variant: 'ncert',
+          title: 'NCERT मूल पाठ व PDF दर्शक सूचना',
+          body:
+            'आधिकारिक NCERT अध्याय का संपूर्ण मुद्रित पाठ (पृष्ठ 1–12) ऊपर ‘NCERT Textbook Reference’ सेक्शन में संलग्न PDF (jhsy102.pdf) में देखा जा सकता है। नीचे दिए गए 5 मौलिक कथा-प्रसंग पाठ के पूरे घटनाक्रम, सभी 14 NCERT पाद-टिप्पणियों तथा Interactive Inline Word Lens अभ्यास को 1-to-1 English Transcript सहित समेटते हैं।',
+        },
         {
           type: 'poetic-stanza',
           passageMode: 'prose',
-          stanzaLabel: 'गद्यांश 1 — बच्चों के खेल में बोली का भेद नहीं और बचपन की सरल लोकोक्ति',
+          stanzaLabel: 'प्रसंग 1 — बालपन की टोलियाँ, राजस्थान-हरियाणा के मित्र व निश्छल खेल (खेडण)',
           dialectBadge: 'ग्रामीण आंचलिक आत्मकथा',
           stanzaText:
-            'हमारे साथ खेलने वाले कई लड़के राजस्थान या हरियाणा से आकर मंडी में बस गए व्यापारियों के बच्चे थे। उनकी बोलियाँ हमारी बोली से भिन्न थीं, पर जब हम सभी खेलते तो किसी को एक-दूसरे की बात समझने में अड़चन नहीं होती थी। हमारे बचपन में किसी ने यह ध्यान नहीं दिया कि कौन किस प्रांत का है। सच तो यह है कि तब की मस्त टोलियों पर वह पंजाबी लोकोक्ति बिल्कुल सटीक बैठती थी—‘एह खेडण दे दिन चार’।',
+            'लेखक के बचपन में मंडी के कई साथी राजस्थान और हरियाणा से बसे व्यापारियों के बेटे थे, जिनकी बोलियाँ स्थानीय बोली से भिन्न होने पर भी आपसी खेल में कभी अड़चन नहीं डालती थीं। मैदानी खेलों और खेडण के आगे कोई यह न सोचता कि कौन किस प्रांत का है—तब की टोलियों पर पंजाबी कहावत बिल्कुल सटीक बैठती थी। बच्चे कटी-फटी कमीज़ों और घायल घुटनों की परवाह किए बिना बाग-बगीचों में दौड़ते और स्कूल के चपड़ासी से बचकर मस्त रहते थे।',
           prasang:
-            'पाठ के आरंभ में ही गुरदयाल सिंह बचपन की उस निश्छल मैत्री को याद करते हैं जहाँ प्रांत, भाषा और आर्थिक स्थिति की दीवारें खेल की उमंग के सामने अपने आप ढह जाती थीं।',
+            'पाठ के आरंभ में गुरदयाल सिंह अपने बचपन की उस निश्छल मैत्री को याद करते हैं जहाँ प्रांत, बोली और जाति की दीवारें खेल की उमंग के सामने अपने आप ढह जाती थीं।',
           bhavarthHindi:
-            'लेखक बताते हैं कि उनकी बाल-मंडली में राजस्थान व हरियाणा के व्यापारियों के बच्चे भी शामिल थे। यद्यपि उनकी बोली अलग थी और शुरुआत में कुछ शब्द अजीब लगते थे, किंतु खेल के मैदान में भाव-भंगिमा से सब एक-दूसरे की बात समझ लेते थे। किसी को भी न अपनी बोली का अभिमान था न पराएपन का बोध—तब वास्तव में ‘खेलने-कूदने के ये चार दिन’ अनमोल थे।',
+            'मंडी में आकर बसे राजस्थानी व हरियाणवी व्यापारियों के बच्चों की बोली शुरू में पंजाबी बच्चों को कुछ अटपटी अवश्य लगती थी, किंतु खेलते समय इशारों और भावनाओं से सब एक-दूसरे की बात सहज समझ लेते थे। न कोई किसी प्रांत का भेद मानता था और न टूटी-फूटी पोशाक या खरोंचों की चिंता करता था; सभी ‘खेलने के चार दिनों’ की मस्ती में डूबे रहते और स्कूल के चपरासी से बचते फिरते थे।',
           englishHelper:
-            'Many of our playmates were children of merchants who had migrated to the market town from Rajasthan or Haryana. Their dialects differed from ours, yet once we started playing, no language barrier ever got in the way. Truly, that carefree brotherhood lived up to the Punjabi proverb: “These four days are meant for playing.”',
+            'Many childhood playmates were sons of merchant families from Rajasthan and Haryana. Although their accents initially sounded different, shared play dissolved every language barrier—embodying the Punjabi proverb about carefree childhood playmates dodging the school peon amidst scratches and torn shirts.',
           poeticDevices: [
-            'पंजाबी लोकोक्ति व आंचलिक प्रयोग — ‘एह खेडण दे दिन चार’ से बाल-सुलभ आनंद की क्षणभंगुरता व पवित्रता साकार हुई है।',
+            'पंजाबी आंचलिक शब्दावली व लोकोक्ति (‘खेडण’, ‘चपड़ासी’) — बाल-मैत्री की सहजता और आंचलिक जीवंतता को उभारती है।',
           ],
           words: [
             {
@@ -83,33 +99,215 @@ export const sanchayan02SapnonKeSeDin: Subtopic = {
               word: 'अड़चन',
               hindiMeaning: 'बाधा, रुकावट, कठिनाई',
               englishMeaning: 'Obstacle / difficulty / barrier',
-              grammarNote: 'तद्भव देशज स्त्रीलिंग संज्ञा (adachan)',
+              grammarNote: 'देशज स्त्रीलिंग संज्ञा (adachan)',
+            },
+            {
+              word: 'खेडण',
+              hindiMeaning: 'खेलने के (NCERT पाद-टिप्पणी #4)',
+              englishMeaning: 'For playing / meant to play (Punjabi)',
+              grammarNote: 'पंजाबी आंचलिक क्रिया-रूप (khedan)',
             },
             {
               word: 'सटीक',
               hindiMeaning: 'बिल्कुल ठीक, उपयुक्त',
-              englishMeaning: 'Accurate / spot-on / exact',
+              englishMeaning: 'Accurate / spot-on / apt',
               grammarNote: 'स + टीक (sateek • विशेषण)',
+            },
+            {
+              word: 'घायल',
+              hindiMeaning: 'चोटिल, ज़ख़्मी',
+              englishMeaning: 'Injured / bruised',
+              grammarNote: 'विशेषण (ghaayal)',
+            },
+            {
+              word: 'चपड़ासी',
+              hindiMeaning: 'चपरासी, कार्यालय या स्कूल का संदेशवाहक/सेवक (NCERT पाद-टिप्पणी #5)',
+              englishMeaning: 'Peon / school attendant',
+              grammarNote: 'तद्भव आंचलिक रूप (chapdaasi • मानक: चपरासी)',
+            },
+            {
+              word: 'टोलियों',
+              hindiMeaning: 'मित्रों के समूह, दल',
+              englishMeaning: 'Groups / gangs of friends',
+              grammarNote: 'टोली का बहुवचन (toliyon)',
             },
           ],
         },
         {
           type: 'poetic-stanza',
           passageMode: 'prose',
-          stanzaLabel: 'गद्यांश 2 — स्काउट परेड का गौरव, नीली-पीली झंडियाँ और पीटी सर की ‘शाबाश’',
-          dialectBadge: 'बाल-मनोविज्ञान व आत्मकथांश',
+          stanzaLabel: 'प्रसंग 2 — ‘लंडे-बहियाँ’, गर्मी की छुट्टियों का गृहकार्य व ओमा का ‘रेल-बम्बा’',
+          dialectBadge: 'बाल-मनोविज्ञान व स्थानीय परिवेश',
           stanzaText:
-            'स्काउट परेड के दिन हम धुली हुई खाकी वर्दी, बूट और बेल्ट पहनकर मैदान में खड़े होते। पीटी मास्टर प्रीतमचंद हमें बायाँ-दायाँ मुड़ने और नीली-पीली झंडियाँ लहराने का अभ्यास कराते। किसी दिन जब कोई छात्र एक भी भूल न करता तो प्रीतमचंद केवल अपनी चमकीली आँखों के नीचे से ‘शाबाश’ कह देते। उस एक शब्द से हमें इतनी खुशी मिलती मानो हमने फ़ौज के बड़े तमगे या तमगों वाले गुड्डों को जीत लिया हो।',
+            'मंडी के अधिकांश आढ़ती औपचारिक स्कूली ट्रेनिंग के बजाय अपने बेटों को पं. घनश्याम दास से लंडे सिखाकर दुकान की बहियाँ लिखवाना अधिक उपयोगी समझते थे। गरमी की लंबी छुट्टियों के आरंभ में बच्चे ननिहाल के तालाब और रेत में जी भरकर खेलते, किंतु अंतिम दिनों में हिसाब के दो सौ सवाल पहाड़ लगने लगते। ऐसे समय में जबरन पिटने से बचने के लिए लड़कों ने नाटे पर दबंग ‘ओमा’ को नेता मान लिया था, जो प्रतिद्वंद्वियों को सिर की ‘रेल-बम्बा’ टक्कर मारकर भगा देता था।',
           prasang:
-            'लेखक बताते हैं कि यद्यपि स्कूल में पढ़ाई उबाऊ लगती थी और अध्यापकों की मार से भय लगता था, किंतु स्काउट परेड के समय वर्दी, बूटों की खट-खट और पीटी सर की दुर्लभ प्रशंसा बच्चों में अद्भुत आत्मगौरव जगाती थी।',
+            'दूसरे कथा-अंश में लेखक तत्कालीन मंडी समाज की पढ़ाई के प्रति उदासीन सोच, दो महीने की छुट्टियों की मस्ती तथा होमवर्क के डर से पनपी बाल-योजनाओं का सजीव चित्रण करते हैं।',
           bhavarthHindi:
-            'सारा वर्ष बस्तों और पिटाई से डरने वाले बच्चे भी स्काउट परेड में पूरे उत्साह से भाग लेते थे। जब बिना किसी गलती के परेड पूरी होती और कठोर माने जाने वाले प्रीतमचंद मुख से मात्र ‘शाबाश’ कह देते, तो छात्रों का सीना गर्व से फूल उठता—उन्हें लगता जैसे वे सचमुच के फ़ौजी सिपाही हों जिन्होंने युद्ध में विजय के तमगे जीत लिए हों।',
+            'व्यापारिक परिवारों को अंग्रेजी-स्कूली शिक्षा के बजाय बही-खाता लिखने की पंजाबी ‘लंडे’ लिपि ज़्यादा काम की लगती थी। जो बच्चे स्कूल जाते थे, उनके लिए दो महीने की गरमी की छुट्टियाँ शुरू में तो ननिहाल के तालाबों में नहाने व रेत के टीलों पर लोटने में बीत जातीं, पर आखिरी पखवाड़े में गणित के 200 सवाल भारी बोझ लगते। पिटाई टालने के लिए बच्चे चार बित्ते ऊँचे लेकिन हट्टे-कट्टे सिर वाले ‘ओमा’ के दल में शामिल हो जाते, जिसका ‘रेल-बम्बा’ वार सब पर भारी पड़ता था।',
           englishHelper:
-            'On Scout Parade days we stood smartly in washed khaki uniforms, boots, and belts while PT Master Pritamchand drilled left-right turns and blue-yellow flag signals. Whenever a boy completed the drill without a single mistake and Pritamchand softly uttered “Shabaash” (Well done), that lone word filled us with pride greater than winning real military medals.',
+            'Most grain merchants preferred Pandit Ghanshyam Das teaching their boys “Lande” script for shop ledgers over formal school training. Early summer holidays meant carefree pond swims at maternal grandmother’s village, until 200 pending maths sums triggered last-minute dread—driving boys under tough little leader “Oma,” famed for his fierce “Rail-Bamba” headbutt.',
           poeticDevices: [
-            'बाल-मन का मनोवैज्ञानिक सत्य — कठोर शिक्षक के मुख से निकला एक प्रोत्साहन-शब्द भी बच्चे के हृदय में अमर उत्साह भर देता है।',
+            'हास्य-व्यंग्य व बाल-स्वभाव — होमवर्क को अनदेखा कर ‘ओमा’ जैसे काल्पनिक रक्षक के भरोसे ‘बहादुर’ बनने की बाल-कल्पना अत्यंत स्वाभाविक है।',
           ],
           words: [
+            {
+              word: 'अधिकांश',
+              hindiMeaning: 'ज़्यादातर, बड़ा भाग',
+              englishMeaning: 'Majority / most of',
+              grammarNote: 'अधिक + अंश (अधिकाँश • दीर्घ संधि)',
+            },
+            {
+              word: 'ट्रेनिंग',
+              hindiMeaning: 'प्रशिक्षण, किसी कार्य या विद्या का व्यावहारिक अभ्यास (NCERT पाद-टिप्पणी #1)',
+              englishMeaning: 'Training / formal instruction',
+              grammarNote: 'आगत अंग्रेज़ी संज्ञा (training)',
+            },
+            {
+              word: 'लंडे',
+              hindiMeaning: 'हिसाब-किताब लिखने की पंजाबी प्राचीन लिपि (NCERT पाद-टिप्पणी #2)',
+              englishMeaning: 'Ancient Punjabi mercantile shorthand script for accounting',
+              grammarNote: 'आंचलिक पुल्लिंग संज्ञा (lande)',
+            },
+            {
+              word: 'बहियाँ',
+              hindiMeaning: 'खाता; दुकान के हिसाब-किताब का ब्यौरा जिसमें लिखा जाए (NCERT पाद-टिप्पणी #3)',
+              englishMeaning: 'Account ledger books',
+              grammarNote: '‘बही’ का बहुवचन (bahiyaan)',
+            },
+            {
+              word: 'आरंभ',
+              hindiMeaning: 'शुरुआत, प्रारंभ',
+              englishMeaning: 'Beginning / start',
+              grammarNote: 'तत्सम संज्ञा (aarambh • विलोम: अंत)',
+            },
+            {
+              word: 'ननिहाल',
+              hindiMeaning: 'मामा-नाना का घर, माँ का मायका',
+              englishMeaning: 'Maternal grandparents’ home',
+              grammarNote: 'तद्भव पुल्लिंग संज्ञा (nanihaal)',
+            },
+            {
+              word: 'जबरन',
+              hindiMeaning: 'बलपूर्वक, ज़बरदस्ती (NCERT पाद-टिप्पणी #9)',
+              englishMeaning: 'Forcibly / by compulsion',
+              grammarNote: 'अरबी आगत क्रियाविशेषण (jabran)',
+            },
+            {
+              word: 'प्रतिद्वंद्वियों',
+              hindiMeaning: 'विरोधियों, मुकाबले में खड़े लोगों',
+              englishMeaning: 'Rivals / opponents',
+              grammarNote: 'प्रति + द्वंद्व + ई का बहुवचन (pratidvandviyon)',
+            },
+          ],
+        },
+        {
+          type: 'poetic-stanza',
+          passageMode: 'prose',
+          stanzaLabel: 'प्रसंग 3 — ‘H’ आकार का स्कूल, हेडमास्टर शर्मा जी व पुरानी किताबों की गंध',
+          dialectBadge: 'शिक्षक का वात्सल्य व आर्थिक संघर्ष',
+          stanzaText:
+            'अंग्रेज़ी ‘H’ आकार की नौ कमरों वाली पाठशाला में अधिकतर विद्यार्थियों को कठोर पिटाई का भय सताता था, परंतु पांचवीं कक्षा के अध्यापक व हेडमास्टर शर्मा जी छात्रों के लिए सतिगुर समान स्नेही थे। उनकी उँगलियों की हल्की चपत भी भीखे की खस्ता पापड़ी जैसी लगती थी और वे गरीब लेखक के लिए किसी धनाढ्य छात्र की पुरानी किताबें मँगवा देते थे। फिर भी नई श्रेणी में चढ़ते समय किताबों की अजीब गंध और बड़ी कक्षा के डर से बाल-मन में अनजानी उदासी छा जाती थी।',
+          prasang:
+            'इस अंश में लेखक ने अपने नौ कमरों वाले स्कूल के भयपूर्ण वातावरण के बीच हेडमास्टर मदनमोहन शर्मा जी की करुणा, आर्थिक सहायता और नई कक्षा में होने वाली अजीब उदासी का वर्णन किया है।',
+          bhavarthHindi:
+            'उस दौर में जहाँ एक रुपये सेर घी और दो रुपये मन गेहूँ मिलता था, तब भी निर्धन परिवार के लिए एक-दो रुपये की नयी पुस्तकें खरीदना कठिन था। पांचवीं के स्नेही हेडमास्टर शर्मा जी किसी अमीर छात्र की पुरानी किताबें दिलाकर लेखक की पढ़ाई बचा लेते थे। वे बच्चों को कभी सख़्ती से न पीटते—हल्की चपत भी भाई की नमकीन पापड़ी सी मीठी लगती। इसके बावजूद अगली कक्षा में जाते ही पुरानी किताबों की गंध और सख़्त मास्टरों के डर से लेखक के मन में उत्साह की जगह उदासी छा जाती।',
+          englishHelper:
+            'Inside the nine-room “H”-shaped school where dread of corporal beating loomed large, gentle Headmaster Sharma Ji shone like a “Satigur”: his playful backhand tap felt softer than salted papadi, and he arranged free second-hand books from a wealthy student—saving ₹1–₹2 for the narrator’s poor household, even as stale page-odour and fear of tougher teachers tinged promotions with melancholy.',
+          poeticDevices: [
+            'उपमा व संवेदनशील स्मृति — सस्ते ज़माने (₹1 सेर घी, ₹2 मन गंदम) में भी शिक्षा के प्रति गरीब परिवार की तंगी और गुरु की करुणा मार्मिक है।',
+          ],
+          words: [
+            {
+              word: 'अधिकतर',
+              hindiMeaning: 'बहुत-से, प्रायः सभी',
+              englishMeaning: 'Mostly / majority of',
+              grammarNote: 'विशेषण (adhiktar)',
+            },
+            {
+              word: 'पिटाई',
+              hindiMeaning: 'मार-पीट, शारीरिक दंड (NCERT पाद-टिप्पणी #6 — टिप्पणी: आजकल स्कूलों में विद्यार्थियों को पीटना मना है)',
+              englishMeaning: 'Beating / corporal punishment (prohibited in schools today)',
+              grammarNote: 'पिट + आई (pitaai • भाववाचक संज्ञा)',
+            },
+            {
+              word: 'सतिगुर',
+              hindiMeaning: 'सतगुरु, सच्चे और कृपालु गुरु (NCERT पाद-टिप्पणी #7)',
+              englishMeaning: 'True guru / compassionate spiritual master',
+              grammarNote: 'पंजाबी तद्भव रूप (satigur)',
+            },
+            {
+              word: 'स्नेही',
+              hindiMeaning: 'प्रेम करने वाले, ममत्व से भरे',
+              englishMeaning: 'Affectionate / loving',
+              grammarNote: 'स्नेह + ई (snehee • विशेषण)',
+            },
+            {
+              word: 'चपत',
+              hindiMeaning: 'हल्का थप्पड़, स्नेह या सज़ा की हल्की थपकी',
+              englishMeaning: 'Light slap / gentle tap',
+              grammarNote: 'देशज स्त्रीलिंग संज्ञा (chapat)',
+            },
+            {
+              word: 'धनाढ्य',
+              hindiMeaning: 'बहुत धनवान, संपन्न',
+              englishMeaning: 'Wealthy / affluent',
+              grammarNote: 'धन + आढ्य (dhanaadhya • दीर्घ संधि)',
+            },
+            {
+              word: 'श्रेणी',
+              hindiMeaning: 'कक्षा, दर्जा',
+              englishMeaning: 'Class / school grade',
+              grammarNote: 'तत्सम स्त्रीलिंग संज्ञा (shreni)',
+            },
+            {
+              word: 'उदासी',
+              hindiMeaning: 'खिन्नता, मन का बुझ जाना',
+              englishMeaning: 'Sadness / gloom / melancholy',
+              grammarNote: 'उदास + ई (udaasee • भाववाचक संज्ञा)',
+            },
+          ],
+        },
+        {
+          type: 'poetic-stanza',
+          passageMode: 'prose',
+          stanzaLabel: 'प्रसंग 4 — नाभा रियासत के भर्ती नाटक, ‘अठे-उठै’ गीत व स्काउट परेड का गौरव',
+          dialectBadge: 'रियासती पृष्ठभूमि व अनुशासन का गर्व',
+          stanzaText:
+            'विश्वयुद्ध के दिनों में फ़ौजी भर्ती वाले नौटंकी गाकर गाते कि अठे टूटे लीतर पहनने पड़ते हैं जबकि उठै फ़ौज में मज़बूत बूट मिलते हैं। विद्यालय में भी स्काउट परेड के दौरान धुली खाकी वर्दी, बूटों की खुरियाँ और नीली-पीली झंडियाँ बच्चों में गज़ब का उत्साह भरती थीं। यूं तो पीटी मास्टर प्रीतमचंद हरफनमौला और अत्यंत सख़्त थे, पर जब वे चमकीली आँखों के नीचे से ‘शाबाश’ कह देते तो बच्चों को फ़ौज के तमगे जीतने जैसा गौरव मिलता था।',
+          prasang:
+            'चौथे प्रसंग में नाभा रियासत (1923 में राजा की गिरफ़्तारी) की ऐतिहासिक झलक तथा विश्वयुद्ध की भर्ती नौटंकियों के बीच बच्चों द्वारा स्काउट परेड में फौजी गर्व अनुभव करने का वर्णन है।',
+          bhavarthHindi:
+            'फौज में सिपाही भर्ती करने वाली टोलियाँ नौटंकी में फटे-पुराने ‘लीतरों’ के बदले चमचमाते फौजी बूटों का प्रलोभन देती थीं। स्कूल में भी जब बच्चे धुलकर तैयार खाकी वर्दी, खुरियों वाले बूट और नीली-पीली झंडियाँ लेकर पीटी सर प्रीतमचंद की कवायद करते, तो उन्हें स्वयं में असली सैनिक होने का आभास होता। परेड-कला में पारंगत यानी हरफनमौला पीटी सर जब बिना गलती के परेड देख मुस्कराए बिना ही ‘शाबाश’ कह देते, तो छात्रों को लगता मानो उन्होंने सचमुच वीरता के पदक पा लिए हों।',
+          englishHelper:
+            'During wartime recruitment dramas, performers sang alluring lines contrasting torn shoes worn here (“athe”) with sturdy army boots waiting there (“uthe”). Back at school, crisp washed khaki uniforms, metal heel-plates, and blue-yellow Scout flags stirred fierce soldierly pride—especially when strict, multi-skilled (“harfanmaula”) PT Master Pritamchand uttered his rare “Shabaash!”, sweeter than military medals.',
+          poeticDevices: [
+            'ऐतिहासिक व सांस्कृतिक संदर्भ — 1923 की नाभा रियासत, फौजी भर्ती गीत (‘अठे-उठै’) तथा परेड की ध्वन्यात्मक खट-खट वातावरण को जीवंत बनाती है।',
+          ],
+          words: [
+            {
+              word: 'अठे',
+              hindiMeaning: 'यहाँ (राजस्थानी/बागड़ी आंचलिक शब्द, NCERT पाद-टिप्पणी #10)',
+              englishMeaning: 'Here (regional dialect)',
+              grammarNote: 'स्थानवाचक अव्यय (athe • तुलना: अत्र)',
+            },
+            {
+              word: 'लीतर',
+              hindiMeaning: 'टूटे हुए पुराने खस्ताहाल जूते (NCERT पाद-टिप्पणी #11)',
+              englishMeaning: 'Worn-out, tattered old shoes',
+              grammarNote: 'देशज पुल्लिंग संज्ञा (leetar)',
+            },
+            {
+              word: 'उठै',
+              hindiMeaning: 'वहाँ (राजस्थानी/बागड़ी आंचलिक शब्द, NCERT पाद-टिप्पणी #12)',
+              englishMeaning: 'There (regional dialect)',
+              grammarNote: 'स्थानवाचक अव्यय (uthe • तुलना: तत्र)',
+            },
+            {
+              word: 'फ़ौज',
+              hindiMeaning: 'सेना, सैन्य दल',
+              englishMeaning: 'Army / military force',
+              grammarNote: 'अरबी आगत संज्ञा (fauj • नुक्ते सहित शुद्ध वर्तनी)',
+            },
             {
               word: 'परेड',
               hindiMeaning: 'सैनिक या स्काउट दलों का लयबद्ध मार्च/कवायद',
@@ -117,16 +315,22 @@ export const sanchayan02SapnonKeSeDin: Subtopic = {
               grammarNote: 'आगत अंग्रेज़ी संज्ञा (parade)',
             },
             {
+              word: 'खुरियाँ',
+              hindiMeaning: 'बूट की एड़ी घिसने से बचाने को ठोकी जाने वाली लोहे की पत्तियाँ',
+              englishMeaning: 'Iron heel-plates nailed under heavy boots',
+              grammarNote: 'देशज स्त्रीलिंग बहुवचन (khuriyaan)',
+            },
+            {
+              word: 'हरफनमौला',
+              hindiMeaning: 'पारंगत, विद्वान, हर फन (विद्या) में माहिर (NCERT पाद-टिप्पणी #8)',
+              englishMeaning: 'All-rounder / master of many crafts',
+              grammarNote: 'हर + फन + मौला (harfanmaula • विशेषण)',
+            },
+            {
               word: 'चमकीली',
               hindiMeaning: 'चमक से भरी, तेजस्वी',
               englishMeaning: 'Bright / gleaming / piercing',
-              grammarNote: 'विशेषण (chamakeelee • चमक + ईली)',
-            },
-            {
-              word: 'फ़ौज',
-              hindiMeaning: 'सेना, सैन्य दल',
-              englishMeaning: 'Army / military force',
-              grammarNote: 'अरबी आगत संज्ञा (fauj • नुक्ते सहित शुद्ध वर्तनी)',
+              grammarNote: 'विशेषण (chamakeelee)',
             },
             {
               word: 'तमगे',
@@ -139,42 +343,71 @@ export const sanchayan02SapnonKeSeDin: Subtopic = {
         {
           type: 'poetic-stanza',
           passageMode: 'prose',
-          stanzaLabel: 'गद्यांश 3 — मुर्गा सज़ा पर हेडमास्टर शर्मा जी का क्रोध व तोतों को बादाम खिलाना',
+          stanzaLabel: 'प्रसंग 5 — फ़ारसी कक्षा में ‘मुर्गा’ दंड, ‘मुअत्तल’ आदेश व तोतों की गिरियाँ',
           dialectBadge: 'कठोरता व करुणा का विरोधाभास',
           stanzaText:
-            'चौथी श्रेणी में फ़ारसी का शब्द-रूप न सुना पाने पर जब प्रीतमचंद ने बच्चों को मुर्गा बना रखा था, तभी हेडमास्टर शर्मा जी वहाँ आ निकले। यह दृश्य देख उनका कोमल हृदय क्रोध से काँप उठा और उन्होंने तुरंत प्रीतमचंद को निलंबित करने के लिए नाभा के महकमाए-तालीम को आदेश भेज दिया। किंतु अचरज तब हुआ जब निलंबित होने के बाद भी प्रीतमचंद अपने चौबारे में पिंजरे के दो तोतों को भीगे हुए बादाम की गिरियाँ छीलकर खिलाते और उनसे मीठी बातें करते देखे गए।',
+            'एक दिन चौथी कक्षा के छात्र फ़ारसी का शब्द-रूप न सुना सके तो प्रीतमचंद ने उन्हें दर्दनाक ‘मुर्गा’ बनने का दंड दिया। बाहर से लौटते हेडमास्टर शर्मा जी यह क्रूर दृश्य सहन न कर पाए और उन्होंने तुरंत नाभा के महकमाए-तालीम को प्रीतमचंद को मुअत्तल (अर्थात् निलंबित) करने का आदेश भेज दिया। किंतु सबको गहरा अचरज तब हुआ जब निलंबन के बावजूद प्रीतमचंद अपने ऊपर के चौबारे में पिंजरे के दो तोतों को भीगे बादाम की गिरियाँ छीलकर बड़े प्रेम से खिलाते मिले।',
           prasang:
-            'यह कहानी का सबसे मर्मस्पर्शी और निर्णायक मोड़ है जहाँ हेडमास्टर शर्मा जी की संवेदनशीलता तथा पीटी सर प्रीतमचंद के भीतर छिपी कोमल मानवता एक साथ उजागर होती हैं।',
+            'अंतिम कथा-अंश पाठ का निर्णायक चरित्र-चित्रण प्रस्तुत करता है—जहाँ हेडमास्टर शर्मा जी का न्यायप्रिय मानवीय रोष तथा पीटी सर प्रीतमचंद के कठोर आवरण के पीछे छिपा कोमल हृदय प्रकट होता है।',
           bhavarthHindi:
-            'डॉ. कपलाश से मिलकर लौटते समय हेडमास्टर मदनमोहन शर्मा जी ने देखा कि छोटे-छोटे चौथी के बच्चे ‘मुर्गा’ बने दर्द से तड़प रहे हैं। वे इस बर्बर दंड को सहन न कर सके और डायरेक्टर हरजीलाल को सख़्त रिपोर्ट भेजकर प्रीतमचंद को मुअत्तल करा दिया। पर हैरानी की बात थी कि सख़्त दिखने वाले वही प्रीतमचंद जब एकांत चौबारे में अपने पालतू तोतों को बड़े प्यार से भीगे बादाम छीलकर खिलाते, तो उनकी अनदेखी कोमलता सामने आ जाती थी।',
+            'डॉ. कपलाश से मिलकर लौटते हुए हेडमास्टर शर्मा जी ने देखा कि छोटे-छोटे बच्चे फ़ारसी के रूप याद न करने पर ‘मुर्गा’ बनकर दर्द से तड़प रहे हैं। इस अमानवीय बर्ताव से आहत होकर उन्होंने शिक्षा विभाग के डायरेक्टर हरजीलाल को रिपोर्ट भेजकर प्रीतमचंद को निलंबित कर दिया। लोगों को लगा कि प्रीतमचंद नौकरी जाने से टूट गए होंगे, परंतु छात्रों ने चौबारे में झाँककर देखा तो वे शांत मन से अपने पालतू तोतों को भीगे बादाम छीलकर खिलाते और उनसे मीठी बातें करते नज़र आए।',
           englishHelper:
-            'When Class 4 boys failed to recite Persian declensions and PT Sir forced them into the agonising “murga” crouch, Headmaster Sharma—who had just returned from visiting Dr. Kaplash—could not tolerate such cruelty and wrote to Nabha’s education director Harjilal to suspend him. Yet astonishingly, after his suspension, Pritamchand was spotted in his attic room gently peeling soaked almonds to feed his two caged parrots and speaking tenderly to them.',
+            'When Class 4 boys stumbled over Persian declensions, PT Master Pritamchand forced them into the excruciating “murga” crouch. Returning from Dr. Kaplash’s clinic, gentle Headmaster Sharma witnessed the cruelty and promptly dispatched suspension (“muattal”) orders to Nabha’s Education Department (“Mahakma-e-Talim”). Yet curious boys peering into Pritamchand’s upstairs room felt sheer astonishment: the feared drillmaster sat calmly peeling soaked almond kernels to feed his two caged parrots.',
           poeticDevices: [
-            'चरित्र-वैपरीत्य (Character Contrast) — बाहर से कठोर तानाशाह जैसा दिखने वाला शिक्षक अपने भीतर पक्षियों के प्रति ममत्व संजोए हुए है।',
+            'चरित्र-वैपरीत्य (Character Contrast) — ‘बाहर से नारियल जैसा कठोर, भीतर से कोमल’ स्वभाव का अत्यंत कलात्मक उद्घाटन।',
           ],
           words: [
             {
-              word: 'अचरज',
-              hindiMeaning: 'आश्चर्य, हैरानी, विस्मय',
-              englishMeaning: 'Wonder / astonishment / surprise',
-              grammarNote: 'तद्भव संज्ञा (acharaj • तत्सम रूप: आश्चर्य)',
+              word: 'फ़ारसी',
+              hindiMeaning: 'ईरान और मध्यकालीन भारतीय प्रशासन में प्रचलित एक प्राचीन भाषा',
+              englishMeaning: 'Persian language',
+              grammarNote: 'व्यक्तिवाचक संज्ञा / विशेषण (faarsi • नुक्ते सहित)',
+            },
+            {
+              word: 'दंड',
+              hindiMeaning: 'सज़ा, अनुशासनात्मक जुर्माना या पीड़ा',
+              englishMeaning: 'Punishment / penalty',
+              grammarNote: 'तत्सम संज्ञा (dand)',
+            },
+            {
+              word: 'क्रूर',
+              hindiMeaning: 'निर्दयी, अमानवीय, कठोर',
+              englishMeaning: 'Cruel / merciless',
+              grammarNote: 'तत्सम विशेषण (kroor)',
+            },
+            {
+              word: 'महकमाए-तालीम',
+              hindiMeaning: 'शिक्षा विभाग (NCERT पाद-टिप्पणी #14)',
+              englishMeaning: 'Department of Education',
+              grammarNote: 'अरबी-फ़ारसी प्रशासनिक युग्म (mahakmaa-e-taaleem)',
+            },
+            {
+              word: 'मुअत्तल',
+              hindiMeaning: 'निलंबित, पद से अस्थायी रूप से अलग (NCERT पाद-टिप्पणी #13)',
+              englishMeaning: 'Suspended from office',
+              grammarNote: 'अरबी आगत विशेषण (muattal)',
             },
             {
               word: 'निलंबित',
-              hindiMeaning: 'पद या कार्य से अस्थायी रूप से अलग किया गया (मुअत्तल)',
+              hindiMeaning: 'अस्थायी रूप से सेवा या पद से हटाया गया',
               englishMeaning: 'Suspended from duty',
-              grammarNote: 'विशेषण (nilambit • उर्दू पाठ-शब्द: मुअत्तल)',
-              exampleSentence: 'बच्चों को अमानवीय दंड देने पर प्रीतमचंद को सेवा से निलंबित कर दिया गया।',
+              grammarNote: 'तत्सम विशेषण (nilambit)',
+            },
+            {
+              word: 'अचरज',
+              hindiMeaning: 'आश्चर्य, हैरानी, विस्मय',
+              englishMeaning: 'Wonder / astonishment',
+              grammarNote: 'तद्भव संज्ञा (acharaj • तत्सम: आश्चर्य)',
             },
             {
               word: 'चौबारे',
               hindiMeaning: 'घर की ऊपरी मंज़िल का चारों ओर हवादार कमरा',
-              englishMeaning: 'Upper-storey airy terrace room / attic room',
-              grammarNote: 'चौ (चार) + बारा (चाउबारा • देशज संज्ञा)',
+              englishMeaning: 'Upper-storey airy terrace room',
+              grammarNote: 'चौ + बारा (chaubaare • देशज संज्ञा)',
             },
             {
               word: 'गिरियाँ',
-              hindiMeaning: 'बादाम या सूखे मेवे के अंदर का खाने योग्य गूदा/बीज',
+              hindiMeaning: 'बादाम आदि सूखे मेवों के अंदर का खाने योग्य गूदा/बीज',
               englishMeaning: 'Peeled edible kernels (of soaked almonds)',
               grammarNote: 'स्त्रीलिंग संज्ञा ‘गिरी’ का बहुवचन (giriyaan)',
             },
@@ -190,42 +423,42 @@ export const sanchayan02SapnonKeSeDin: Subtopic = {
           type: 'english-transcript',
           title: 'Sapnon Ke-Se Din — Complete Childhood Memoir in Plain English',
           intro:
-            'Note the vivid rural Punjab imagery, specific book prices, Nabha state context, and why both school dread and Scout Parade joy coexist in a child’s memory.',
+            'Every interactive scene passage above aligns 1-to-1 with its complete plain-English narrative segment—capturing regional dialects, wartime Nabha state context, and Headmaster Sharma vs. PT Master Pritamchand.',
           segments: [
             {
-              label: 'Section 1: Playmates Across Dialects & “Lande-Bahi” Trade',
+              label: 'Section 1: Playmates Across Dialects & Carefree Games (“Khedan”)',
               hindiOriginal:
-                'राजस्थान-हरियाणा के व्यापारियों के बच्चों संग खेल; आढ़ती स्कूल के बजाय पं. घनश्याम दास से ‘लंडे’ पढ़वाकर ‘बहियाँ’ लिखवाने को श्रेष्ठ मानते।',
+                'लेखक के बचपन में मंडी के कई साथी राजस्थान और हरियाणा से बसे व्यापारियों के बेटे थे, जिनकी बोलियाँ स्थानीय बोली से भिन्न होने पर भी आपसी खेल में कभी अड़चन नहीं डालती थीं। मैदानी खेलों और खेडण के आगे कोई यह न सोचता कि कौन किस प्रांत का है—तब की टोलियों पर पंजाबी कहावत बिल्कुल सटीक बैठती थी। बच्चे कटी-फटी कमीज़ों और घायल घुटनों की परवाह किए बिना बाग-बगीचों में दौड़ते और स्कूल के चपड़ासी से बचकर मस्त रहते थे।',
               englishText:
-                'As children, nobody cared who spoke Rajasthani or Haryanvi—games erased every accent. In the market town, grain-commission agents (aadhatiye) saw little point in formal schooling; they preferred sending boys to Pandit Ghanshyam Das to learn “Lande” (an old mercantile shorthand script) so they could maintain account ledgers (“bahiyan”). Most kids tore clothes, collected scratches, and grazed the bitter-sweet buds of Aliyar hedges and motia-marigold bushes while dodging peon Chandu.',
+                'As children in the market town, many of the narrator’s companions were sons of merchant families who had settled from Rajasthan and Haryana. Even though their dialects differed from local Punjabi speech, playing together removed every barrier—no child ever paused to think who belonged to which province. That carefree brotherhood lived out the Punjabi saying “Eh khedan de din chaar” (These four days are for playing), as boys sprinted through gardens with torn shirts and scratched knees while dodging the school peon (“chapdaasi”).',
             },
             {
-              label: 'Section 2: Summer Holidays, Nani’s House & Maths Nightmare',
+              label: 'Section 2: “Lande-Bahiyan”, Summer Holidays & Oma’s “Rail-Bamba”',
               hindiOriginal:
-                'गरमी की छुट्टियों के 200 हिसाब के सवाल, ननिहाल में तालाब-रेत की मस्ती, और नेता ‘ओमा’ का ‘रेल-बम्बा’ मुकाबला।',
+                'मंडी के अधिकांश आढ़ती औपचारिक स्कूली ट्रेनिंग के बजाय अपने बेटों को पं. घनश्याम दास से लंडे सिखाकर दुकान की बहियाँ लिखवाना अधिक उपयोगी समझते थे। गरमी की लंबी छुट्टियों के आरंभ में बच्चे ननिहाल के तालाब और रेत में जी भरकर खेलते, किंतु अंतिम दिनों में हिसाब के दो सौ सवाल पहाड़ लगने लगते। ऐसे समय में जबरन पिटने से बचने के लिए लड़कों ने नाटे पर दबंग ‘ओमा’ को नेता मान लिया था, जो प्रतिद्वंद्वियों को सिर की ‘रेल-बम्बा’ टक्कर मारकर भगा देता था।',
               englishText:
-                'Two months of summer holidays felt like an eternity—split between joyous weeks at maternal grandmother’s (nanihal) village bathing in ponds and rolling in sand, and sudden panic in the final weeks over 200 Maths homework sums! To survive those sums, children formed gangs led by “Oma”—a tough little boy barely four handspans tall with a pot-sized head, coconut-like eyes, and a dreaded headbutt nicknamed “Rail-Bamba” (train engine).',
+                'Most market commission agents saw little point in formal school “training,” preferring to send boys to Pandit Ghanshyam Das to learn “Lande” (an old mercantile shorthand script) so they could maintain shop ledgers (“bahiyan”). For schoolgoers, two-month summer holidays began blissfully in village ponds and sand dunes at their maternal grandparents’ home (“nanihal”), before ending in panic over 200 maths homework sums. Rather than endure forced (“jabran”) beatings, boys rallied behind stocky, big-headed gang leader “Oma,” who drove rivals off with his dreaded “Rail-Bamba” headbutt.',
             },
             {
-              label: 'Section 3: ‘H’-Shaped 9-Room School & Kind Headmaster Sharma Ji',
+              label: 'Section 3: ‘H’-Shaped School, Kind Sharma Ji & Old Book Smell',
               hindiOriginal:
-                'अंग्रेज़ी ‘H’ आकार का 9 कमरों वाला स्कूल; हेडमास्टर श्री मदनमोहन शर्मा जी द्वारा पुरानी किताबों की व्यवस्था व भीखे पापड़ी-सी चपत।',
+                'अंग्रेज़ी ‘H’ आकार की नौ कमरों वाली पाठशाला में अधिकतर विद्यार्थियों को कठोर पिटाई का भय सताता था, परंतु पांचवीं कक्षा के अध्यापक व हेडमास्टर शर्मा जी छात्रों के लिए सतिगुर समान स्नेही थे। उनकी उँगलियों की हल्की चपत भी भीखे की खस्ता पापड़ी जैसी लगती थी और वे गरीब लेखक के लिए किसी धनाढ्य छात्र की पुरानी किताबें मँगवा देते थे। फिर भी नई श्रेणी में चढ़ते समय किताबों की अजीब गंध और बड़ी कक्षा के डर से बाल-मन में अनजानी उदासी छा जाती थी।',
               englishText:
-                'The school stood in an English ‘H’ layout with nine rooms—yet most students dreaded going, partly because of poverty and strict beatings. However, fifth-class teacher and Headmaster Shri Madanmohan Sharma Ji (often assisted by Persian teacher Master Nauharia Ram) was endlessly affectionate: even his playful slap with the back of his fingers felt softer than brother Bhikhe’s salty crisp papadi. Knowing the narrator’s financial struggle (even when 1 seer ghee cost ₹1 and 1 maund wheat cost ₹2!), Sharma Ji got him free second-hand books from a wealthy boy—sparing him ₹1–₹2 and making reading thrilling.',
+                'Inside the nine-room English ‘H’-shaped schoolhouse, most pupils lived in dread of harsh beating (“pitaai”). Yet Class 5 teacher and Headmaster Madanmohan Sharma Ji was as gentle as a “Satigur”: even his playful tap with the back of his fingers felt softer than crisp salted papadi. Knowing the narrator’s household poverty—even when ghee cost ₹1 a seer and wheat ₹2 a maund—Sharma Ji arranged second-hand books from an affluent boy, saving ₹1–₹2. Still, advancing to each new grade carried the strange smell of used pages and anxiety over stricter senior masters.',
             },
             {
-              label: 'Section 4: Nabha State Recruiting Songs & PT Master’s Parade Pride',
+              label: 'Section 4: Wartime Recruiting Ballads & Scout Parade Pride',
               hindiOriginal:
-                'नाभा रियासत के राजा का प्रसंग (1923 गिरफ़्तारी) व नौटंकी भर्ती गीत; पीटी सर प्रीतमचंद की नीली-पीली झंडियाँ व ‘शाबाश’।',
+                'विश्वयुद्ध के दिनों में फ़ौजी भर्ती वाले नौटंकी गाकर गाते कि अठे टूटे लीतर पहनने पड़ते हैं जबकि उठै फ़ौज में मज़बूत बूट मिलते हैं। विद्यालय में भी स्काउट परेड के दौरान धुली खाकी वर्दी, बूटों की खुरियाँ और नीली-पीली झंडियाँ बच्चों में गज़ब का उत्साह भरती थीं। यूं तो पीटी मास्टर प्रीतमचंद हरफनमौला और अत्यंत सख़्त थे, पर जब वे चमकीली आँखों के नीचे से ‘शाबाश’ कह देते तो बच्चों को फ़ौज के तमगे जीतने जैसा गौरव मिलता था।',
               englishText:
-                'World War II era recruiters held street dramas (nautanki) singing tempting songs: “Enlist, young recruit! Here you wear torn shoes, there you’ll get sturdy boots!” Though Nabha had lost its own king back in 1923 (deposed by the British to Kodaikanal where he died, leaving his son abroad), boys still thrilled to soldierly drills at school. Wearing clean khaki shorts, canvas shoes, and waving blue-yellow signal flags under PT Sir Pritamchand, a rare “Shabaash!” from his stern lips felt better than real battlefield medals.',
+                'During the Second World War, military recruiters staged street nautanki songs teasing village youths: “Here (‘athe’) you wear tattered old shoes (‘leetar’), while there (‘uthe’) in the army (‘fauj’) you’ll get gleaming boots!” Against Nabha state’s backdrop after its king’s 1923 arrest, school Scout parades brought boys immense dignity: freshly laundered khaki uniforms, iron heel-plated boots (“khuriyaan”), and blue-yellow signal flags. When multi-skilled (“harfanmaula”) yet stern PT Master Pritamchand let slip a rare “Shabaash!” from beneath gleaming eyes, boys felt they had won real army medals.',
             },
             {
               label: 'Section 5: The Murga Punishment, Suspension & Peeled Almonds',
               hindiOriginal:
-                'चौथी में फ़ारसी न सुनाने पर मुर्गा सज़ा देख शर्मा जी ने महकमाए-तालीम के डायरेक्टर हरजीलाल को ‘मुअत्तल’ आदेश भेजा; तोतों को बादाम खिलाते पीटी सर।',
+                'एक दिन चौथी कक्षा के छात्र फ़ारसी का शब्द-रूप न सुना सके तो प्रीतमचंद ने उन्हें दर्दनाक ‘मुर्गा’ बनने का दंड दिया। बाहर से लौटते हेडमास्टर शर्मा जी यह क्रूर दृश्य सहन न कर पाए और उन्होंने तुरंत नाभा के महकमाए-तालीम को प्रीतमचंद को मुअत्तल (अर्थात् निलंबित) करने का आदेश भेज दिया। किंतु सबको गहरा अचरज तब हुआ जब निलंबन के बावजूद प्रीतमचंद अपने ऊपर के चौबारे में पिंजरे के दो तोतों को भीगे बादाम की गिरियाँ छीलकर बड़े प्रेम से खिलाते मिले।',
               englishText:
-                'Everything turned upside down one afternoon when Class 4 boys stumbled over Persian grammar declensions and Pritamchand forced them into the excruciating “murga” position. Returning from Dr. Kaplash’s clinic, gentle Headmaster Sharma saw the children trembling and immediately issued suspension (muattal) papers via Harjilal, Director of Nabha’s Education Department. Yet when curious boys later peeked into Pritamchand’s upper-floor room, the terrifying drillmaster didn’t look beaten at all—he was patiently peeling soaked almonds for his two caged parrots and whispering lovingly to them, revealing a lonely, tender soul beneath his iron shell.',
+                'One day Class 4 students faltered while reciting Persian verb forms, and PT Master Pritamchand ordered them into the excruciating “murga” crouch. Returning from Dr. Kaplash’s clinic, compassionate Headmaster Sharma could not stomach such brutality and immediately forwarded suspension (“muattal”) papers to Harjilal at Nabha’s Department of Education (“Mahakma-e-Talim”). Everyone expected Pritamchand to look broken—yet curious boys peeking into his upper attic room felt deep astonishment (“acharaj”) to find the fierce drillmaster tenderly peeling soaked almond kernels for his two caged parrots.',
             },
           ],
         },
@@ -412,14 +645,14 @@ export const sanchayan02SapnonKeSeDin: Subtopic = {
     },
     {
       id: 'qa',
-      title: '7. NCERT बोध-प्रश्न व Competency Q&A (3 Marks Exam Standard)',
+      title: '7. संपूर्ण NCERT बोध-प्रश्न (Q1–Q11) व Competency Q&A',
       blocks: [
         {
           type: 'qa',
           marks: 3,
           tag: 'NCERT प्रश्न-अभ्यास',
           question:
-            'प्रश्न 1: कोई भी भाषा आपसी व्यवहार में बाधा नहीं बनती—पाठ के किस अंश से यह सिद्ध होता है?',
+            'NCERT प्रश्न 1: कोई भी भाषा आपसी व्यवहार में बाधा नहीं बनती—पाठ के किस अंश से यह सिद्ध होता है?',
           answer:
             'पाठ के आरंभ में लेखक बताते हैं कि उनकी टोली के कई साथी हरियाणा और राजस्थान से मंडी में आए व्यापारियों के बेटे थे। उनकी बोलियाँ पंजाबी बच्चों को शुरू में अजीब अवश्य लगती थीं, परंतु जब वे सब मिलकर खेलते तो बिना किसी दुभाषिए या बाधा के एक-दूसरे की भावना और बात सहज ही समझ लेते थे। इससे सिद्ध होता है कि आत्मीय व्यवहार व खेल के सामने भाषा की भिन्नता कभी दीवार नहीं बनती।',
           markingTip:
@@ -430,18 +663,29 @@ export const sanchayan02SapnonKeSeDin: Subtopic = {
           marks: 3,
           tag: 'NCERT प्रश्न-अभ्यास',
           question:
-            'प्रश्न 2: लेखक को पुरानी किताबें मिलने से क्या लाभ हुआ और नई श्रेणी में जाने पर उसे निराशा (उदासी) क्यों हो जाती थी?',
+            'NCERT प्रश्न 2: पीटी साहब की ‘शाबाश’ फौज के तमगों-सी क्यों लगती थी? स्पष्ट कीजिए।',
           answer:
-            'गरीबी के कारण लेखक नई किताबें नहीं खरीद सकते थे; हेडमास्टर शर्मा जी द्वारा एक धनाढ्य लड़के की पुरानी किताबें दिला देने से परिवार के एक-दो रुपये बच गए, जिससे उनकी पढ़ाई जारी रह सकी। फिर भी नई श्रेणी में जाते ही पुरानी किताबों की एक अजीब गंध और बड़ी कक्षाओं के कठिन पाठ्यक्रम व मारपीट के भय से उन्हें उतनी खुशी नहीं मिलती थी जितनी की अपेक्षा की जाती थी—पढ़ाई उनके लिए बोझ बन जाती थी।',
+            'पीटी मास्टर प्रीतमचंद अत्यंत कठोर, अनुशासनप्रिय और डरावने शिक्षक थे जो कभी हँसते नहीं थे और छोटी-सी गलती पर कड़ी सज़ा देते थे। स्काउट परेड के दौरान जब छात्र बिना किसी भूल के नीली-पीली झंडियाँ लहराकर परेड पूरी करते, तो वे केवल चमकीली आँखों के नीचे से ‘शाबाश’ कह देते। ऐसे सख़्त गुरु से मिला वह एक प्रशंसा-शब्द बच्चों को किसी असली फ़ौजी युद्ध में जीते गए बड़े तमगे (मेडल) जैसा अमूल्य गौरव देता था।',
           markingTip:
-            'English Helper: Free second-hand books saved ₹1–₹2 (big amount back then), yet stale smell + fear of strict teachers soured higher grades.',
+            'English Helper: Rare praise (“Shabaash”) from a terrifying, rigid drillmaster made boys feel like decorated soldiers.',
         },
         {
           type: 'qa',
           marks: 3,
           tag: 'NCERT प्रश्न-अभ्यास',
           question:
-            'प्रश्न 3: स्काउट परेड करते समय लेखक अपने आपको महत्त्वपूर्ण ‘आदमी’ फ़ौजी जवान समझने लगता था—क्यों?',
+            'NCERT प्रश्न 3: नई श्रेणी में जाने और नई कापियों तथा पुरानी किताबों से आती विशेष गंध से लेखक का बालमन क्यों उदास हो उठता था?',
+          answer:
+            'गरीबी के कारण लेखक को हर साल धनाढ्य परिवार के लड़के की पुरानी किताबें मिलती थीं, जिनसे आने वाली सीलन-भरी गंध उन्हें पिछले साल की याद दिलाती थी। इसके साथ ही नई कक्षा में बढ़ते कठिन पाठ्यक्रम, सख़्त नए मास्टरों की मार और अनुशासन के भय से लेखक उत्साहित होने के बजाय उदास हो उठते थे—पढ़ाई उनके लिए आनंद की जगह मानसिक दबाव बन जाती थी।',
+          markingTip:
+            'English Helper: Smell of used books + dread of harder syllabus and strict teachers made promotion feel burdensome instead of joyful.',
+        },
+        {
+          type: 'qa',
+          marks: 3,
+          tag: 'NCERT प्रश्न-अभ्यास',
+          question:
+            'NCERT प्रश्न 4: स्काउट परेड करते समय लेखक अपने आपको महत्त्वपूर्ण ‘आदमी’ फ़ौजी जवान समझने लगता था—क्यों?',
           answer:
             'सामान्य दिनों में स्कूल में बच्चे उपेक्षित और दंड से डरे रहते थे, किंतु स्काउट परेड के दौरान साफ धोबी-धुली वर्दी, चमकते बूट, बेल्ट की खट-खट और अनुशासित लयबद्ध मार्च से उनमें आत्मविश्वास जागता था। ऊपर से सख़्त पीटी सर प्रीतमचंद जब दाँत भींचकर ‘शाबाश’ कह देते, तो बच्चों को लगता जैसे उन्होंने सचमुच की फ़ौज के बड़े-बड़े तमगे जीत लिए हों।',
           markingTip:
@@ -452,7 +696,7 @@ export const sanchayan02SapnonKeSeDin: Subtopic = {
           marks: 3,
           tag: 'NCERT प्रश्न-अभ्यास',
           question:
-            'प्रश्न 4: हेडमास्टर शर्मा जी ने पीटी साहब को क्यों मुअत्तल (निलंबित) कर दिया?',
+            'NCERT प्रश्न 5: हेडमास्टर शर्मा जी ने पीटी साहब को क्यों मुअत्तल (निलंबित) कर दिया?',
           answer:
             'चौथी श्रेणी के छोटे बच्चे फ़ारसी के कठिन शब्द-रूप याद नहीं कर पाए थे। इस पर पीटी मास्टर प्रीतमचंद ने बच्चों को अत्यंत क्रूर ‘मुर्गा’ बनने की सज़ा दी, जिससे कई बच्चे दर्द से बेसुध होने लगे। ठीक उसी समय हेडमास्टर शर्मा जी डॉ. कपलाश से मिलकर लौटे और बच्चों पर यह अमानवीय बर्बरता देख क्रोधित हो उठे; उन्होंने तुरंत नाभा के ‘महकमाए-तालीम’ के डायरेक्टर हरजीलाल को लिखकर प्रीतमचंद को निलंबित कर दिया।',
           markingTip:
@@ -463,18 +707,84 @@ export const sanchayan02SapnonKeSeDin: Subtopic = {
           marks: 3,
           tag: 'NCERT प्रश्न-अभ्यास',
           question:
-            'प्रश्न 5: “प्रायः अभिभावक बच्चों को खेल-कूद में ज़्यादा रुचि लेने पर रोकते हैं और समय बरबाद न करने की नसीहत देते हैं”—आपकी नज़र में खेलों के लिए समय न देना क्या उचित है?',
+            'NCERT प्रश्न 6: लेखक के अनुसार उन्हें स्कूल जाना कब और क्यों अच्छा लगने लगा?',
           answer:
-            'अभिभावकों का ऐसा सोचना आंशिक रूप से भविष्य की चिंता से उपजता है, किंतु खेलों से पूरी तरह वंचित करना उचित नहीं है। जिस प्रकार पाठ में खेलों ने विभिन्न प्रांतों के बच्चों को जोड़ा तथा स्काउट परेड ने अनुशासन व साहस दिया, उसी प्रकार आज भी खेल बच्चों का शारीरिक स्वास्थ्य, टीम-भावना, नेतृत्व क्षमता और तनाव-मुक्ति विकसित करते हैं। इसलिए पढ़ाई और खेल के बीच संतुलन ही श्रेष्ठ मार्ग है।',
+            'लेखक और उनके साथियों को स्कूल तब बहुत अच्छा लगता जब स्काउट परेड का अभ्यास होता था। इस समय वे धोबी की धुली वर्दी, पॉलिश किए हुए बूट और जुर्राबें पहनकर ठक-ठक करते हुए मार्च करते तथा बायाँ-दायाँ मुड़कर नीली-पीली झंडियाँ लहराते थे। इसके अलावा जब कोई बड़ी श्रेणी का छात्र न आने पर हेडमास्टर शर्मा जी प्रेम से पढ़ाते, तब भी स्कूल का वातावरण सुखद लगने लगता था।',
           markingTip:
-            'English Helper: Acknowledge parents’ concern briefly, then advocate balance: games foster teamwork, physical vitality, and emotional resilience.',
+            'English Helper: Scout Parade drills (washed khaki uniforms, gleaming boots, flags) and Sharma Ji’s affectionate teaching made school appealing.',
+        },
+        {
+          type: 'qa',
+          marks: 3,
+          tag: 'NCERT प्रश्न-अभ्यास',
+          question:
+            'NCERT प्रश्न 7: लेखक अपने छात्र जीवन में स्कूल से छुट्टियों में मिले काम को पूरा करने के लिए क्या-क्या योजनाएँ बनाया करता था और उसे पूरा न कर पाने की स्थिति में किसकी भाँति ‘बहादुर’ बनने की कल्पना किया करता था?',
+          answer:
+            'दो महीने की छुट्टियों के आरंभ में लेखक काम की चिंता छोड़कर ननिहाल के तालाब व रेत में मस्ती करते और अंतिम एक महीने में रोज़ दस-दस सवाल हल करके बीस दिन में 200 सवाल निपटाने की योजना बनाते, पर खेल में दिन बीत जाते थे। फिर पिटाई का डर सताने पर वे चार बित्ते कद और बड़े सिर वाले दबंग साथी ‘ओमा’ की तरह ‘बहादुर’ बनने की कल्पना करते, जो मार खाने की बजाय अपनी ‘रेल-बम्बा’ टक्कर से मुक़ाबला करता था।',
+          markingTip:
+            'English Helper: Planned to solve 10 maths sums daily in the last month; when time slipped, fantasised being bold like gang-leader Oma.',
+        },
+        {
+          type: 'qa',
+          marks: 3,
+          tag: 'NCERT प्रश्न-अभ्यास',
+          question:
+            'NCERT प्रश्न 8: पाठ में वर्णित घटनाओं के आधार पर पीटी सर की चारित्रिक विशेषताओं पर प्रकाश डालिए।',
+          answer:
+            'पीटी मास्टर प्रीतमचंद का चरित्र नारियल की भाँति बाहर से कठोर परंतु भीतर से कोमल था—(1) कठोर अनुशासनप्रिय व भयावह बाह्य रूप: छोटे कद-काठी होते हुए भी चमकीली आँखों, तनी भौंहों और भारी बूटों की खट-खट से वे भय उत्पन्न करते और ‘मुर्गा’ जैसी सख़्त सज़ा देते थे; (2) कुशल प्रशिक्षक व प्रोत्साहक: वे स्काउट परेड के हरफनमौला प्रशिक्षक थे और सही परेड होने पर दिल से ‘शाबाश’ कहकर बच्चों का मनोबल बढ़ाते थे; (3) संवेदनशील पशु-पक्षी प्रेमी: निलंबित होने पर भी वे अपने चौबारे में पिंजरे के दो तोतों को भीगे बादाम की गिरियाँ छीलकर प्रेमपूर्वक खिलाते थे।',
+          markingTip:
+            'English Helper: Highlight three clear traits—fearsome outward discipline, skilful motivating drillmaster, and tender care for caged parrots.',
+        },
+        {
+          type: 'qa',
+          marks: 3,
+          tag: 'NCERT प्रश्न-अभ्यास',
+          question:
+            'NCERT प्रश्न 9: विद्यार्थियों को अनुशासन में रखने के लिए पाठ में अपनाई गई युक्तियों और वर्तमान में स्वीकृत मान्यताओं के संबंध में अपने विचार प्रकट कीजिए।',
+          answer:
+            'पाठ के युग में अनुशासन बनाए रखने के लिए छात्रों की पिटाई करना, थप्पड़ मारना तथा फ़ारसी याद न होने पर ‘मुर्गा’ बनाने जैसे कठोर शारीरिक दंड आम युक्तियाँ थीं। वर्तमान शिक्षा-मनोविज्ञान और बाल-अधिकार कानून (RTE अधिनियम) के अंतर्गत विद्यालयों में किसी भी प्रकार का शारीरिक या मानसिक दंड पूर्णतः निषिद्ध है। आज परामर्श, स्नेहपूर्ण संवाद, सह-पाठ्यक्रम गतिविधियों और रचनात्मक प्रेरणा द्वारा आत्म-अनुशासन विकसित करना ही सर्वमान्य व प्रभावी मार्ग माना जाता है।',
+          markingTip:
+            'English Helper: Contrast bygone corporal punishment (“murga”, beatings) with modern child-rights norms valuing counselling and positive reinforcement.',
+        },
+        {
+          type: 'qa',
+          marks: 3,
+          tag: 'NCERT प्रश्न-अभ्यास',
+          question:
+            'NCERT प्रश्न 10: बचपन की यादें मन को गुदगुदाने वाली होती हैं विशेषकर तब, जब वे अपने ननिहाल या किसी अन्य स्थान से जुड़ी हों—पाठ व अपने अनुभव के आधार पर स्पष्ट कीजिए।',
+          answer:
+            'बचपन निश्छलता और उन्मुक्त आनंद का काल होता है। पाठ में लेखक भी बड़ी उम्र में पहुँचकर ननिहाल के तालाब में नहाने, गरम रेत पर लोटने, आलियार की टहनियों व कच्चे-पक्के फलों के स्वाद, ओमा की दोस्ती तथा स्काउट परेड के रोमांच को याद करके भावुक हो उठते हैं। इसी प्रकार आज भी ननिहाल की छुट्टियाँ, दादी-नानी की कहानियाँ और मित्रों संग खेले गए बेफ़िक्र खेल बड़े होने पर मन को सुकून व ताज़गी से भर देते हैं।',
+          markingTip:
+            'English Helper: Connect Gurdayal Singh’s nostalgic memories of nanihal ponds and playground friends with universal childhood warmth.',
+        },
+        {
+          type: 'qa',
+          marks: 3,
+          tag: 'NCERT प्रश्न-अभ्यास',
+          question:
+            'NCERT प्रश्न 11 (क): प्रायः अभिभावक बच्चों को खेल-कूद में ज़्यादा रुचि लेने पर रोकते हैं—आपकी नज़र में खेल आपके लिए क्यों ज़रूरी हैं?',
+          answer:
+            'खेल केवल मनोरंजन नहीं बल्कि सर्वांगीण विकास का आधार हैं। जिस प्रकार पाठ में खेलों ने विभिन्न प्रांतों के बच्चों को आपस में जोड़ा और स्काउट परेड ने साहस व अनुशासन सिखाया, उसी प्रकार आज भी खेल-कूद शरीर को स्वस्थ रखते हैं, एकाग्रता और स्मरण-शक्ति बढ़ाते हैं तथा टीम-भावना, नेतृत्व क्षमता, हार को स्वीकार करने का धैर्य व तनाव-मुक्ति प्रदान करते हैं।',
+          markingTip:
+            'English Helper: Explain why play matters—physical health, teamwork, emotional resilience, and sharpening academic focus.',
+        },
+        {
+          type: 'qa',
+          marks: 3,
+          tag: 'NCERT प्रश्न-अभ्यास',
+          question:
+            'NCERT प्रश्न 11 (ख): आप कौन-से नियम-कायदों को अपनाएँगे जिससे अभिभावकों को आपके खेल पर आपत्ति न हो?',
+          answer:
+            'अभिभावकों को आश्वस्त करने के लिए मैं पढ़ाई और खेल के बीच स्पष्ट समय-सारणी का पालन करूँगा—(1) पहले विद्यालय का दैनिक गृहकार्य व अध्ययन पूरा करके निश्चित संध्याकालीन समय पर ही खेलूँगा; (2) खेल के दौरान सुरक्षित स्थान, अनुशासित व्यवहार और चोट से बचाव का ध्यान रखूँगा; (3) परीक्षा परिणाम और स्वास्थ्य दोनों में निरंतर सुधार दिखाकर यह सिद्ध करूँगा कि खेल मेरी पढ़ाई में बाधक नहीं बल्कि सहायक हैं।',
+          markingTip:
+            'English Helper: Give practical commitments—homework before play, fixed evening schedule, safety, and steady academic grades.',
         },
         {
           type: 'qa',
           marks: 3,
           tag: 'संचयन मूल्यपरक',
           question:
-            'प्रश्न 6: पीटी मास्टर प्रीतमचंद का चरित्र ‘बाहर से कठोर किंतु भीतर से कोमल (नारियल-सा)’ कैसे सिद्ध होता है? स्पष्ट कीजिए।',
+            'बोर्ड Competency प्रश्न: पीटी मास्टर प्रीतमचंद का चरित्र ‘बाहर से कठोर किंतु भीतर से कोमल (नारियल-सा)’ कैसे सिद्ध होता है? स्पष्ट कीजिए।',
           answer:
             'प्रीतमचंद जी ऊपर से अत्यंत कठोर, अनुशासनप्रिय और डरावने दिखते थे—उनकी आँखें लाल-चमकीली थीं, भारी बूटों की खुरियाँ फर्श पर खटखटातीं और वे ‘मुर्गा’ जैसी सख़्त सज़ा देते थे। परंतु उनका अंतःकरण बहुत संवेदनशील था:\n1. परेड अच्छी होने पर वे दिल से ‘शाबाश’ कहकर बच्चों का मनोबल बढ़ाते थे।\n2. मुअत्तल होने के बाद भी वे अपने चौबारे में पिंजरे के दो तोतों को भीगे बादाम की गिरियाँ अपने हाथों से छीलकर बड़े प्रेम से खिलाते और उनसे बातें करते थे।',
           markingTip:
